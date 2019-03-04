@@ -22,12 +22,14 @@ void MainWindow::createWidget()
 	mainWidget = new QWidget(this);
 	setCentralWidget(mainWidget);
 	loginWindow = new LoginDialog();
+	gameWidget = new GameWidget();
 }
 
 void MainWindow::createLayout()
 {
 	mainLayout = new QGridLayout(mainWidget);
 	mainLayout->addWidget(loginWindow, 0, 0);
+	mainLayout->addWidget(gameWidget, 0, 1);
 
 	mainWidget->setLayout(mainLayout);
 }

@@ -28,15 +28,19 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     databaseserver.cpp \
-    logindialog.cpp
+    logindialog.cpp \
+    gamewidget.cpp
 
 HEADERS += \
         mainwindow.h \
     datastructure.h \
     databaseserver.h \
-    logindialog.h
+    logindialog.h \
+    gamewidget.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+

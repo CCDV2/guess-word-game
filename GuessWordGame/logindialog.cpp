@@ -15,6 +15,7 @@ void LoginDialog::createWidget()
 	userNameLineEdit = new QLineEdit();
 	userNameLabel = new QLabel(tr("用户名"));
 	passWordLineEdit = new QLineEdit();
+	passWordLineEdit->setEchoMode(QLineEdit::Password);
 	passWordLabel = new QLabel(tr("密码"));
 	submitButton = new QPushButton(tr("登录"));
 	cancelButton = new QPushButton(tr("取消"));

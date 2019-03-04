@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QGridLayout>
 #include "logindialog.h"
+#include"gamewidget.h"
 
 class MainWindow : public QMainWindow
 {
@@ -19,6 +20,7 @@ private:
 	QWidget *mainWidget;
 	QGridLayout *mainLayout;
 	LoginDialog *loginWindow;
+	GameWidget *gameWidget;
 };
 
 #endif // MAINWINDOW_H
