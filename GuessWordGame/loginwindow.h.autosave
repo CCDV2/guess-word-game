@@ -1,0 +1,29 @@
+#ifndef LOGINWINDOW_H
+#define LOGINWINDOW_H
+
+#include"datastructure.h"
+#include <QWidget>
+#include <QLineEdit>
+#include <QPushButton>
+#include<QLabel>
+
+class LoginWindow : public QWidget
+{
+	Q_OBJECT
+public:
+	explicit LoginWindow(QWidget *parent = nullptr);
+
+signals:
+
+private slots:
+	void on_submitButton_clicked();
+	void on_cancelButton_clicked();
+private:
+	 isValidUser();
+	
+	QLineEdit *userNameLineEdit, *passWordLineEdit;
+	QLabel *userNameLabel, *passWordLabel;
+	QPushButton *submitButton, *cancelButton;
+};
+
+#endif // LOGINWINDOW_H

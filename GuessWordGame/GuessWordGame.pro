@@ -27,11 +27,14 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    loginwindow.cpp
+    databaseserver.cpp \
+    logindialog.cpp
 
 HEADERS += \
         mainwindow.h \
-    loginwindow.h
+    datastructure.h \
+    databaseserver.h \
+    logindialog.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

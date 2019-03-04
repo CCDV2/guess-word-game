@@ -1,21 +1,33 @@
 #include "mainwindow.h"
-#include <QGridLayout>
+
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 {
 	setWindowTitle(tr("猜单词游戏"));
-	resize(2560, 1440);
+	setWindowState(Qt::WindowMaximized);
 
-	loginWindow = new LoginWindow(this);
+	createWidget();
+	createLayout();
 
-	QGridLayout *mainLayout = new QGridLayout(this);
-	mainLayout->addWidget(loginWindow, 0, 0);
-
-	setLayout(mainLayout);
 }
 
 MainWindow::~MainWindow()
 {
 
+}
+
+void MainWindow::createWidget()
+{
+	mainWidget = new QWidget(this);
+	setCentralWidget(mainWidget);
+	loginWindow = new LoginDialog();
+}
+
+void MainWindow::createLayout()
+{
+	mainLayout = new QGridLayout(mainWidget);
+	mainLayout->addWidget(loginWindow, 0, 0);
+
+	mainWidget->setLayout(mainLayout);
 }

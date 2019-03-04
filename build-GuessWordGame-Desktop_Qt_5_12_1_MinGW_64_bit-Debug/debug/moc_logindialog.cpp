@@ -1,16 +1,16 @@
 /****************************************************************************
-** Meta object code from reading C++ file 'loginwindow.h'
+** Meta object code from reading C++ file 'logindialog.h'
 **
 ** Created by: The Qt Meta Object Compiler version 67 (Qt 5.12.1)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../../GuessWordGame/loginwindow.h"
+#include "../../GuessWordGame/logindialog.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
-#error "The header file 'loginwindow.h' doesn't include <QObject>."
+#error "The header file 'logindialog.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
 #error "This file was generated using the moc from 5.12.1. It"
 #error "cannot be used with the include files from this version of Qt."
@@ -20,29 +20,29 @@
 QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
-struct qt_meta_stringdata_LoginWindow_t {
+struct qt_meta_stringdata_LoginDialog_t {
     QByteArrayData data[4];
     char stringdata0[61];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
-    qptrdiff(offsetof(qt_meta_stringdata_LoginWindow_t, stringdata0) + ofs \
+    qptrdiff(offsetof(qt_meta_stringdata_LoginDialog_t, stringdata0) + ofs \
         - idx * sizeof(QByteArrayData)) \
     )
-static const qt_meta_stringdata_LoginWindow_t qt_meta_stringdata_LoginWindow = {
+static const qt_meta_stringdata_LoginDialog_t qt_meta_stringdata_LoginDialog = {
     {
-QT_MOC_LITERAL(0, 0, 11), // "LoginWindow"
+QT_MOC_LITERAL(0, 0, 11), // "LoginDialog"
 QT_MOC_LITERAL(1, 12, 23), // "on_submitButton_clicked"
 QT_MOC_LITERAL(2, 36, 0), // ""
 QT_MOC_LITERAL(3, 37, 23) // "on_cancelButton_clicked"
 
     },
-    "LoginWindow\0on_submitButton_clicked\0"
+    "LoginDialog\0on_submitButton_clicked\0"
     "\0on_cancelButton_clicked"
 };
 #undef QT_MOC_LITERAL
 
-static const uint qt_meta_data_LoginWindow[] = {
+static const uint qt_meta_data_LoginDialog[] = {
 
  // content:
        8,       // revision
@@ -66,10 +66,10 @@ static const uint qt_meta_data_LoginWindow[] = {
        0        // eod
 };
 
-void LoginWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void LoginDialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
-        auto *_t = static_cast<LoginWindow *>(_o);
+        auto *_t = static_cast<LoginDialog *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->on_submitButton_clicked(); break;
@@ -80,30 +80,30 @@ void LoginWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
     Q_UNUSED(_a);
 }
 
-QT_INIT_METAOBJECT const QMetaObject LoginWindow::staticMetaObject = { {
+QT_INIT_METAOBJECT const QMetaObject LoginDialog::staticMetaObject = { {
     &QWidget::staticMetaObject,
-    qt_meta_stringdata_LoginWindow.data,
-    qt_meta_data_LoginWindow,
+    qt_meta_stringdata_LoginDialog.data,
+    qt_meta_data_LoginDialog,
     qt_static_metacall,
     nullptr,
     nullptr
 } };
 
 
-const QMetaObject *LoginWindow::metaObject() const
+const QMetaObject *LoginDialog::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *LoginWindow::qt_metacast(const char *_clname)
+void *LoginDialog::qt_metacast(const char *_clname)
 {
     if (!_clname) return nullptr;
-    if (!strcmp(_clname, qt_meta_stringdata_LoginWindow.stringdata0))
+    if (!strcmp(_clname, qt_meta_stringdata_LoginDialog.stringdata0))
         return static_cast<void*>(this);
     return QWidget::qt_metacast(_clname);
 }
 
-int LoginWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int LoginDialog::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QWidget::qt_metacall(_c, _id, _a);
     if (_id < 0)
