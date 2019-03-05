@@ -5,6 +5,7 @@
 #include <QGridLayout>
 #include "logindialog.h"
 #include"gamewidget.h"
+#include"registerdialog.h"
 
 class MainWindow : public QMainWindow
 {
@@ -20,6 +21,7 @@ private:
 	QWidget *mainWidget;
 	QGridLayout *mainLayout;
 	LoginDialog *loginWindow;
+	RegisterDialog *registerWindow;
 	GameWidget *gameWidget;
 };
 
