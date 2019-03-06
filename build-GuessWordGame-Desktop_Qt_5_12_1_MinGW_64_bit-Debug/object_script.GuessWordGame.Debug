@@ -1,0 +1,13 @@
+debug/main.o
+debug/mainwindow.o
+debug/databaseserver.o
+debug/logindialog.o
+debug/gamewidget.o
+debug/registerdialog.o
+debug/user.o
+debug/simplifieduserinfowidget.o
+debug/loginorregisterdialog.o
+debug/moc_mainwindow.o
+debug/moc_logindialog.o
+debug/moc_gamewidget.o
+debug/moc_simplifieduserinfowidget.o

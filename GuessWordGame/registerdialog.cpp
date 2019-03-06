@@ -1,6 +1,6 @@
 #include "registerdialog.h"
 
-RegisterDialog::RegisterDialog(QWidget *parent): QWidget(parent)
+RegisterDialog::RegisterDialog(QWidget *parent): QDialog(parent)
 {
 	createLabel();
 	createLayout();
@@ -13,8 +13,10 @@ void RegisterDialog::createLabel()
 	userNameLineEdit = new QLineEdit();
 	passwordLabel = new QLabel(tr("密码"));
 	passwordLineEdit = new QLineEdit();
+	passwordLineEdit->setEchoMode(QLineEdit::Password);
 	recheckPasswordLabel = new QLabel(tr("确认密码"));
 	recheckPasswordLineEdit = new QLineEdit();
+	recheckPasswordLineEdit->setEchoMode(QLineEdit::Password);
 
 	submitButton = new QPushButton(tr("注册"));
 	cancelButton = new QPushButton(tr("取消"));
@@ -39,5 +41,5 @@ void RegisterDialog::createLayout()
 
 void RegisterDialog::createConnection()
 {
-
+	connect(cancelButton, &QPushButton::clicked, this, &RegisterDialog::reject);
 }

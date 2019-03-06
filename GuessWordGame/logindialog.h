@@ -3,13 +3,14 @@
 
 #include"datastructure.h"
 #include <QWidget>
+#include<QDialog>
 #include <QLineEdit>
 #include <QPushButton>
 #include<QLabel>
 #include<QGridLayout>
 #include<QHBoxLayout>
 
-class LoginDialog : public QWidget
+class LoginDialog : public QDialog
 {
 	Q_OBJECT
 public:

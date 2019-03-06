@@ -10,7 +10,7 @@
 #include<QGridLayout>
 #include<QHBoxLayout>
 
-class RegisterDialog : public QWidget
+class RegisterDialog : public QDialog
 {
 public:
 	explicit RegisterDialog(QWidget *parent = nullptr);

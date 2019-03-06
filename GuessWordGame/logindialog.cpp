@@ -3,7 +3,7 @@
 #include"databaseserver.h"
 #include<QMessageBox>
 
-LoginDialog::LoginDialog(QWidget *parent) : QWidget(parent)
+LoginDialog::LoginDialog(QWidget *parent) : QDialog(parent)
 {
 	createWidget();
 	createLayout();
@@ -29,7 +29,7 @@ void LoginDialog::createLayout()
 	loginWindowLayout->addWidget(passWordLabel, 1, 0);
 	loginWindowLayout->addWidget(passWordLineEdit, 1, 1);
 
-	buttonLayout = new QHBoxLayout(this);
+	buttonLayout = new QHBoxLayout();
 	buttonLayout->addWidget(submitButton);
 	buttonLayout->addWidget(cancelButton);
 
@@ -37,14 +37,14 @@ void LoginDialog::createLayout()
 
 	setLayout(loginWindowLayout);
 
-	setFixedSize(this->size());
+//	setFixedSize(this->size());
 
 }
 
 void LoginDialog::createConnection()
 {
 	connect(submitButton, &QPushButton::clicked, this, &LoginDialog::on_submitButton_clicked);
-	connect(cancelButton, &QPushButton::clicked, this, &LoginDialog::on_cancelButton_clicked);
+	connect(cancelButton, &QPushButton::clicked, this, &LoginDialog::reject);
 }
 
 
@@ -88,7 +88,7 @@ void LoginDialog::on_submitButton_clicked()
 
 void LoginDialog::on_cancelButton_clicked()
 {
-
+//	rejected();
 }
 
 LoginState LoginDialog::checkLoginState(const LoginPackage &loginPackage)

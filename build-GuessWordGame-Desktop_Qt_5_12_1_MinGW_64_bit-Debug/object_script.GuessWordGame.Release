@@ -1,0 +1,13 @@
+release/main.o
+release/mainwindow.o
+release/databaseserver.o
+release/logindialog.o
+release/gamewidget.o
+release/registerdialog.o
+release/user.o
+release/simplifieduserinfowidget.o
+release/loginorregisterdialog.o
+release/moc_mainwindow.o
+release/moc_logindialog.o
+release/moc_gamewidget.o
+release/moc_simplifieduserinfowidget.o

@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	createWidget();
 	createLayout();
+	createConnection();
 
 }
 
@@ -17,21 +18,29 @@ MainWindow::~MainWindow()
 
 }
 
+
 void MainWindow::createWidget()
 {
 	mainWidget = new QWidget(this);
 	setCentralWidget(mainWidget);
-	loginWindow = new LoginDialog();
-	registerWindow = new RegisterDialog();
+//	loginWindow = new LoginDialog();
+//	registerWindow = new RegisterDialog();
 	gameWidget = new GameWidget();
+	simplifiedUserInfoWidget = new SimplifiedUserInfoWidget();
 }
 
 void MainWindow::createLayout()
 {
 	mainLayout = new QGridLayout(mainWidget);
-	mainLayout->addWidget(loginWindow, 0, 0);
-	mainLayout->addWidget(gameWidget, 0, 1);
-	mainLayout->addWidget(registerWindow, 1, 0);
+	mainLayout->addWidget(simplifiedUserInfoWidget, 0, 0);
+//	mainLayout->addWidget(loginWindow, 0, 0);
+//	mainLayout->addWidget(registerWindow, 1, 0);
 
+	mainLayout->addWidget(gameWidget, 0, 1);
 	mainWidget->setLayout(mainLayout);
+}
+
+void MainWindow::createConnection()
+{
+
 }

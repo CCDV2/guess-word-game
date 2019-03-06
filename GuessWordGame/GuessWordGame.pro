@@ -30,7 +30,10 @@ SOURCES += \
     databaseserver.cpp \
     logindialog.cpp \
     gamewidget.cpp \
-    registerdialog.cpp
+    registerdialog.cpp \
+    user.cpp \
+    simplifieduserinfowidget.cpp \
+    loginorregisterdialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -38,7 +41,10 @@ HEADERS += \
     databaseserver.h \
     logindialog.h \
     gamewidget.h \
-    registerdialog.h
+    registerdialog.h \
+    user.h \
+    simplifieduserinfowidget.h \
+    loginorregisterdialog.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
