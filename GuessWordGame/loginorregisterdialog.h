@@ -8,12 +8,14 @@
 #include<QPushButton>
 #include<QHBoxLayout>
 #include<QVBoxLayout>
-
+#include"databaseserver.h"
 
 class LoginOrRegisterDialog: public QDialog
 {
 public:
-	LoginOrRegisterDialog(QWidget *parent = nullptr);
+	LoginOrRegisterDialog(DatabaseServer &_DBServer, QWidget *parent = nullptr);
+	LoginDialog *getLoginDialog() const;
+
 private slots:
 	void showLoginDialog();
 	void showRegisterDialog();
@@ -32,6 +34,8 @@ private:
 	QHBoxLayout *switchButtonLayout;
 
 	bool isInLoginDialog;
+
+	DatabaseServer &DBserver;
 };
 
 #endif // LOGINORREGISTERDIALOG_H

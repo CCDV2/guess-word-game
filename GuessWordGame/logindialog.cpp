@@ -3,11 +3,30 @@
 #include"databaseserver.h"
 #include<QMessageBox>
 
-LoginDialog::LoginDialog(QWidget *parent) : QDialog(parent)
+LoginDialog::LoginDialog(DatabaseServer &_DBserver, QWidget *parent) :
+	QDialog(parent), DBserver(_DBserver)
 {
 	createWidget();
 	createLayout();
 	createConnection();
+}
+
+void LoginDialog::receiveLoginState(LoginState state)
+{
+	switch(state)
+	{
+	case LOGIN_SUCCESS:
+		accepted();
+		break;
+	case WRONG_PASSWORD:
+		QMessageBox::warning(this, tr("密码错误"), tr("密码错误，请重新输入密码"));
+		passWordLineEdit->setFocus();
+		break;
+	case UNFOUND_USERNAME:
+		QMessageBox::warning(this, tr("未找到用户"), tr("该用户未被注册"));
+		userNameLineEdit->setFocus();
+		break;
+	}
 }
 
 void LoginDialog::createWidget()
@@ -45,6 +64,8 @@ void LoginDialog::createConnection()
 {
 	connect(submitButton, &QPushButton::clicked, this, &LoginDialog::on_submitButton_clicked);
 	connect(cancelButton, &QPushButton::clicked, this, &LoginDialog::reject);
+	connect(this, &LoginDialog::sendLoginPackage, &DBserver, &DatabaseServer::receiveLoginPackage);
+	connect(&DBserver, &DatabaseServer::sendLoginState, this, &LoginDialog::receiveLoginState);
 }
 
 
@@ -68,20 +89,7 @@ void LoginDialog::on_submitButton_clicked()
 		}
 		else // check valid
 		{
-			switch(checkLoginState(loginPackage))
-			{
-			case SUCCESS:
-
-				break;
-			case WRONG_PASSWORD:
-				QMessageBox::warning(this, tr("密码错误"), tr("密码错误，请重新输入密码"));
-				passWordLineEdit->setFocus();
-				break;
-			case UNFOUND_USERNAME:
-				QMessageBox::warning(this, tr("未找到用户"), tr("该用户未被注册"));
-				userNameLineEdit->setFocus();
-				break;
-			}
+			emit sendLoginPackage(loginPackage);
 		}
 	}
 }
@@ -95,4 +103,9 @@ LoginState LoginDialog::checkLoginState(const LoginPackage &loginPackage)
 {
 	// TODO
 	return DatabaseServer::checkLoginState(loginPackage);
+}
+
+QPushButton *LoginDialog::getSubmitButton() const
+{
+	return submitButton;
 }

@@ -11,13 +11,22 @@ struct LoginPackage
 	LoginPackage(QString _userName, QString _passWord):
 		userName(_userName), passWord(_passWord) {}
 };
+typedef LoginPackage RegisterPackage;
 
+//using RegisterPackage=LoginPackage ;
 enum LoginState
 {
-	SUCCESS,
+	LOGIN_SUCCESS,
 	WRONG_PASSWORD,
 	UNFOUND_USERNAME
 };
+
+enum RegisterState
+{
+	REGISTER_SUCCESS,
+	USER_EXISTED
+};
+
 
 
 #endif // DATASTRUCTURE_H

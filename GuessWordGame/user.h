@@ -14,7 +14,7 @@ protected:
 	QString userName;
 };
 
-class Player: User
+class Player: public User
 {
 
 public:
@@ -38,7 +38,7 @@ private:
 
 };
 
-class Questioner: User
+class Questioner: public User
 {
 
 public:

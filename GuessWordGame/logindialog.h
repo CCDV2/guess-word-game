@@ -9,14 +9,22 @@
 #include<QLabel>
 #include<QGridLayout>
 #include<QHBoxLayout>
+#include"databaseserver.h"
+
 
 class LoginDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit LoginDialog(QWidget *parent = nullptr);
+	explicit LoginDialog(DatabaseServer &_DBserver, QWidget *parent = nullptr);
+
+	QPushButton *getSubmitButton() const;
 
 signals:
+	void sendLoginPackage(LoginPackage loginPackage);
+public slots:
+	void receiveLoginState(LoginState state);
+
 
 private slots:
 	void on_submitButton_clicked();
@@ -33,6 +41,8 @@ private:
 	QPushButton *submitButton, *cancelButton;
 	QGridLayout *loginWindowLayout;
 	QHBoxLayout *buttonLayout;
+
+	DatabaseServer &DBserver;
 };
 
 #endif // LOGINWINDOW_H

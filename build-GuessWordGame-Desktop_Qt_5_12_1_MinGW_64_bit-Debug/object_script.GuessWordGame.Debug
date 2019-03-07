@@ -8,6 +8,7 @@ debug/user.o
 debug/simplifieduserinfowidget.o
 debug/loginorregisterdialog.o
 debug/moc_mainwindow.o
+debug/moc_databaseserver.o
 debug/moc_logindialog.o
 debug/moc_gamewidget.o
 debug/moc_simplifieduserinfowidget.o

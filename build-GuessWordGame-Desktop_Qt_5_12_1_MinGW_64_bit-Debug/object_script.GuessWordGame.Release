@@ -8,6 +8,7 @@ release/user.o
 release/simplifieduserinfowidget.o
 release/loginorregisterdialog.o
 release/moc_mainwindow.o
+release/moc_databaseserver.o
 release/moc_logindialog.o
 release/moc_gamewidget.o
 release/moc_simplifieduserinfowidget.o

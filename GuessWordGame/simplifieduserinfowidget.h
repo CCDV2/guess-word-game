@@ -10,17 +10,20 @@
 #include<QStackedWidget>
 #include"user.h"
 #include"loginorregisterdialog.h"
+#include"databaseserver.h"
 
 class SimplifiedUserInfoWidget: public QWidget
 {
 	Q_OBJECT
 public:
-	SimplifiedUserInfoWidget(QWidget *parent = nullptr);
+	SimplifiedUserInfoWidget(DatabaseServer &_DBServer, QWidget *parent = nullptr);
 
 	QPushButton *getLoginOrRegisterButton() const;
 
+	LoginOrRegisterDialog *getLoginOrRegisterDialog() const;
+
+	void showUserInfo(Player player, Questioner questioner);
 public slots:
-	void resetUserInfo(QString &userName, int level, int experience);
 
 private slots:
 	void showLoginOrRegisterWindow();
@@ -38,6 +41,7 @@ private:
 	LoginOrRegisterDialog *loginOrRegisterDialog;
 
 	QGridLayout *mainLayout;
+	DatabaseServer &DBserver;
 };
 
 #endif // SIMPLIFIEDUSERINFOWIDGET_H

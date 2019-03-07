@@ -248,6 +248,7 @@ Makefile: ../GuessWordGame/GuessWordGame.pro D:/Qt/Qt5.12.1/5.12.1/mingw73_64/mk
 		../GuessWordGame/GuessWordGame.pro \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/lib/Qt5Widgets.prl \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/lib/Qt5Gui.prl \
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/lib/Qt5Sql.prl \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/lib/Qt5Core.prl \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/lib/qtmaind.prl
 	$(QMAKE) -o Makefile ..\GuessWordGame\GuessWordGame.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug"
@@ -436,6 +437,7 @@ D:/Qt/Qt5.12.1/5.12.1/mingw73_64/mkspecs/features/lex.prf:
 ../GuessWordGame/GuessWordGame.pro:
 D:/Qt/Qt5.12.1/5.12.1/mingw73_64/lib/Qt5Widgets.prl:
 D:/Qt/Qt5.12.1/5.12.1/mingw73_64/lib/Qt5Gui.prl:
+D:/Qt/Qt5.12.1/5.12.1/mingw73_64/lib/Qt5Sql.prl:
 D:/Qt/Qt5.12.1/5.12.1/mingw73_64/lib/Qt5Core.prl:
 D:/Qt/Qt5.12.1/5.12.1/mingw73_64/lib/qtmaind.prl:
 qmake: FORCE

@@ -1,6 +1,7 @@
 #include "loginorregisterdialog.h"
 
-LoginOrRegisterDialog::LoginOrRegisterDialog(QWidget *parent): QDialog(parent)
+LoginOrRegisterDialog::LoginOrRegisterDialog(DatabaseServer &_DBserver, QWidget *parent):
+	QDialog(parent), DBserver(_DBserver)
 {
 	isInLoginDialog = true;
 	createWidget();
@@ -30,7 +31,7 @@ void LoginOrRegisterDialog::createWidget()
 {
 	loginButton = new QPushButton(tr("登录"));
 	registerButton = new QPushButton(tr("注册"));
-	loginDialog = new LoginDialog();
+	loginDialog = new LoginDialog(DBserver);
 	registerDialog = new RegisterDialog();
 	stackWidget = new QStackedWidget();
 	stackWidget->addWidget(loginDialog);
@@ -55,4 +56,10 @@ void LoginOrRegisterDialog::createConnection()
 	connect(registerButton, &QPushButton::clicked, this, &LoginOrRegisterDialog::showRegisterDialog);
 	connect(loginDialog, &LoginDialog::rejected, this, &LoginOrRegisterDialog::reject);
 	connect(registerDialog, &RegisterDialog::rejected, this, &LoginOrRegisterDialog::reject);
+	connect(loginDialog, &LoginDialog::accepted, this, &LoginOrRegisterDialog::accept);
+}
+
+LoginDialog *LoginOrRegisterDialog::getLoginDialog() const
+{
+	return loginDialog;
 }
