@@ -33,7 +33,8 @@ SOURCES += \
     registerdialog.cpp \
     user.cpp \
     simplifieduserinfowidget.cpp \
-    loginorregisterdialog.cpp
+    loginorregisterdialog.cpp \
+    detaileduserinfodialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -44,7 +45,8 @@ HEADERS += \
     registerdialog.h \
     user.h \
     simplifieduserinfowidget.h \
-    loginorregisterdialog.h
+    loginorregisterdialog.h \
+    detaileduserinfodialog.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

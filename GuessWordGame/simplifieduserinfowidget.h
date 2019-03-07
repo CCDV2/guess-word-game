@@ -8,9 +8,13 @@
 #include<QPixmap>
 #include<QGridLayout>
 #include<QStackedWidget>
+#include<QStackedLayout>
+#include<QMouseEvent>
+#include<QHBoxLayout>
 #include"user.h"
 #include"loginorregisterdialog.h"
 #include"databaseserver.h"
+#include"detaileduserinfodialog.h"
 
 class SimplifiedUserInfoWidget: public QWidget
 {
@@ -23,10 +27,13 @@ public:
 	LoginOrRegisterDialog *getLoginOrRegisterDialog() const;
 
 	void showUserInfo(Player player, Questioner questioner);
+signals:
+	void requireUserInfo();
 public slots:
-
+	void receiveUserInfo(Player player, Questioner questioner);
 private slots:
 	void showLoginOrRegisterWindow();
+	void showDetailedInfo();
 private:
 	void createWidget();
 	void createLayout();
@@ -34,9 +41,11 @@ private:
 
 	QLabel *userNameLabel, *levelLabel, *mainUserStateLabel;
 	QProgressBar *levelBar;
-	QPushButton *loginOrRegisterButton;
+	QPushButton *loginOrRegisterButton, *showDetailButton;
 	QPixmap *avatorPixmap;
 	QStackedWidget *stateOrButtonWidget;
+	QWidget *stateWidget;
+	QHBoxLayout *stateLayout;
 
 	LoginOrRegisterDialog *loginOrRegisterDialog;
 

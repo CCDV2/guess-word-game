@@ -17,11 +17,18 @@ void SimplifiedUserInfoWidget::showLoginOrRegisterWindow()
 	loginOrRegisterDialog->exec();
 }
 
+void SimplifiedUserInfoWidget::showDetailedInfo()
+{
+	emit requireUserInfo();
+	// after receive userinfo, use receiveUserInfo() to show the detailed widget
+}
+
+
 void SimplifiedUserInfoWidget::showUserInfo(Player player, Questioner questioner)
 {
 	userNameLabel->setText(player.getUserName());
 	loginOrRegisterButton->setVisible(false);
-	stateOrButtonWidget->setCurrentWidget(mainUserStateLabel);
+	stateOrButtonWidget->setCurrentWidget(stateWidget);
 	levelLabel->setVisible(true);
 	levelBar->setVisible(true);
 	levelBar->setMaximum(100);
@@ -42,17 +49,30 @@ void SimplifiedUserInfoWidget::showUserInfo(Player player, Questioner questioner
 	{
 		levelBar->setValue(i);
 	}
+	connect(this, &SimplifiedUserInfoWidget::mouseReleaseEvent, this, &SimplifiedUserInfoWidget::showDetailedInfo);
+}
+
+void SimplifiedUserInfoWidget::receiveUserInfo(Player player, Questioner questioner)
+{
+	DetailedUserInfoDialog *detailedWidget = new DetailedUserInfoDialog(player, questioner, this);
+	detailedWidget->exec();
 }
 
 void SimplifiedUserInfoWidget::createWidget()
 {
 	userNameLabel = new QLabel(tr("游客"));
 	loginOrRegisterButton = new QPushButton(tr("登录/注册"));
+	showDetailButton = new QPushButton(tr("详细"));
 	mainUserStateLabel = new QLabel();
+
+	stateWidget = new QWidget();
+	stateLayout = new QHBoxLayout(stateWidget);
+	stateLayout->addWidget(mainUserStateLabel);
+	stateLayout->addWidget(showDetailButton);
 
 	stateOrButtonWidget = new QStackedWidget();
 	stateOrButtonWidget->addWidget(loginOrRegisterButton);
-	stateOrButtonWidget->addWidget(mainUserStateLabel);
+	stateOrButtonWidget->addWidget(stateWidget);
 
 	levelLabel = new QLabel(tr("Lv"));
 	levelLabel->setVisible(false);
@@ -75,7 +95,8 @@ void SimplifiedUserInfoWidget::createConnection()
 {
 	connect(loginOrRegisterButton, &QPushButton::clicked,
 			this, &SimplifiedUserInfoWidget::showLoginOrRegisterWindow);
-
+	connect(showDetailButton, &QPushButton::clicked,
+			this, &SimplifiedUserInfoWidget::showDetailedInfo);
 }
 
 LoginOrRegisterDialog *SimplifiedUserInfoWidget::getLoginOrRegisterDialog() const

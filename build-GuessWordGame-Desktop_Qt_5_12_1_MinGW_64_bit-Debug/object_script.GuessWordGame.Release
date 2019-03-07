@@ -7,6 +7,7 @@ release/registerdialog.o
 release/user.o
 release/simplifieduserinfowidget.o
 release/loginorregisterdialog.o
+release/detaileduserinfodialog.o
 release/moc_mainwindow.o
 release/moc_databaseserver.o
 release/moc_logindialog.o

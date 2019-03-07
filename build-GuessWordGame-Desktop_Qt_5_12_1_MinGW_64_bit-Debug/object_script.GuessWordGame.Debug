@@ -7,6 +7,7 @@ debug/registerdialog.o
 debug/user.o
 debug/simplifieduserinfowidget.o
 debug/loginorregisterdialog.o
+debug/detaileduserinfodialog.o
 debug/moc_mainwindow.o
 debug/moc_databaseserver.o
 debug/moc_logindialog.o

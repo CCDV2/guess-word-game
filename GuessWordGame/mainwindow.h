@@ -7,6 +7,7 @@
 #include"gamewidget.h"
 #include"registerdialog.h"
 #include"simplifieduserinfowidget.h"
+#include"detaileduserinfodialog.h"
 #include"databaseserver.h"
 
 class MainWindow : public QMainWindow
@@ -16,10 +17,11 @@ class MainWindow : public QMainWindow
 public:
 	MainWindow(QWidget *parent = nullptr);
 	~MainWindow();
-
+signals:
+	void sendUserInfo(Player player, Questioner questioner);
 public slots:
 	void receiveUserInfo(Player _player, Questioner _questioner);
-
+	void receiveRequireForUserInfo();
 private:
 	void createWidget();
 	void createLayout();

@@ -24,8 +24,14 @@ void MainWindow::receiveUserInfo(Player _player, Questioner _questioner)
 {
 	player = new Player(_player);
 	questioner = new Questioner(_questioner);
-	simplifiedUserInfoWidget->showUserInfo(_player, _questioner);
+	simplifiedUserInfoWidget->showUserInfo(*player, *questioner);
 }
+
+void MainWindow::receiveRequireForUserInfo()
+{
+	emit sendUserInfo(*player, *questioner);
+}
+
 
 
 void MainWindow::createWidget()
@@ -52,4 +58,8 @@ void MainWindow::createLayout()
 void MainWindow::createConnection()
 {
 	connect(&DBServer, &DatabaseServer::sendUserInfo, this, &MainWindow::receiveUserInfo);
+	connect(simplifiedUserInfoWidget, &SimplifiedUserInfoWidget::requireUserInfo,
+			this, &MainWindow::receiveRequireForUserInfo);
+	connect(this, &MainWindow::sendUserInfo,
+			simplifiedUserInfoWidget, &SimplifiedUserInfoWidget::receiveUserInfo);
 }
