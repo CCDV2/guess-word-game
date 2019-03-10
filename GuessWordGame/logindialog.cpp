@@ -16,7 +16,9 @@ void LoginDialog::receiveLoginState(LoginState state)
 	switch(state)
 	{
 	case LOGIN_SUCCESS:
+		QMessageBox::information(this, tr("登录成功"), tr("登录成功，欢迎回来！"));
 		accepted();
+		close();
 		break;
 	case WRONG_PASSWORD:
 		QMessageBox::warning(this, tr("密码错误"), tr("密码错误，请重新输入密码"));

@@ -49,7 +49,6 @@ void SimplifiedUserInfoWidget::showUserInfo(Player player, Questioner questioner
 	{
 		levelBar->setValue(i);
 	}
-	connect(this, &SimplifiedUserInfoWidget::mouseReleaseEvent, this, &SimplifiedUserInfoWidget::showDetailedInfo);
 }
 
 void SimplifiedUserInfoWidget::receiveUserInfo(Player player, Questioner questioner)

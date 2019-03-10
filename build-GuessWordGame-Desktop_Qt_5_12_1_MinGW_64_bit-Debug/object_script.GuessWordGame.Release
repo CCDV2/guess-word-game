@@ -12,4 +12,5 @@ release/moc_mainwindow.o
 release/moc_databaseserver.o
 release/moc_logindialog.o
 release/moc_gamewidget.o
+release/moc_registerdialog.o
 release/moc_simplifieduserinfowidget.o

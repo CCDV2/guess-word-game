@@ -32,7 +32,7 @@ void LoginOrRegisterDialog::createWidget()
 	loginButton = new QPushButton(tr("登录"));
 	registerButton = new QPushButton(tr("注册"));
 	loginDialog = new LoginDialog(DBserver);
-	registerDialog = new RegisterDialog();
+	registerDialog = new RegisterDialog(DBserver);
 	stackWidget = new QStackedWidget();
 	stackWidget->addWidget(loginDialog);
 	stackWidget->addWidget(registerDialog);

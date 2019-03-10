@@ -12,4 +12,5 @@ debug/moc_mainwindow.o
 debug/moc_databaseserver.o
 debug/moc_logindialog.o
 debug/moc_gamewidget.o
+debug/moc_registerdialog.o
 debug/moc_simplifieduserinfowidget.o

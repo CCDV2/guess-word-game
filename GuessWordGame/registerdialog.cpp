@@ -1,10 +1,64 @@
 #include "registerdialog.h"
+#include<QMessageBox>
 
-RegisterDialog::RegisterDialog(QWidget *parent): QDialog(parent)
+RegisterDialog::RegisterDialog(DatabaseServer &_DBserver, QWidget *parent):
+	QDialog(parent), DBserver(_DBserver)
 {
 	createLabel();
 	createLayout();
 	createConnection();
+}
+
+void RegisterDialog::receiveRegisterState(RegisterState state)
+{
+	switch(state)
+	{
+	case REGISTER_SUCCESS:
+		QMessageBox::information(this, tr("注册成功"), tr("注册成功，欢迎来玩游戏！"));
+		accepted();
+		close();
+		break;
+	case USER_EXISTED:
+		QMessageBox::warning(this, tr("用户已存在"), tr("用户已存在，请起一个新的用户名"));
+		userNameLineEdit->setFocus();
+		break;
+	}
+}
+
+void RegisterDialog::on_submitButton_clicked()
+{
+	const QString userName = userNameLineEdit->text();
+	const QString password = passwordLineEdit->text();
+	const QString recheckPassword = recheckPasswordLineEdit->text();
+	if(userName.isEmpty())
+	{
+		QMessageBox::information(this, tr("请输入用户名"), tr("请先输入用户名再注册"));
+		userNameLineEdit->setFocus();
+	}
+	else if(password.isEmpty())
+	{
+		QMessageBox::information(this, tr("请输入密码"), tr("请先输入密码再注册"));
+		passwordLineEdit->setFocus();
+	}
+	else if(recheckPassword.isEmpty())
+	{
+		QMessageBox::information(this, tr("请输入确认密码"), tr("请先输入确认密码再注册"));
+		passwordLineEdit->setFocus();
+	}
+	else
+	{
+		if(password != recheckPassword)
+		{
+			QMessageBox::warning(this, tr("密码错误"), tr("两次密码不一致，请重新输入"));
+			passwordLineEdit->setFocus();
+		}
+		else
+		{
+			RegisterPackage package = LoginPackage(userName, password);
+			emit sendRegisterPackage(package);
+		}
+	}
+
 }
 
 void RegisterDialog::createLabel()
@@ -42,4 +96,7 @@ void RegisterDialog::createLayout()
 void RegisterDialog::createConnection()
 {
 	connect(cancelButton, &QPushButton::clicked, this, &RegisterDialog::reject);
+	connect(submitButton, &QPushButton::clicked, this, &RegisterDialog::on_submitButton_clicked);
+	connect(this, &RegisterDialog::sendRegisterPackage, &DBserver, &DatabaseServer::receiveRegisterPackage);
+	connect(&DBserver, &DatabaseServer::sendRegisterState, this, &RegisterDialog::receiveRegisterState);
 }

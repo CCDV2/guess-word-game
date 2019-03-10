@@ -79,7 +79,38 @@ void DatabaseServer::receiveLoginPackage(LoginPackage loginPackage)
 
 void DatabaseServer::receiveRegisterPackage(RegisterPackage registerPackage)
 {
-
+	const QString &userName = registerPackage.userName;
+	const QString &password = registerPackage.passWord;
+	if(query.exec(tr("select * from user where username='%1'").arg(userName)))
+	{
+		if(query.next())
+		{
+			emit sendRegisterState(USER_EXISTED);
+		}
+		else
+		{
+			query.prepare((tr("insert into user values(?,?,?,?,?,?,?,?)")));
+			query.bindValue(0, userName);
+			query.bindValue(1, password);
+			query.bindValue(2, 1);
+			query.bindValue(3, 0);
+			query.bindValue(4, 0);
+			query.bindValue(5, 1);
+			query.bindValue(6, 0);
+			query.bindValue(7, 0);
+			if(query.exec())
+			{
+				emit sendRegisterState(REGISTER_SUCCESS);
+				emit sendUserInfo(Player(userName, 1, 0, 0), Questioner(userName, 1, 0, 0));
+			}
+			else
+				qDebug() << query.lastError() << "query for register package failed";
+		}
+	}
+	else
+	{
+		qDebug() << query.lastError() << "query for register package failed";
+	}
 }
 
 void DatabaseServer::initDataBase()
