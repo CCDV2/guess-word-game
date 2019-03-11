@@ -84,7 +84,6 @@ WordLineEdit::WordLineEdit(QWidget *parent): QWidget(parent)
 {
 	lineEdit = new QLineEdit(this);
 	lineEdit->setEnabled(false);
-
 }
 
 void WordLineEdit::setEnabled(bool enable)

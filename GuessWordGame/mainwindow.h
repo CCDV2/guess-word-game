@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QGridLayout>
+#include<QPushButton>
+#include<QVBoxLayout>
 #include "logindialog.h"
 #include"gamewidget.h"
 #include"registerdialog.h"
@@ -22,6 +24,10 @@ signals:
 public slots:
 	void receiveUserInfo(Player _player, Questioner _questioner);
 	void receiveRequireForUserInfo();
+private slots:
+	void on_startGameButton_clicked();
+	void on_startQuestionButton_clicked();
+
 private:
 	void createWidget();
 	void createLayout();
@@ -29,10 +35,12 @@ private:
 
 	QWidget *mainWidget;
 	QGridLayout *mainLayout;
+	QVBoxLayout *buttonLayout;
 //	LoginDialog *loginWindow;
 //	RegisterDialog *registerWindow;
 	GameWidget *gameWidget;
 	SimplifiedUserInfoWidget *simplifiedUserInfoWidget;
+	QPushButton *startGameButton, *startQuestionButton;
 
 	Player *player;
 	Questioner *questioner;
