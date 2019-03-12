@@ -1,0 +1,41 @@
+#ifndef SEARCHWIDGET_H
+#define SEARCHWIDGET_H
+
+#include <QWidget>
+#include<QPushButton>
+#include<QTableWidget>
+#include<QVector>
+#include<QVBoxLayout>
+#include<QHBoxLayout>
+#include"user.h"
+#include"databaseserver.h"
+
+class SearchWidget: public QWidget
+{
+public:
+	explicit SearchWidget(DatabaseServer &_DBServer, QWidget *parent = nullptr);
+signals:	
+	void requestRankList(bool isPlayerList);
+public slots:
+	void receiveRankList(QVector<Player> players, QVector<Questioner> questioners, bool isPlayerList);
+	
+private slots:
+	void on_searchPlayerButton_clicked();
+	void on_searchQuestionerButton_clicked();
+
+private:
+	void createWidget();
+	void createLayout();
+	void createConnection();
+	
+	QPushButton *searchPlayerButton, *searchQuestionerButton;
+	QTableWidget *tableWidget;
+	QVBoxLayout *mainLayout;
+	QHBoxLayout *buttonLayout;
+	
+	
+	DatabaseServer &DBserver;
+	
+};
+
+#endif // SEARCHWIDGET_H

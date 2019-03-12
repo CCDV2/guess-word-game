@@ -1,0 +1,27 @@
+#include "searchwidget.h"
+
+SearchWidget::SearchWidget(DatabaseServer &_DBserver, QWidget *parent): 
+	QWidget(parent), DBserver(_DBserver)
+{
+	
+}
+
+void SearchWidget::createWidget()
+{
+	searchPlayerButton = new QPushButton(tr("玩家榜"));
+	searchQuestionerButton = new QPushButton(tr("出题榜"));
+	tableWidget = new QTableWidget();
+}
+
+void SearchWidget::createLayout()
+{
+	buttonLayout = new QHBoxLayout();
+	buttonLayout->addWidget(searchPlayerButton);
+	buttonLayout->addWidget(searchQuestionerButton);
+	
+	mainLayout = new QVBoxLayout(this);
+	mainLayout->addLayout(buttonLayout);
+	mainLayout->addWidget()
+}
+
+

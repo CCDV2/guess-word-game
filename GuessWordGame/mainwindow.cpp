@@ -68,6 +68,7 @@ void MainWindow::createWidget()
 	simplifiedUserInfoWidget = new SimplifiedUserInfoWidget(DBServer);
 	startGameButton = new QPushButton(tr("开始游戏"));
 	startQuestionButton = new QPushButton(tr("开始出题"));
+	ranklistWidget = new RanklistWidget(DBServer);
 }
 
 void MainWindow::createLayout()
@@ -77,7 +78,8 @@ void MainWindow::createLayout()
 //	mainLayout->addWidget(loginWindow, 0, 0);
 //	mainLayout->addWidget(registerWindow, 1, 0);
 
-	mainLayout->addWidget(gameWidget, 0, 1, 2, 1);
+	mainLayout->addWidget(gameWidget, 0, 1, 1, 1);
+	mainLayout->addWidget(ranklistWidget, 1, 1, 1, 1);
 
 	buttonLayout = new QVBoxLayout();
 	buttonLayout->addWidget(startGameButton);

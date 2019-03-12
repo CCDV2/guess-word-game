@@ -11,6 +11,7 @@
 #include"simplifieduserinfowidget.h"
 #include"detaileduserinfodialog.h"
 #include"databaseserver.h"
+#include"ranklistwidget.h"
 
 class MainWindow : public QMainWindow
 {
@@ -41,6 +42,7 @@ private:
 	GameWidget *gameWidget;
 	SimplifiedUserInfoWidget *simplifiedUserInfoWidget;
 	QPushButton *startGameButton, *startQuestionButton;
+	RanklistWidget *ranklistWidget;
 
 	Player *player;
 	Questioner *questioner;

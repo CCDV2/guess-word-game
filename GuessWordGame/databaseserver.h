@@ -22,9 +22,11 @@ signals:
 	void sendLoginState(LoginState state);
 	void sendRegisterState(RegisterState state);
 	void sendUserInfo(Player player, Questioner questioner);
+	void sendRanklist(QVector<Player> players, QVector<Questioner> questioners, bool isPlayer);
 public slots:
 	void receiveLoginPackage(LoginPackage loginPackage);
 	void receiveRegisterPackage(RegisterPackage registerPackage);
+	void receiveRanklistRequest(bool isPlayer);
 private:
 	void initDataBase();
 

@@ -113,6 +113,20 @@ void DatabaseServer::receiveRegisterPackage(RegisterPackage registerPackage)
 	}
 }
 
+void DatabaseServer::receiveRanklistRequest(bool isPlayer)
+{
+	if(isPlayer)
+	{
+		qDebug() << "search for player ranklist";
+//		emit sendRanklist(NULL, NULL, isPlayer);
+	}
+	else
+	{
+		qDebug() << "search for questioner ranklist";
+//		emit sendRanklist(NULL, NULL, isPlayer);
+	}
+}
+
 void DatabaseServer::initDataBase()
 {
 	if(query.exec(tr("select * from user where username='%1'").arg(tr("CCDV2"))))
