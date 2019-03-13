@@ -113,17 +113,352 @@ void DatabaseServer::receiveRegisterPackage(RegisterPackage registerPackage)
 	}
 }
 
-void DatabaseServer::receiveRanklistRequest(bool isPlayer)
+void DatabaseServer::receiveRanklistRequest(SortMethod sortMethod)
 {
-	if(isPlayer)
+	QVector<Player> players;
+	QVector<Questioner> questioners;
+	switch(sortMethod)
 	{
-		qDebug() << "search for player ranklist";
-//		emit sendRanklist(NULL, NULL, isPlayer);
+	// initial state, should not be received
+	case NULL_SORT:
+		qDebug() << "error receiving NULL_SORT";
+		break;
+	// player part
+	case PLAYER_LEVEL_DESC:
+		if(query.exec(tr("select * from user order by playerlevel desc, playerexp desc")))
+		{
+			while(query.next())
+			{
+				players.push_back(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()));
+				questioners.push_back(Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			emit sendRanklist(players, questioners, sortMethod);
+		}
+		else
+			qDebug() << query.lastError() << "query for player ranklist failed: level desc";
+		break;
+	case PLAYER_LEVEL_ASC:
+		if(query.exec(tr("select * from user order by playerlevel asc, playerexp asc")))
+		{
+			while(query.next())
+			{
+				players.push_back(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()));
+				questioners.push_back(Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			emit sendRanklist(players, questioners, sortMethod);
+		}
+		else
+			qDebug() << query.lastError() << "query for player ranklist failed: level asc";
+		break;
+	case PLAYER_NAME_DESC:
+		if(query.exec(tr("select * from user order by username desc")))
+		{
+			while(query.next())
+			{
+				players.push_back(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()));
+				questioners.push_back(Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			emit sendRanklist(players, questioners, sortMethod);
+		}
+		else
+			qDebug() << query.lastError() << "query for player ranklist failed: username desc";
+		break;
+	case PLAYER_NAME_ASC:
+		if(query.exec(tr("select * from user order by username asc")))
+		{
+			while(query.next())
+			{
+				players.push_back(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()));
+				questioners.push_back(Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			emit sendRanklist(players, questioners, sortMethod);
+		}
+		else
+			qDebug() << query.lastError() << "query for player ranklist failed: username asc";
+		break;
+	case PLAYER_NUM_DESC:
+		if(query.exec(tr("select * from user order by playernum desc")))
+		{
+			while(query.next())
+			{
+				players.push_back(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()));
+				questioners.push_back(Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			emit sendRanklist(players, questioners, sortMethod);
+		}
+		else
+			qDebug() << query.lastError() << "query for player ranklist failed: playernum desc";
+		break;
+	case PLAYER_NUM_ASC:
+		if(query.exec(tr("select * from user order by playernum asc")))
+		{
+			while(query.next())
+			{
+				players.push_back(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()));
+				questioners.push_back(Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			emit sendRanklist(players, questioners, sortMethod);
+		}
+		else
+			qDebug() << query.lastError() << "query for player ranklist failed: playernum asc";
+		break;
+	// questioner part
+	case QUESTIONER_LEVEL_DESC:
+		if(query.exec(tr("select * from user order by questionerlevel desc, questionerexp desc")))
+		{
+			while(query.next())
+			{
+				players.push_back(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()));
+				questioners.push_back(Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			emit sendRanklist(players, questioners, sortMethod);
+		}
+		else
+			qDebug() << query.lastError() << "query for questioner ranklist failed: level desc";
+		break;
+	case QUESTIONER_LEVEL_ASC:
+		if(query.exec(tr("select * from user order by questionerlevel asc, questionerexp asc")))
+		{
+			while(query.next())
+			{
+				players.push_back(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()));
+				questioners.push_back(Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			emit sendRanklist(players, questioners, sortMethod);
+		}
+		else
+			qDebug() << query.lastError() << "query for questioner ranklist failed: level asc";
+		break;
+	case QUESTIONER_NAME_DESC:
+		if(query.exec(tr("select * from user order by username desc")))
+		{
+			while(query.next())
+			{
+				players.push_back(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()));
+				questioners.push_back(Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			emit sendRanklist(players, questioners, sortMethod);
+		}
+		else
+			qDebug() << query.lastError() << "query for questioner ranklist failed: username desc";
+		break;
+	case QUESTIONER_NAME_ASC:
+		if(query.exec(tr("select * from user order by username asc")))
+		{
+			while(query.next())
+			{
+				players.push_back(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()));
+				questioners.push_back(Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			emit sendRanklist(players, questioners, sortMethod);
+		}
+		else
+			qDebug() << query.lastError() << "query for questioner ranklist failed: username asc";
+		break;
+	case QUESTIONER_NUM_DESC:
+		if(query.exec(tr("select * from user order by questionernum desc")))
+		{
+			while(query.next())
+			{
+				players.push_back(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()));
+				questioners.push_back(Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			emit sendRanklist(players, questioners, sortMethod);
+		}
+		else
+			qDebug() << query.lastError() << "query for qeustioner ranklist failed: questionernum desc";
+		break;
+	case QUESTIONER_NUM_ASC:
+		if(query.exec(tr("select * from user order by questionernum asc")))
+		{
+			while(query.next())
+			{
+				players.push_back(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()));
+				questioners.push_back(Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			emit sendRanklist(players, questioners, sortMethod);
+		}
+		else
+			qDebug() << query.lastError() << "query for qeustioner ranklist failed: questionernum asc";
+		break;
 	}
-	else
+}
+
+void DatabaseServer::receiveDetailInfoRequest(SortMethod sortMethod, int index)
+{
+	switch(sortMethod)
 	{
-		qDebug() << "search for questioner ranklist";
-//		emit sendRanklist(NULL, NULL, isPlayer);
+	case NULL_SORT:
+		qDebug() << "error: receive NULL_SORT";
+		break;
+	case PLAYER_LEVEL_DESC:
+		if(query.exec(tr("select * from user order by playerlevel desc limit %1, 1").arg(index)))
+		{
+			if(query.next())
+			{
+				emit sendDetailInfo(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+								  Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			else
+				qDebug() << query.lastError() << "no detail user info... error";
+		}
+		else
+			qDebug() << query.lastError() << "get detail failed for player level";
+		break;
+	case PLAYER_LEVEL_ASC:
+		if(query.exec(tr("select * from user order by playerlevel asc limit %1, 1").arg(index)))
+		{
+			if(query.next())
+			{
+				emit sendDetailInfo(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+								  Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			else
+				qDebug() << query.lastError() << "no detail user info... error";
+		}
+		else
+			qDebug() << query.lastError() << "get detail failed for player level";
+		break;
+	case PLAYER_NAME_DESC:
+		if(query.exec(tr("select * from user order by username desc limit %1, 1").arg(index)))
+		{
+			if(query.next())
+			{
+				emit sendDetailInfo(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+								  Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			else
+				qDebug() << query.lastError() << "no detail user info... error";
+		}
+		else
+			qDebug() << query.lastError() << "get detail failed for username";
+		break;
+	case PLAYER_NAME_ASC:
+		if(query.exec(tr("select * from user order by username asc limit %1, 1").arg(index)))
+		{
+			if(query.next())
+			{
+				emit sendDetailInfo(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+								  Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			else
+				qDebug() << query.lastError() << "no detail user info... error";
+		}
+		else
+			qDebug() << query.lastError() << "get detail failed for username";
+		break;
+	case PLAYER_NUM_DESC:
+		if(query.exec(tr("select * from user order by playernum desc limit %1, 1").arg(index)))
+		{
+			if(query.next())
+			{
+				emit sendDetailInfo(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+								  Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			else
+				qDebug() << query.lastError() << "no detail user info... error";
+		}
+		else
+			qDebug() << query.lastError() << "get detail failed for player num";
+		break;
+	case PLAYER_NUM_ASC:
+		if(query.exec(tr("select * from user order by playernum asc limit %1, 1").arg(index)))
+		{
+			if(query.next())
+			{
+				emit sendDetailInfo(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+								  Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			else
+				qDebug() << query.lastError() << "no detail user info... error";
+		}
+		else
+			qDebug() << query.lastError() << "get detail failed for player num";
+		break;
+	case QUESTIONER_LEVEL_DESC:
+		if(query.exec(tr("select * from user order by questionerlevel desc limit %1, 1").arg(index)))
+		{
+			if(query.next())
+			{
+				emit sendDetailInfo(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+								  Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			else
+				qDebug() << query.lastError() << "no detail user info... error";
+		}
+		else
+			qDebug() << query.lastError() << "get detail failed for questioner level";
+		break;
+	case QUESTIONER_LEVEL_ASC:
+		if(query.exec(tr("select * from user order by questionerlevel asc limit %1, 1").arg(index)))
+		{
+			if(query.next())
+			{
+				emit sendDetailInfo(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+								  Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			else
+				qDebug() << query.lastError() << "no detail user info... error";
+		}
+		else
+			qDebug() << query.lastError() << "get detail failed for questioner level";
+		break;
+	case QUESTIONER_NAME_DESC:
+		if(query.exec(tr("select * from user order by username desc limit %1, 1").arg(index)))
+		{
+			if(query.next())
+			{
+				emit sendDetailInfo(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+								  Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			else
+				qDebug() << query.lastError() << "no detail user info... error";
+		}
+		else
+			qDebug() << query.lastError() << "get detail failed for username";
+		break;
+	case QUESTIONER_NAME_ASC:
+		if(query.exec(tr("select * from user order by username asc limit %1, 1").arg(index)))
+		{
+			if(query.next())
+			{
+				emit sendDetailInfo(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+								  Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			else
+				qDebug() << query.lastError() << "no detail user info... error";
+		}
+		else
+			qDebug() << query.lastError() << "get detail failed for username";
+		break;
+	case QUESTIONER_NUM_DESC:
+		if(query.exec(tr("select * from user order by questionernum desc limit %1, 1").arg(index)))
+		{
+			if(query.next())
+			{
+				emit sendDetailInfo(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+								  Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			else
+				qDebug() << query.lastError() << "no detail user info... error";
+		}
+		else
+			qDebug() << query.lastError() << "get detail failed for questioner num";
+		break;
+	case QUESTIONER_NUM_ASC:
+		if(query.exec(tr("select * from user order by questionernum asc limit %1, 1").arg(index)))
+		{
+			if(query.next())
+			{
+				emit sendDetailInfo(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+								  Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			}
+			else
+				qDebug() << query.lastError() << "no detail user info... error";
+		}
+		else
+			qDebug() << query.lastError() << "get detail failed for questioner num";
+		break;
 	}
 }
 

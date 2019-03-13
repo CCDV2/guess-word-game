@@ -18,7 +18,7 @@ class Player: public User
 {
 
 public:
-	Player(QString _userName, int _level, int _experience, int _playNum);
+	Player(QString _userName = "", int _level = 0, int _experience = 0, int _playNum = 0);
 
 	int getLevel() const;
 
@@ -42,7 +42,7 @@ class Questioner: public User
 {
 
 public:
-	Questioner(QString _userName, int _level, int _experience, int _questionNum);
+	Questioner(QString _userName = "", int _level = 0, int _experience = 0, int _questionNum = 0);
 
 	int getLevel() const;
 	void setLevel(int value);
