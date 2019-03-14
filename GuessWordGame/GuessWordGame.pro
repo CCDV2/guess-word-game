@@ -35,7 +35,9 @@ SOURCES += \
     simplifieduserinfowidget.cpp \
     loginorregisterdialog.cpp \
     detaileduserinfodialog.cpp \
-    ranklistwidget.cpp
+    ranklistwidget.cpp \
+    word.cpp \
+    questionwidget.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -48,11 +50,16 @@ HEADERS += \
     simplifieduserinfowidget.h \
     loginorregisterdialog.h \
     detaileduserinfodialog.h \
-    ranklistwidget.h
+    ranklistwidget.h \
+    word.h \
+    questionwidget.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    img.qrc
 
 

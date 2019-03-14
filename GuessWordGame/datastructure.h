@@ -44,5 +44,27 @@ enum SortMethod
 	QUESTIONER_NUM_ASC
 };
 
+enum GameLevel
+{
+	EASY,
+	NORMAL,
+	HARD,
+	EXPERT
+};
+
+const int LEVEL_TIME_TABLE[] =
+{
+	0,
+	5500, //level 1
+	5000, //level 2
+	4500, //level 3
+	4000, //level 4
+	3500, //level 5
+	3000, //level 6
+	2500, //level 7
+	2000, //level 8
+	1500, //level 9
+	1000, //level 10
+};
 
 #endif // DATASTRUCTURE_H

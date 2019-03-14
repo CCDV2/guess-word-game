@@ -462,8 +462,24 @@ void DatabaseServer::receiveDetailInfoRequest(SortMethod sortMethod, int index)
 	}
 }
 
+void DatabaseServer::receiveWordListRequest(GameLevel level)
+{
+	QVector<Word> words;
+	if(query.exec(tr("select * from wordlist")))
+	{
+		while(query.next())
+		{
+			words.push_back(Word(query.value(0).toString(), query.value(1).toInt()));
+		}
+		emit sendWordList(words);
+	}
+	else
+		qDebug() << query.lastError() << "get wordlist failed";
+}
+
 void DatabaseServer::initDataBase()
 {
+	// init user
 	if(query.exec(tr("select * from user where username='%1'").arg(tr("CCDV2"))))
 	{
 		if(!query.next())
@@ -487,5 +503,29 @@ void DatabaseServer::initDataBase()
 		}
 	}
 	else
-		qDebug() << query.lastError() << "init database failed";
+		qDebug() << query.lastError() << "init user database failed";
+	// init wordlist
+	if(query.exec(tr("select * from wordlist where word='%1'").arg(tr("apple"))))
+	{
+		if(!query.next())
+		{
+			query.prepare(tr("insert into wordlist values(?,?)"));
+			for(auto word : initWords)
+			{
+				query.bindValue(0, word.getWord());
+				query.bindValue(1, word.getLevel());
+				if(query.exec())
+				{
+					qDebug() << "init insert into wordlist success!";
+				}
+				else
+					qDebug() << query.lastError() << "insert into init wordlist failed";
+			}
+		}
+		else
+			qDebug() << "wordlist already existed";
+	}
+	else
+		qDebug() << query.lastError() << "init wordlist database failed";
+
 }

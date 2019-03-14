@@ -7,7 +7,6 @@ SimplifiedUserInfoWidget::SimplifiedUserInfoWidget(DatabaseServer &_DBserver, QW
 	createWidget();
 	createLayout();
 	createConnection();
-	setFixedSize(this->size());
 }
 
 

@@ -9,6 +9,9 @@ debug/simplifieduserinfowidget.o
 debug/loginorregisterdialog.o
 debug/detaileduserinfodialog.o
 debug/ranklistwidget.o
+debug/word.o
+debug/questionwidget.o
+debug/qrc_img.o
 debug/moc_mainwindow.o
 debug/moc_databaseserver.o
 debug/moc_logindialog.o
@@ -16,3 +19,4 @@ debug/moc_gamewidget.o
 debug/moc_registerdialog.o
 debug/moc_simplifieduserinfowidget.o
 debug/moc_ranklistwidget.o
+debug/moc_questionwidget.o

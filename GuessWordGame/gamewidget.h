@@ -11,21 +11,61 @@
 #include<QPalette>
 #include<QStackedWidget>
 #include<QKeyEvent>
+#include"datastructure.h"
+#include"word.h"
+#include"databaseserver.h"
 
 class WordLineEdit;
+
+struct GameCache
+{
+public:
+	void setWords(QVector<Word> _words);
+
+	bool nextWord();
+	QString getCurrentWord() const;
+	int getCurrentLevel() const;
+	void increaseExp(int incExp);
+	void increaseCorrectNum(int inc = 1);
+	void increaseWrongNum(int inc = 1);
+	bool decreaseTimeLength(int dec = 1);
+	void reset();
+	bool isReady();
+	int getTimeLength() const;
+
+	int getCorrectNum() const;
+
+	int getWrongNum() const;
+
+private:
+	int timeLength;
+
+	QVector<Word> words;
+	int wordi;
+
+	int correctNum, wrongNum;
+	int expGained;
+	bool ready;
+};
+
 
 class GameWidget: public QWidget
 {
 	Q_OBJECT
 public:
-	GameWidget(QWidget *parent = nullptr);
-
+	GameWidget(DatabaseServer &_DBserver, QWidget *parent = nullptr);
+	void startGame(GameLevel level);
+	void endGame();
 public slots:
-	void receiveWord(QString);
+	void receiveWord(QString); // the word from line edit
+	void receiveWordList(QVector<Word> _words);
+signals:
+	void requestWordList(GameLevel level);
+	void wordCorrectChecked(bool isCorrect);
 
 private slots:
-	void showWordLineEdit();
 	void updateCountDown();
+	void nextWord(bool isLastCorrect);
 
 private:
 	void createWidget();
@@ -33,6 +73,8 @@ private:
 	void createConnection();
 
 	void startCountDown();
+	void showWordLineEdit();
+	void showCountDownBar();
 
 	QVBoxLayout *mainLayout;
 	QTimer countDownTimer;
@@ -40,7 +82,10 @@ private:
 	QLabel *wordLabel, *levelLabel;
 	WordLineEdit *wordLineEdit;
 	QStackedWidget *wordStackedWidget;
-	int timeLength;
+
+	GameCache gameCache;
+
+	DatabaseServer &DBserver;
 };
 
 class WordLineEdit: public QWidget
@@ -57,5 +102,7 @@ private slots:
 private:
 	QLineEdit *lineEdit;
 };
+
+
 
 #endif // GAMEWIDGET_H
