@@ -465,12 +465,29 @@ void DatabaseServer::receiveDetailInfoRequest(SortMethod sortMethod, int index)
 void DatabaseServer::receiveWordListRequest(GameLevel level)
 {
 	QVector<Word> words;
-	if(query.exec(tr("select * from wordlist")))
+	QString levelRange;
+	switch(level)
+	{
+	case EASY:
+		levelRange = tr("level between 1 and 3");
+		break;
+	case NORMAL:
+		levelRange = tr("level between 4 and 6");
+		break;
+	case HARD:
+		levelRange = tr("level between 7 and 9");
+		break;
+	case EXPERT:
+		levelRange = tr("level >= 8");
+		break;
+	}
+	if(query.exec(tr("select * from wordlist where %1 order by random() limit 5").arg(levelRange)))
 	{
 		while(query.next())
 		{
 			words.push_back(Word(query.value(0).toString(), query.value(1).toInt()));
 		}
+		qDebug() << "Receive " << words.size() << "words";
 		emit sendWordList(words);
 	}
 	else

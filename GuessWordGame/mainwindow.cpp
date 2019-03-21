@@ -41,7 +41,6 @@ void MainWindow::on_startGameButton_clicked()
 	else
 	{
 		stackWidget->setCurrentWidget(widget[1]);
-		gameWidget->startGame(EASY);
 	}
 }
 
