@@ -148,7 +148,7 @@ void MainWindow::createLayout()
 	widgetLayout[0]->addLayout(buttonLayout, 1);
 
 //	game select widget
-	widgetLayout[1]->addWidget(gameModeSelectWidget);
+	widgetLayout[1]->addWidget(gameModeSelectWidget, 1, Qt::AlignCenter);
 	widgetLayout[1]->addWidget(backButton[0], 0, Qt::AlignBottom | Qt::AlignRight);
 
 //	game widget
