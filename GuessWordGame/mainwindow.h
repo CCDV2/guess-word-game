@@ -15,6 +15,7 @@
 #include"databaseserver.h"
 #include"ranklistwidget.h"
 #include"questionwidget.h"
+#include"gamemodeselectwidget.h"
 
 class MainWindow : public QMainWindow
 {
@@ -34,6 +35,7 @@ private slots:
 	void on_startQuestionButton_clicked();
 	void on_startRanklistButton_clicked();
 	void backToWelcomeWidget();
+	void receiveGameMode(GameLevel level);
 private:
 	void createWidget();
 	void createLayout();
@@ -45,6 +47,7 @@ private:
 //	LoginDialog *loginWindow;
 //	RegisterDialog *registerWindow;
 	GameWidget *gameWidget;
+	GameModeSelectWidget *gameModeSelectWidget;
 	SimplifiedUserInfoWidget *simplifiedUserInfoWidget;
 	QPushButton *startGameButton, *startQuestionButton, *startRanklistButton;
 	QuestionWidget *questionWidget;

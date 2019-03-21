@@ -55,16 +55,16 @@ enum GameLevel
 const int LEVEL_TIME_TABLE[] =
 {
 	0,
-	5500, //level 1
-	5000, //level 2
-	4500, //level 3
-	4000, //level 4
-	3500, //level 5
-	3000, //level 6
-	2500, //level 7
-	2000, //level 8
-	1500, //level 9
-	1000, //level 10
+	2750, //level 1
+	2500, //level 2
+	2250, //level 3
+	2000, //level 4
+	1750, //level 5
+	1500, //level 6
+	1250, //level 7
+	1000, //level 8
+	750, //level 9
+	500, //level 10
 };
 
 #endif // DATASTRUCTURE_H

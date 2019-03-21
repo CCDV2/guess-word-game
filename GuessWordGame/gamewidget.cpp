@@ -1,6 +1,7 @@
 #include "gamewidget.h"
 #include<QDebug>
 #include<QThread>
+#include<QMessageBox>
 
 const int TIME_INTERVAL = 20;
 
@@ -25,9 +26,8 @@ void GameWidget::startGame(GameLevel level)
 
 void GameWidget::endGame()
 {
-	qDebug() << "Game finished!";
-	qDebug() << "correct:" << gameCache.getCorrectNum();
-	qDebug() << "wrong:" << gameCache.getWrongNum();
+	QMessageBox::information(this, tr("游戏结束"), \
+							 tr("游戏结束\n您答对单词：%1个\n答错单词：%2个\n").arg(gameCache.getCorrectNum()).arg(gameCache.getWrongNum()));
 }
 
 void GameWidget::showWordLineEdit()

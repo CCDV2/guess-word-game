@@ -37,7 +37,8 @@ SOURCES += \
     detaileduserinfodialog.cpp \
     ranklistwidget.cpp \
     word.cpp \
-    questionwidget.cpp
+    questionwidget.cpp \
+    gamemodeselectwidget.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -52,7 +53,8 @@ HEADERS += \
     detaileduserinfodialog.h \
     ranklistwidget.h \
     word.h \
-    questionwidget.h
+    questionwidget.h \
+    gamemodeselectwidget.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -61,5 +63,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     img.qrc
+
 
 

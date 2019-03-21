@@ -11,6 +11,7 @@ release/detaileduserinfodialog.o
 release/ranklistwidget.o
 release/word.o
 release/questionwidget.o
+release/gamemodeselectwidget.o
 release/qrc_img.o
 release/moc_mainwindow.o
 release/moc_databaseserver.o
@@ -20,3 +21,4 @@ release/moc_registerdialog.o
 release/moc_simplifieduserinfowidget.o
 release/moc_ranklistwidget.o
 release/moc_questionwidget.o
+release/moc_gamemodeselectwidget.o

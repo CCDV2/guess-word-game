@@ -477,6 +477,32 @@ void DatabaseServer::receiveWordListRequest(GameLevel level)
 		qDebug() << query.lastError() << "get wordlist failed";
 }
 
+void DatabaseServer::receiveQuestionWordList(QVector<Word> words)
+{
+	int cnt = 0;
+	for(auto word: words)
+	{
+		if(query.exec(tr("select * from wordlist where word='%1'").arg(word.getWord())))
+		{
+			if(!query.next())
+			{
+				query.prepare(tr("insert into wordlist values(?,?)"));
+				query.bindValue(0, word.getWord());
+				query.bindValue(1, word.getLevel());
+				if(query.exec())
+				{
+					++cnt;
+				}
+				else
+					qDebug() << query.lastError() << "question word insert failed";
+			}
+		}
+		else
+			qDebug() << query.lastError() << "qeustion wordlist search failed";
+	}
+	emit sendAddedWords(cnt);
+}
+
 void DatabaseServer::initDataBase()
 {
 	// init user

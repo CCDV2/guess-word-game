@@ -11,6 +11,7 @@ debug/detaileduserinfodialog.o
 debug/ranklistwidget.o
 debug/word.o
 debug/questionwidget.o
+debug/gamemodeselectwidget.o
 debug/qrc_img.o
 debug/moc_mainwindow.o
 debug/moc_databaseserver.o
@@ -20,3 +21,4 @@ debug/moc_registerdialog.o
 debug/moc_simplifieduserinfowidget.o
 debug/moc_ranklistwidget.o
 debug/moc_questionwidget.o
+debug/moc_gamemodeselectwidget.o

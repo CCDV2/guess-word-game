@@ -40,7 +40,7 @@ void MainWindow::on_startGameButton_clicked()
 	}
 	else
 	{
-		stackWidget->setCurrentWidget(widget[2]);
+		stackWidget->setCurrentWidget(widget[1]);
 		gameWidget->startGame(EASY);
 	}
 }
@@ -74,6 +74,12 @@ void MainWindow::backToWelcomeWidget()
 	stackWidget->setCurrentWidget(widget[0]);
 }
 
+void MainWindow::receiveGameMode(GameLevel level)
+{
+	stackWidget->setCurrentWidget(widget[2]);
+	gameWidget->startGame(level);
+}
+
 
 
 void MainWindow::createWidget()
@@ -97,6 +103,7 @@ void MainWindow::createWidget()
 	widget[0] = new QWidget();
 
 //	game mode select widget
+	gameModeSelectWidget = new GameModeSelectWidget();
 	backButton[0] = new QPushButton(tr("返回"));
 	widget[1] = new QWidget();
 
@@ -142,6 +149,7 @@ void MainWindow::createLayout()
 	widgetLayout[0]->addLayout(buttonLayout, 1);
 
 //	game select widget
+	widgetLayout[1]->addWidget(gameModeSelectWidget);
 	widgetLayout[1]->addWidget(backButton[0], 0, Qt::AlignBottom | Qt::AlignRight);
 
 //	game widget
@@ -169,6 +177,7 @@ void MainWindow::createConnection()
 	connect(this, &MainWindow::sendUserInfo,
 			simplifiedUserInfoWidget, &SimplifiedUserInfoWidget::receiveUserInfo);
 	connect(startGameButton, &QPushButton::clicked, this, &MainWindow::on_startGameButton_clicked);
+	connect(gameModeSelectWidget, &GameModeSelectWidget::sendGameMode, this, &MainWindow::receiveGameMode);
 	connect(startQuestionButton, &QPushButton::clicked, this, &MainWindow::on_startQuestionButton_clicked);
 	connect(startRanklistButton, &QPushButton::clicked, this, &MainWindow::on_startRanklistButton_clicked);
 
