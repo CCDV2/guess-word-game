@@ -22,6 +22,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::receiveUserInfo(Player _player, Questioner _questioner)
 {
+	if(player != nullptr) delete player;
+	if(questioner != nullptr) delete questioner;
 	player = new Player(_player);
 	questioner = new Questioner(_questioner);
 	simplifiedUserInfoWidget->showUserInfo(*player, *questioner);
@@ -30,6 +32,19 @@ void MainWindow::receiveUserInfo(Player _player, Questioner _questioner)
 void MainWindow::receiveRequireForUserInfo()
 {
 	emit sendUserInfo(*player, *questioner);
+}
+
+void MainWindow::receiveRequireForQuestionerName()
+{
+	if(questioner == nullptr)
+	{
+		qDebug() << "questioner not created error";
+		emit sendQuestionerName(tr(""));
+	}
+	else
+	{
+		emit sendQuestionerName(questioner->getUserName());
+	}
 }
 
 void MainWindow::on_startGameButton_clicked()
@@ -76,7 +91,7 @@ void MainWindow::backToWelcomeWidget()
 void MainWindow::receiveGameMode(GameLevel level)
 {
 	stackWidget->setCurrentWidget(widget[2]);
-	gameWidget->startGame(level);
+	gameWidget->startGame(*player, level);
 }
 
 
@@ -170,16 +185,25 @@ void MainWindow::createLayout()
 
 void MainWindow::createConnection()
 {
+	// use in login
 	connect(&DBServer, &DatabaseServer::sendUserInfo, this, &MainWindow::receiveUserInfo);
 	connect(simplifiedUserInfoWidget, &SimplifiedUserInfoWidget::requireUserInfo,
 			this, &MainWindow::receiveRequireForUserInfo);
+
+	// use for detail uesr info
 	connect(this, &MainWindow::sendUserInfo,
 			simplifiedUserInfoWidget, &SimplifiedUserInfoWidget::receiveUserInfo);
+
+	// use for questioner widget
+	connect(questionWidget, &QuestionWidget::requireQuestionerName, this, &MainWindow::receiveRequireForQuestionerName);
+	connect(this, &MainWindow::sendQuestionerName, questionWidget, &QuestionWidget::receiveQuestionerName);
+
 	connect(startGameButton, &QPushButton::clicked, this, &MainWindow::on_startGameButton_clicked);
 	connect(gameModeSelectWidget, &GameModeSelectWidget::sendGameMode, this, &MainWindow::receiveGameMode);
 	connect(startQuestionButton, &QPushButton::clicked, this, &MainWindow::on_startQuestionButton_clicked);
 	connect(startRanklistButton, &QPushButton::clicked, this, &MainWindow::on_startRanklistButton_clicked);
 
+	connect(gameWidget, &GameWidget::toMainWindow, this, &MainWindow::backToWelcomeWidget);
 	for(int i = 0; i < 4; ++i)
 	{
 		connect(backButton[i], &QPushButton::clicked, this, &MainWindow::backToWelcomeWidget);

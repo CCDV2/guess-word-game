@@ -46,10 +46,10 @@ enum SortMethod
 
 enum GameLevel
 {
-	EASY,
-	NORMAL,
-	HARD,
-	EXPERT
+	EASY = 0,
+	NORMAL = 1,
+	HARD = 2,
+	EXPERT = 3
 };
 
 const int LEVEL_TIME_TABLE[] =
@@ -65,6 +65,39 @@ const int LEVEL_TIME_TABLE[] =
 	1000, //level 8
 	750, //level 9
 	500, //level 10
+};
+
+const double DIFFICULTY_SCALE_TABLE[] =
+{
+	1.00,
+	1.05,
+	1.10,
+	1.15
+};
+
+const int TIME_INTERVAL = 20;
+
+inline int getLevelMaxExp(int level)
+{
+	// 0~100: lv * 100
+	// 100~300: lv * 50 + 5000
+	// 300+: 20000
+	return level <= 100 ? level * 100 : (level <= 300 ? 5000 + level * 50 : 20000);
+}
+
+const double LEVEL_SCALE_TABLE[] =
+{
+	0,
+	1.01, //level 1
+	1.02, //level 2
+	1.03, //level 3
+	1.04, //level 4
+	1.05, //level 5
+	1.06, //level 6
+	1.07, //level 7
+	1.08, //level 8
+	1.09, //level 9
+	1.10, //level 10
 };
 
 #endif // DATASTRUCTURE_H

@@ -12,6 +12,8 @@ debug/ranklistwidget.o
 debug/word.o
 debug/questionwidget.o
 debug/gamemodeselectwidget.o
+debug/endgamedialog.o
+debug/gamecache.o
 debug/qrc_img.o
 debug/moc_mainwindow.o
 debug/moc_databaseserver.o

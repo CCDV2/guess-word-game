@@ -2,6 +2,7 @@
 #define GAMEWIDGET_H
 
 #include <QWidget>
+#include<QDialog>
 #include<QProgressBar>
 #include<QLabel>
 #include<QLineEdit>
@@ -14,39 +15,11 @@
 #include"datastructure.h"
 #include"word.h"
 #include"databaseserver.h"
+#include"endgamedialog.h"
+#include"gamecache.h"
+
 
 class WordLineEdit;
-
-struct GameCache
-{
-public:
-	void setWords(QVector<Word> _words);
-
-	bool nextWord();
-	QString getCurrentWord() const;
-	int getCurrentLevel() const;
-	void increaseExp(int incExp);
-	void increaseCorrectNum(int inc = 1);
-	void increaseWrongNum(int inc = 1);
-	bool decreaseTimeLength(int dec = 1);
-	void reset();
-	bool isReady();
-	int getTimeLength() const;
-
-	int getCorrectNum() const;
-
-	int getWrongNum() const;
-
-private:
-	int timeLength;
-
-	QVector<Word> words;
-	int wordi;
-
-	int correctNum, wrongNum;
-	int expGained;
-	bool ready;
-};
 
 
 class GameWidget: public QWidget
@@ -54,14 +27,23 @@ class GameWidget: public QWidget
 	Q_OBJECT
 public:
 	GameWidget(DatabaseServer &_DBserver, QWidget *parent = nullptr);
-	void startGame(GameLevel level);
+	void startGame(Player _player, GameLevel level);
 	void endGame();
 public slots:
 	void receiveWord(QString); // the word from line edit
 	void receiveWordList(QVector<Word> _words);
+	void receiveShowEndGameDialog();
 signals:
+	// to datbase
 	void requestWordList(GameLevel level);
+	// to this(self)
 	void wordCorrectChecked(bool isCorrect);
+	// to database
+	void updateUserExp(QString playerName, int expGained, int problemNum);
+	// to mainwindow
+	void toMainWindow();
+
+
 
 private slots:
 	void updateCountDown();
@@ -86,6 +68,7 @@ private:
 	GameCache gameCache;
 
 	DatabaseServer &DBserver;
+	Player player;
 };
 
 class WordLineEdit: public QWidget

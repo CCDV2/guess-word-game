@@ -26,10 +26,14 @@ public:
 	~MainWindow();
 signals:
 	void sendUserInfo(Player player, Questioner questioner);
-	void sendUpdateUserInfo(Player player, Questioner questioner);
+	void sendQuestionerName(QString _questionerName);
 public slots:
 	void receiveUserInfo(Player _player, Questioner _questioner);
+	// to detial user info
 	void receiveRequireForUserInfo();
+	// to questioner
+	void receiveRequireForQuestionerName();
+
 private slots:
 	void on_startGameButton_clicked();
 	void on_startQuestionButton_clicked();

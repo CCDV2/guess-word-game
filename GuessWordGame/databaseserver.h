@@ -38,7 +38,7 @@ signals:
 	void sendWordList(QVector<Word> words);
 
 	// to questionWidget.cpp
-	void sendAddedWords(int count);
+	void sendAddedWords(int count, int expGained);
 
 public slots:
 	// from loginDialog.cpp
@@ -53,12 +53,16 @@ public slots:
 
 	// from gameWidget.cpp
 	void receiveWordListRequest(GameLevel level);
+	void receiveUpdatedExp(QString playerName, int expGained, int problemNum);
 
 	// from questionWidget.cpp
-	void receiveQuestionWordList(QVector<Word> words);
+	void receiveQuestionWordList(QVector<Word> words, QString questioner);
 
 private:
 	void initDataBase();
+	static bool isLevelup(int curLevel, int &exp);
+
+
 
 	QSqlDatabase db;
 	QSqlQuery query;

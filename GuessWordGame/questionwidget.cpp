@@ -4,25 +4,32 @@
 #include<QModelIndex>
 #include<QMessageBox>
 #include<QFileDialog>
+#include<QThread>
 
 QuestionWidget::QuestionWidget(DatabaseServer &_DBserver, QWidget *parent):
 	QWidget(parent), DBserver(_DBserver)
 {
+	questionerName = "";
 	createWidget();
 	createLayout();
 	createConnection();
 }
 
-void QuestionWidget::receiveAddedWords(int count)
+void QuestionWidget::receiveAddedWords(int count, int expGained)
 {
-	QMessageBox::information(this, tr("导入成功"), tr("您成功导入了%1个单词").arg(count));
+	QMessageBox::information(this, tr("导入成功"), tr("您成功导入了%1个单词\n增加经验：%2").arg(count).arg(expGained));
+}
+
+void QuestionWidget::receiveQuestionerName(QString _questionerName)
+{
+	questionerName = _questionerName;
 }
 
 void QuestionWidget::createWidget()
 {
-	importButton = new QPushButton(tr("导入并提交"));
+	importButton = new QPushButton(tr("导入"));
 	submitButton = new QPushButton(tr("提交"));
-	checkButton = new QPushButton(tr("检查"));
+	clearButton = new QPushButton(tr("清空"));
 
 	tableWidget = new QTableWidget();
 	tableWidget->setSortingEnabled(true);
@@ -37,7 +44,7 @@ void QuestionWidget::createLayout()
 {
 	buttonLayout = new QHBoxLayout();
 	buttonLayout->addWidget(importButton);
-	buttonLayout->addWidget(checkButton);
+	buttonLayout->addWidget(clearButton);
 	buttonLayout->addWidget(submitButton);
 
 	mainLayout = new QVBoxLayout(this);
@@ -48,6 +55,7 @@ void QuestionWidget::createLayout()
 void QuestionWidget::createConnection()
 {
 	connect(submitButton, &QPushButton::clicked, this, &QuestionWidget::on_submitButton_clicked);
+	connect(clearButton, &QPushButton::clicked, this, &QuestionWidget::on_clearButton_clicked);
 	connect(importButton, &QPushButton::clicked, this, &QuestionWidget::on_importButton_clicked);
 	connect(this, &QuestionWidget::sendQuestionWordList, &DBserver, &DatabaseServer::receiveQuestionWordList);
 	connect(&DBserver, &DatabaseServer::sendAddedWords, this, &QuestionWidget::receiveAddedWords);
@@ -92,9 +100,20 @@ void QuestionWidget::on_importButton_clicked()
 	}
 }
 
+void QuestionWidget::on_clearButton_clicked()
+{
+	tableWidget->clearContents();
+}
+
 void QuestionWidget::on_submitButton_clicked()
 {
 	QVector<Word> words;
+	emit requireQuestionerName();
+	while(questionerName.isEmpty())
+	{
+		QThread::sleep(100);
+		qDebug() << "waiting";
+	}
 	for(int i = 0; i < tableWidget->rowCount(); ++i)
 	{
 		if(tableWidget->item(i, 0) == nullptr || tableWidget->item(i, 1) == nullptr) continue;
@@ -105,7 +124,7 @@ void QuestionWidget::on_submitButton_clicked()
 		if(!ok) continue;
 		words.push_back(Word(word, level));
 	}
-	emit sendQuestionWordList(words);
+	emit sendQuestionWordList(words, questionerName);
 }
 
 void QuestionWidget::keyPressEvent(QKeyEvent *event)

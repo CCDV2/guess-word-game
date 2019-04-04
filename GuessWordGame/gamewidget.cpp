@@ -2,8 +2,9 @@
 #include<QDebug>
 #include<QThread>
 #include<QMessageBox>
+#include<iostream>
+using std::max;
 
-const int TIME_INTERVAL = 20;
 
 GameWidget::GameWidget(DatabaseServer &_DBserver, QWidget *parent):
 	QWidget(parent), DBserver(_DBserver)
@@ -18,16 +19,24 @@ GameWidget::GameWidget(DatabaseServer &_DBserver, QWidget *parent):
 	createConnection();
 }
 
-void GameWidget::startGame(GameLevel level)
+void GameWidget::startGame(Player _player, GameLevel level)
 {
-	gameCache.reset();
+	player = _player;
+	gameCache.reset(level);
 	emit requestWordList(level);
 }
 
 void GameWidget::endGame()
-{
-	QMessageBox::information(this, tr("游戏结束"), \
-							 tr("游戏结束\n您答对单词：%1个\n答错单词：%2个\n").arg(gameCache.getCorrectNum()).arg(gameCache.getWrongNum()));
+{	
+	double difficultyScale = DIFFICULTY_SCALE_TABLE[gameCache.getLevel()];
+	double expGained = 50 * (max(gameCache.getCorrectNum() - gameCache.getWrongNum(), 0))
+			* difficultyScale;
+	gameCache.setExpGained(static_cast<int>(expGained));
+	emit updateUserExp(player.getUserName(), gameCache.getExpGained(), gameCache.getCorrectNum());
+	// TODO
+	EndGameDialog *endGameDialog = new EndGameDialog(gameCache, this);
+	endGameDialog->exec();
+	emit toMainWindow();
 }
 
 void GameWidget::showWordLineEdit()
@@ -102,6 +111,11 @@ void GameWidget::receiveWordList(QVector<Word> words)
 	nextWord(true);
 }
 
+void GameWidget::receiveShowEndGameDialog()
+{
+
+}
+
 void GameWidget::createWidget()
 {
 	wordLabel = new QLabel(tr("abandon"));
@@ -134,6 +148,7 @@ void GameWidget::createConnection()
 	connect(this, &GameWidget::requestWordList, &DBserver, &DatabaseServer::receiveWordListRequest);
 	connect(&DBserver, &DatabaseServer::sendWordList, this, &GameWidget::receiveWordList);
 	connect(this, &GameWidget::wordCorrectChecked, this, &GameWidget::nextWord);
+	connect(this, &GameWidget::updateUserExp, &DBserver, &DatabaseServer::receiveUpdatedExp);
 }
 
 void GameWidget::startCountDown()
@@ -170,80 +185,4 @@ void WordLineEdit::keyPressEvent(QKeyEvent *event)
 }
 
 
-// GameCahe class
-void GameCache::setWords(QVector<Word> _words)
-{
-	words = _words;
-	ready = true;
-}
-
-bool GameCache::nextWord()
-{
-	++wordi;
-	if(wordi == words.length()) return false;
-	timeLength = LEVEL_TIME_TABLE[words[wordi].getLevel()] / TIME_INTERVAL;
-	return true;
-}
-
-QString GameCache::getCurrentWord() const
-{
-	return words[wordi].getWord();
-}
-
-int GameCache::getCurrentLevel() const
-{
-	return words[wordi].getLevel();
-}
-
-void GameCache::increaseExp(int incExp)
-{
-	expGained += incExp;
-}
-
-void GameCache::increaseCorrectNum(int inc)
-{
-	correctNum += inc;
-}
-
-void GameCache::increaseWrongNum(int inc)
-{
-	wrongNum += inc;
-}
-
-bool GameCache::decreaseTimeLength(int dec)
-{
-	timeLength -= dec;
-	if(timeLength <= 0) return false;
-	else return true;
-}
-
-void GameCache::reset()
-{
-	wordi = -1;
-	correctNum = -1;
-	wrongNum = 0;
-	expGained = 0;
-	timeLength = 0;
-	ready = false;
-}
-
-bool GameCache::isReady()
-{
-	return ready;
-}
-
-int GameCache::getTimeLength() const
-{
-	return timeLength;
-}
-
-int GameCache::getCorrectNum() const
-{
-	return correctNum;
-}
-
-int GameCache::getWrongNum() const
-{
-	return wrongNum;
-}
 

@@ -31,18 +31,21 @@ void SimplifiedUserInfoWidget::showUserInfo(Player player, Questioner questioner
 	stateOrButtonWidget->setCurrentWidget(stateWidget);
 	levelLabel->setVisible(true);
 	levelBar->setVisible(true);
-	levelBar->setMaximum(100);
 	int currentExp;
 	if(player.getLevel() >= questioner.getLevel())
 	{
 		mainUserStateLabel->setText(tr("主业：挑战者"));
 		levelLabel->setText(tr("Lv. %1").arg(player.getLevel()));
+		levelBar->setMaximum(getLevelMaxExp(player.getLevel()));
+		levelBar->setFormat(tr("%1/%2").arg(player.getExperience()).arg(getLevelMaxExp(player.getLevel())));
 		currentExp = player.getExperience();
 	}
 	else
 	{
 		mainUserStateLabel->setText(tr("主业：出题者"));
 		levelLabel->setText(tr("Lv. %1").arg(questioner.getLevel()));
+		levelBar->setMaximum(getLevelMaxExp(questioner.getLevel()));
+		levelBar->setFormat(tr("%1/%2").arg(questioner.getExperience()).arg(getLevelMaxExp(questioner.getLevel())));
 		currentExp = player.getExperience();
 	}
 	for(int i = 0; i <= currentExp; ++i)

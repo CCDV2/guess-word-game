@@ -38,7 +38,9 @@ SOURCES += \
     ranklistwidget.cpp \
     word.cpp \
     questionwidget.cpp \
-    gamemodeselectwidget.cpp
+    gamemodeselectwidget.cpp \
+    endgamedialog.cpp \
+    gamecache.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -54,7 +56,9 @@ HEADERS += \
     ranklistwidget.h \
     word.h \
     questionwidget.h \
-    gamemodeselectwidget.h
+    gamemodeselectwidget.h \
+    endgamedialog.h \
+    gamecache.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

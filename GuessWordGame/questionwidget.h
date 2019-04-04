@@ -1,4 +1,4 @@
-#ifndef QUESTIONWIDGET_H
+﻿#ifndef QUESTIONWIDGET_H
 #define QUESTIONWIDGET_H
 
 #include <QWidget>
@@ -16,9 +16,13 @@ class QuestionWidget: public QWidget
 public:
 	explicit QuestionWidget(DatabaseServer &_DBserver ,QWidget *parent = nullptr);
 signals:
-	void sendQuestionWordList(QVector<Word> words);
+	// to database
+	void sendQuestionWordList(QVector<Word> words, QString questionerName);
+	// to mainwindow
+	void requireQuestionerName();
 public slots:
-	void receiveAddedWords(int count);
+	void receiveAddedWords(int count, int expGained);
+	void receiveQuestionerName(QString _questionerName);
 private:	
 	void createWidget();
 	void createLayout();
@@ -26,17 +30,19 @@ private:
 
 	void showImportDialog(QVector<Word> words);
 	void on_importButton_clicked();
+	void on_clearButton_clicked();
 	void on_submitButton_clicked();
 
 	void keyPressEvent(QKeyEvent *event);
 	void addNewLine();
 
-	QPushButton *importButton, *submitButton, *checkButton;
+	QPushButton *importButton, *submitButton, *clearButton;
 	QTableWidget *tableWidget;
 	QHBoxLayout *buttonLayout;
 	QVBoxLayout *mainLayout;
 
 	DatabaseServer &DBserver;
+	QString questionerName;
 };
 
 #endif // QUESTIONWIDGET_H

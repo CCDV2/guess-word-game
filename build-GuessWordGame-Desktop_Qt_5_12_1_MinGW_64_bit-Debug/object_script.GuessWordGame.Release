@@ -12,6 +12,8 @@ release/ranklistwidget.o
 release/word.o
 release/questionwidget.o
 release/gamemodeselectwidget.o
+release/endgamedialog.o
+release/gamecache.o
 release/qrc_img.o
 release/moc_mainwindow.o
 release/moc_databaseserver.o

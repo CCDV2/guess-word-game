@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[19];
-    char stringdata0[283];
+    QByteArrayData data[21];
+    char stringdata0[331];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -38,24 +38,27 @@ QT_MOC_LITERAL(3, 25, 6), // "Player"
 QT_MOC_LITERAL(4, 32, 6), // "player"
 QT_MOC_LITERAL(5, 39, 10), // "Questioner"
 QT_MOC_LITERAL(6, 50, 10), // "questioner"
-QT_MOC_LITERAL(7, 61, 18), // "sendUpdateUserInfo"
-QT_MOC_LITERAL(8, 80, 15), // "receiveUserInfo"
-QT_MOC_LITERAL(9, 96, 7), // "_player"
-QT_MOC_LITERAL(10, 104, 11), // "_questioner"
-QT_MOC_LITERAL(11, 116, 25), // "receiveRequireForUserInfo"
-QT_MOC_LITERAL(12, 142, 26), // "on_startGameButton_clicked"
-QT_MOC_LITERAL(13, 169, 30), // "on_startQuestionButton_clicked"
-QT_MOC_LITERAL(14, 200, 30), // "on_startRanklistButton_clicked"
-QT_MOC_LITERAL(15, 231, 19), // "backToWelcomeWidget"
-QT_MOC_LITERAL(16, 251, 15), // "receiveGameMode"
-QT_MOC_LITERAL(17, 267, 9), // "GameLevel"
-QT_MOC_LITERAL(18, 277, 5) // "level"
+QT_MOC_LITERAL(7, 61, 18), // "sendQuestionerName"
+QT_MOC_LITERAL(8, 80, 15), // "_questionerName"
+QT_MOC_LITERAL(9, 96, 15), // "receiveUserInfo"
+QT_MOC_LITERAL(10, 112, 7), // "_player"
+QT_MOC_LITERAL(11, 120, 11), // "_questioner"
+QT_MOC_LITERAL(12, 132, 25), // "receiveRequireForUserInfo"
+QT_MOC_LITERAL(13, 158, 31), // "receiveRequireForQuestionerName"
+QT_MOC_LITERAL(14, 190, 26), // "on_startGameButton_clicked"
+QT_MOC_LITERAL(15, 217, 30), // "on_startQuestionButton_clicked"
+QT_MOC_LITERAL(16, 248, 30), // "on_startRanklistButton_clicked"
+QT_MOC_LITERAL(17, 279, 19), // "backToWelcomeWidget"
+QT_MOC_LITERAL(18, 299, 15), // "receiveGameMode"
+QT_MOC_LITERAL(19, 315, 9), // "GameLevel"
+QT_MOC_LITERAL(20, 325, 5) // "level"
 
     },
     "MainWindow\0sendUserInfo\0\0Player\0player\0"
-    "Questioner\0questioner\0sendUpdateUserInfo\0"
-    "receiveUserInfo\0_player\0_questioner\0"
-    "receiveRequireForUserInfo\0"
+    "Questioner\0questioner\0sendQuestionerName\0"
+    "_questionerName\0receiveUserInfo\0_player\0"
+    "_questioner\0receiveRequireForUserInfo\0"
+    "receiveRequireForQuestionerName\0"
     "on_startGameButton_clicked\0"
     "on_startQuestionButton_clicked\0"
     "on_startRanklistButton_clicked\0"
@@ -70,7 +73,7 @@ static const uint qt_meta_data_MainWindow[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       9,   14, // methods
+      10,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -78,30 +81,32 @@ static const uint qt_meta_data_MainWindow[] = {
        2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    2,   59,    2, 0x06 /* Public */,
-       7,    2,   64,    2, 0x06 /* Public */,
+       1,    2,   64,    2, 0x06 /* Public */,
+       7,    1,   69,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       8,    2,   69,    2, 0x0a /* Public */,
-      11,    0,   74,    2, 0x0a /* Public */,
-      12,    0,   75,    2, 0x08 /* Private */,
-      13,    0,   76,    2, 0x08 /* Private */,
-      14,    0,   77,    2, 0x08 /* Private */,
-      15,    0,   78,    2, 0x08 /* Private */,
-      16,    1,   79,    2, 0x08 /* Private */,
+       9,    2,   72,    2, 0x0a /* Public */,
+      12,    0,   77,    2, 0x0a /* Public */,
+      13,    0,   78,    2, 0x0a /* Public */,
+      14,    0,   79,    2, 0x08 /* Private */,
+      15,    0,   80,    2, 0x08 /* Private */,
+      16,    0,   81,    2, 0x08 /* Private */,
+      17,    0,   82,    2, 0x08 /* Private */,
+      18,    1,   83,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3, 0x80000000 | 5,    4,    6,
-    QMetaType::Void, 0x80000000 | 3, 0x80000000 | 5,    4,    6,
+    QMetaType::Void, QMetaType::QString,    8,
 
  // slots: parameters
-    QMetaType::Void, 0x80000000 | 3, 0x80000000 | 5,    9,   10,
+    QMetaType::Void, 0x80000000 | 3, 0x80000000 | 5,   10,   11,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 17,   18,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 19,   20,
 
        0        // eod
 };
@@ -113,14 +118,15 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->sendUserInfo((*reinterpret_cast< Player(*)>(_a[1])),(*reinterpret_cast< Questioner(*)>(_a[2]))); break;
-        case 1: _t->sendUpdateUserInfo((*reinterpret_cast< Player(*)>(_a[1])),(*reinterpret_cast< Questioner(*)>(_a[2]))); break;
+        case 1: _t->sendQuestionerName((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 2: _t->receiveUserInfo((*reinterpret_cast< Player(*)>(_a[1])),(*reinterpret_cast< Questioner(*)>(_a[2]))); break;
         case 3: _t->receiveRequireForUserInfo(); break;
-        case 4: _t->on_startGameButton_clicked(); break;
-        case 5: _t->on_startQuestionButton_clicked(); break;
-        case 6: _t->on_startRanklistButton_clicked(); break;
-        case 7: _t->backToWelcomeWidget(); break;
-        case 8: _t->receiveGameMode((*reinterpret_cast< GameLevel(*)>(_a[1]))); break;
+        case 4: _t->receiveRequireForQuestionerName(); break;
+        case 5: _t->on_startGameButton_clicked(); break;
+        case 6: _t->on_startQuestionButton_clicked(); break;
+        case 7: _t->on_startRanklistButton_clicked(); break;
+        case 8: _t->backToWelcomeWidget(); break;
+        case 9: _t->receiveGameMode((*reinterpret_cast< GameLevel(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -133,8 +139,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
             }
         }
         {
-            using _t = void (MainWindow::*)(Player , Questioner );
-            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&MainWindow::sendUpdateUserInfo)) {
+            using _t = void (MainWindow::*)(QString );
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&MainWindow::sendQuestionerName)) {
                 *result = 1;
                 return;
             }
@@ -171,13 +177,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 9)
+        if (_id < 10)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 9;
+        _id -= 10;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 9)
+        if (_id < 10)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 9;
+        _id -= 10;
     }
     return _id;
 }
@@ -190,9 +196,9 @@ void MainWindow::sendUserInfo(Player _t1, Questioner _t2)
 }
 
 // SIGNAL 1
-void MainWindow::sendUpdateUserInfo(Player _t1, Questioner _t2)
+void MainWindow::sendQuestionerName(QString _t1)
 {
-    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 QT_WARNING_POP
