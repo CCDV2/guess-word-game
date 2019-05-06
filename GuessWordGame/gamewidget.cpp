@@ -43,12 +43,14 @@ void GameWidget::showWordLineEdit()
 {
 	wordStackedWidget->setCurrentWidget(wordLineEdit);
 	wordLineEdit->setEnabled(true);
+//	wordLineEdit->setVisible(true);
 	wordLineEdit->setFocus();
 }
 
 void GameWidget::showCountDownBar()
 {
 	wordStackedWidget->setCurrentWidget(wordLabel);
+//	wordLineEdit->setVisible(false);
 	wordLineEdit->setEnabled(false);
 }
 
@@ -122,10 +124,10 @@ void GameWidget::createWidget()
 	levelLabel = new QLabel(tr("Level 0"));
 	countDownBar = new QProgressBar();
 	wordLineEdit = new WordLineEdit();
-	wordLineEdit->resize(wordLineEdit->maximumSize());
+//	wordLineEdit->resize(200, 100);
 
 	wordStackedWidget = new QStackedWidget();
-	wordStackedWidget->resize(wordStackedWidget->maximumSize());
+//	wordStackedWidget->resize(wordStackedWidget->maximumSize());
 	wordStackedWidget->addWidget(wordLabel);
 	wordStackedWidget->addWidget(wordLineEdit);
 }
@@ -134,9 +136,9 @@ void GameWidget::createWidget()
 void GameWidget::createLayout()
 {
 	mainLayout = new QVBoxLayout(this);
-	mainLayout->addWidget(levelLabel, 0, Qt::AlignLeft);
-	mainLayout->addWidget(countDownBar, 0, Qt::AlignCenter);
-	mainLayout->addWidget(wordStackedWidget, 0, Qt::AlignCenter);
+	mainLayout->addWidget(levelLabel, 1, Qt::AlignLeft);
+	mainLayout->addWidget(countDownBar, 5, Qt::AlignCenter);
+	mainLayout->addWidget(wordStackedWidget, 4, Qt::AlignCenter);
 
 	setLayout(mainLayout);
 }
@@ -162,7 +164,9 @@ void GameWidget::startCountDown()
 // WordLineEdit class
 WordLineEdit::WordLineEdit(QWidget *parent): QWidget(parent)
 {
-	lineEdit = new QLineEdit(this);
+	QVBoxLayout *mainLayout = new QVBoxLayout(this);
+	lineEdit = new QLineEdit();
+	mainLayout->addWidget(lineEdit, 0, Qt::AlignCenter);
 	lineEdit->setEnabled(false);
 }
 
@@ -170,6 +174,12 @@ void WordLineEdit::setEnabled(bool enable)
 {
 	lineEdit->setEnabled(enable);
 }
+
+void WordLineEdit::setFocus()
+{
+	lineEdit->setFocus();
+}
+
 
 void WordLineEdit::keyPressEvent(QKeyEvent *event)
 {

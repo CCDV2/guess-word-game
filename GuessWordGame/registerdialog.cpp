@@ -96,6 +96,7 @@ void RegisterDialog::createLayout()
 void RegisterDialog::createConnection()
 {
 	connect(cancelButton, &QPushButton::clicked, this, &RegisterDialog::reject);
+	connect(recheckPasswordLineEdit, &QLineEdit::returnPressed, this, &RegisterDialog::on_submitButton_clicked);
 	connect(submitButton, &QPushButton::clicked, this, &RegisterDialog::on_submitButton_clicked);
 	connect(this, &RegisterDialog::sendRegisterPackage, &DBserver, &DatabaseServer::receiveRegisterPackage);
 	connect(&DBserver, &DatabaseServer::sendRegisterState, this, &RegisterDialog::receiveRegisterState);

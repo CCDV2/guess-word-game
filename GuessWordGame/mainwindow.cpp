@@ -10,6 +10,12 @@ MainWindow::MainWindow(QWidget *parent)
 	createWidget();
 	createLayout();
 	createConnection();
+//	QFile styleSheet(":/qss/qss/style.qss");
+//	if (!styleSheet.open(QIODevice::ReadOnly))
+//	{
+//		qDebug("Can't open the style sheet file.");
+//	}
+//	setStyleSheet(styleSheet.readAll());
 	player = nullptr;
 	questioner = nullptr;
 }
@@ -156,9 +162,9 @@ void MainWindow::createLayout()
 
 //	welcome widget
 	buttonLayout = new QVBoxLayout();
-	buttonLayout->addWidget(startGameButton, 0, Qt::AlignTop);
-	buttonLayout->addWidget(startQuestionButton, 0, Qt::AlignTop);
-	buttonLayout->addWidget(startRanklistButton, 0, Qt::AlignTop);
+	buttonLayout->addWidget(startGameButton, 1, Qt::AlignCenter);
+	buttonLayout->addWidget(startQuestionButton, 1, Qt::AlignCenter);
+	buttonLayout->addWidget(startRanklistButton, 1, Qt::AlignCenter);
 	widgetLayout[0]->addWidget(logoLabel, 4);
 	widgetLayout[0]->addLayout(buttonLayout, 1);
 

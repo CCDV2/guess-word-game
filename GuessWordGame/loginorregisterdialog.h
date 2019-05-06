@@ -9,6 +9,7 @@
 #include<QHBoxLayout>
 #include<QVBoxLayout>
 #include"databaseserver.h"
+#include<QTabWidget>
 
 class LoginOrRegisterDialog: public QDialog
 {
@@ -25,13 +26,14 @@ private:
 	void createLayout();
 	void createConnection();
 
+	QTabWidget *tabWidget;
 	LoginDialog *loginDialog;
 	RegisterDialog *registerDialog;
-	QStackedWidget *stackWidget;
-	QPushButton *loginButton, *registerButton;
+//	QStackedWidget *stackWidget;
+//	QPushButton *loginButton, *registerButton;
 
 	QVBoxLayout *mainLayout;
-	QHBoxLayout *switchButtonLayout;
+//	QHBoxLayout *switchButtonLayout;
 
 	bool isInLoginDialog;
 

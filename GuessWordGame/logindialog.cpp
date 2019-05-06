@@ -64,6 +64,7 @@ void LoginDialog::createLayout()
 
 void LoginDialog::createConnection()
 {
+	connect(passWordLineEdit, &QLineEdit::returnPressed, this, &LoginDialog::on_submitButton_clicked);
 	connect(submitButton, &QPushButton::clicked, this, &LoginDialog::on_submitButton_clicked);
 	connect(cancelButton, &QPushButton::clicked, this, &LoginDialog::reject);
 	connect(this, &LoginDialog::sendLoginPackage, &DBserver, &DatabaseServer::receiveLoginPackage);

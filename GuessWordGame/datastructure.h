@@ -100,4 +100,7 @@ const double LEVEL_SCALE_TABLE[] =
 	1.10, //level 10
 };
 
+const int MIN_WORD_LEVEL = 1;
+const int MAX_WORD_LEVEL = 10;
+
 #endif // DATASTRUCTURE_H

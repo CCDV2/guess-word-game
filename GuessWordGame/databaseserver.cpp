@@ -480,7 +480,7 @@ void DatabaseServer::receiveWordListRequest(GameLevel level)
 		levelRange = tr("level between 7 and 9");
 		break;
 	case EXPERT:
-		levelRange = tr("level >= 8");
+		levelRange = tr("level between 8 and 10");
 		break;
 	}
 	if(query.exec(tr("select * from wordlist where %1 order by random() limit 5").arg(levelRange)))

@@ -103,6 +103,7 @@ void QuestionWidget::on_importButton_clicked()
 void QuestionWidget::on_clearButton_clicked()
 {
 	tableWidget->clearContents();
+	tableWidget->setRowCount(1);
 }
 
 void QuestionWidget::on_submitButton_clicked()
@@ -122,6 +123,7 @@ void QuestionWidget::on_submitButton_clicked()
 		bool ok;
 		int level = tableWidget->item(i, 1)->text().toInt(&ok);
 		if(!ok) continue;
+		if(level < MIN_WORD_LEVEL || level > MAX_WORD_LEVEL) continue;
 		words.push_back(Word(word, level));
 	}
 	emit sendQuestionWordList(words, questionerName);

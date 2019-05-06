@@ -77,6 +77,7 @@ class WordLineEdit: public QWidget
 public:
 	WordLineEdit(QWidget *parent = nullptr);
 	void setEnabled(bool enable);
+	void setFocus();
 signals:
 	void sendWord(QString);
 

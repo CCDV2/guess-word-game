@@ -3,4 +3,8 @@
         <file alias="Logo">img/5701.png</file>
         <file>img/20130707105529296.jpg</file>
     </qresource>
+    <qresource prefix="/qss">
+        <file>qss/style.qss</file>
+        <file>qss/style2.qss</file>
+    </qresource>
 </RCC>

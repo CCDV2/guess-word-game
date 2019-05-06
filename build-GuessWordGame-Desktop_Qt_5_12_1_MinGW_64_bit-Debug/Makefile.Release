@@ -175,7 +175,8 @@ compiler_rcc_clean:
 release/qrc_img.cpp: ../GuessWordGame/img.qrc \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/bin/rcc.exe \
 		../GuessWordGame/img/5701.png \
-		../GuessWordGame/img/20130707105529296.jpg
+		../GuessWordGame/img/20130707105529296.jpg \
+		../GuessWordGame/qss/style.qss
 	D:\Qt\Qt5.12.1\5.12.1\mingw73_64\bin\rcc.exe -name img ..\GuessWordGame\img.qrc -o release\qrc_img.cpp
 
 compiler_moc_predefs_make_all: release/moc_predefs.h
@@ -356,6 +357,7 @@ release/moc_mainwindow.cpp: ../GuessWordGame/mainwindow.h \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QStackedLayout \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/qstackedlayout.h \
 		../GuessWordGame/loginorregisterdialog.h \
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QTabWidget \
 		../GuessWordGame/detaileduserinfodialog.h \
 		../GuessWordGame/ranklistwidget.h \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QTableWidget \
@@ -1081,6 +1083,8 @@ release/moc_simplifieduserinfowidget.cpp: ../GuessWordGame/simplifieduserinfowid
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtCore/QtDebug \
 		../GuessWordGame/registerdialog.h \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QVBoxLayout \
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QTabWidget \
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/qtabwidget.h \
 		../GuessWordGame/detaileduserinfodialog.h \
 		release/moc_predefs.h \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/bin/moc.exe
@@ -1718,6 +1722,7 @@ release/main.o: ../GuessWordGame/main.cpp ../GuessWordGame/mainwindow.h \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QStackedLayout \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/qstackedlayout.h \
 		../GuessWordGame/loginorregisterdialog.h \
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QTabWidget \
 		../GuessWordGame/detaileduserinfodialog.h \
 		../GuessWordGame/ranklistwidget.h \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QTableWidget \
@@ -1918,6 +1923,7 @@ release/mainwindow.o: ../GuessWordGame/mainwindow.cpp ../GuessWordGame/mainwindo
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QStackedLayout \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/qstackedlayout.h \
 		../GuessWordGame/loginorregisterdialog.h \
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QTabWidget \
 		../GuessWordGame/detaileduserinfodialog.h \
 		../GuessWordGame/ranklistwidget.h \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QTableWidget \
@@ -2026,7 +2032,9 @@ release/databaseserver.o: ../GuessWordGame/databaseserver.cpp ../GuessWordGame/d
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtCore/qset.h \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtCore/qcontiguouscache.h \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtCore/qsharedpointer.h \
-		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtCore/qsharedpointer_impl.h
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtCore/qsharedpointer_impl.h \
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtCore/QTime \
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtCore/qdatetime.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\databaseserver.o ..\GuessWordGame\databaseserver.cpp
 
 release/logindialog.o: ../GuessWordGame/logindialog.cpp ../GuessWordGame/logindialog.h \
@@ -2679,6 +2687,8 @@ release/simplifieduserinfowidget.o: ../GuessWordGame/simplifieduserinfowidget.cp
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtCore/QtDebug \
 		../GuessWordGame/registerdialog.h \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QVBoxLayout \
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QTabWidget \
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/qtabwidget.h \
 		../GuessWordGame/detaileduserinfodialog.h \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\simplifieduserinfowidget.o ..\GuessWordGame\simplifieduserinfowidget.cpp
@@ -2832,7 +2842,9 @@ release/loginorregisterdialog.o: ../GuessWordGame/loginorregisterdialog.cpp ../G
 		../GuessWordGame/registerdialog.h \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QStackedWidget \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/qstackedwidget.h \
-		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QVBoxLayout
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QVBoxLayout \
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QTabWidget \
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/qtabwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\loginorregisterdialog.o ..\GuessWordGame\loginorregisterdialog.cpp
 
 release/detaileduserinfodialog.o: ../GuessWordGame/detaileduserinfodialog.cpp ../GuessWordGame/detaileduserinfodialog.h \
@@ -2953,7 +2965,8 @@ release/detaileduserinfodialog.o: ../GuessWordGame/detaileduserinfodialog.cpp ..
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QHBoxLayout \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QProgressBar \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/qprogressbar.h \
-		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QVBoxLayout
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QVBoxLayout \
+		../GuessWordGame/datastructure.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\detaileduserinfodialog.o ..\GuessWordGame\detaileduserinfodialog.cpp
 
 release/ranklistwidget.o: ../GuessWordGame/ranklistwidget.cpp ../GuessWordGame/ranklistwidget.h \
@@ -3342,7 +3355,9 @@ release/questionwidget.o: ../GuessWordGame/questionwidget.cpp ../GuessWordGame/q
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/QFileDialog \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtWidgets/qfiledialog.h \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtCore/qdir.h \
-		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtCore/qfileinfo.h
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtCore/qfileinfo.h \
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtCore/QThread \
+		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/include/QtCore/qthread.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\questionwidget.o ..\GuessWordGame\questionwidget.cpp
 
 release/gamemodeselectwidget.o: ../GuessWordGame/gamemodeselectwidget.cpp ../GuessWordGame/gamemodeselectwidget.h \
