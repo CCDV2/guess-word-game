@@ -11,6 +11,7 @@ DetailedUserInfoDialog::DetailedUserInfoDialog(Player player, Questioner questio
 	playerLevelLabel = new QLabel(tr("Lv. %1").arg(player.getLevel()));
 	playerNumLabel = new QLabel(tr("已闯关关卡数: %1").arg(player.getPlayNum()));
 	playerBar = new QProgressBar();
+	playerBar->setObjectName(levelBarName);
 	playerBar->setMaximum(getLevelMaxExp(player.getLevel()));
 	playerBar->setValue(player.getExperience());
 	playerBar->setFormat(tr("%1/%2").arg(player.getExperience()).arg(getLevelMaxExp(player.getLevel())));
@@ -19,6 +20,7 @@ DetailedUserInfoDialog::DetailedUserInfoDialog(Player player, Questioner questio
 	questionerLevelLabel = new QLabel(tr("Lv. %1").arg(questioner.getLevel()));
 	questionerNumLabel = new QLabel(tr("已出题题数: %1").arg(questioner.getQuestionNum()));
 	questionerBar = new QProgressBar();
+	questionerBar->setObjectName(levelBarName);
 	questionerBar->setMaximum(getLevelMaxExp(questioner.getLevel()));
 	questionerBar->setValue(questioner.getExperience());
 	questionerBar->setFormat(tr("%1/%2").arg(questioner.getExperience()).arg(getLevelMaxExp(questioner.getLevel())));

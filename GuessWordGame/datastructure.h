@@ -103,4 +103,8 @@ const double LEVEL_SCALE_TABLE[] =
 const int MIN_WORD_LEVEL = 1;
 const int MAX_WORD_LEVEL = 10;
 
+// used for qss selection
+const QString levelBarName = "levelBar";
+const QString moduleWidgetName = "ModuleWidget";
+
 #endif // DATASTRUCTURE_H

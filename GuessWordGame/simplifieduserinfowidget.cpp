@@ -1,5 +1,7 @@
 #include "simplifieduserinfowidget.h"
 #include<QDebug>
+#include<QStyleOption>
+#include<QPainter>
 
 SimplifiedUserInfoWidget::SimplifiedUserInfoWidget(DatabaseServer &_DBserver, QWidget *parent):
 	QWidget(parent), DBserver(_DBserver)
@@ -7,6 +9,7 @@ SimplifiedUserInfoWidget::SimplifiedUserInfoWidget(DatabaseServer &_DBserver, QW
 	createWidget();
 	createLayout();
 	createConnection();
+
 }
 
 
@@ -60,6 +63,15 @@ void SimplifiedUserInfoWidget::receiveUserInfo(Player player, Questioner questio
 	detailedWidget->exec();
 }
 
+void SimplifiedUserInfoWidget::paintEvent(QPaintEvent *event)
+{
+	Q_UNUSED(event);
+	QStyleOption styleOpt;
+	styleOpt.init(this);
+	QPainter painter(this);
+	style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
+}
+
 void SimplifiedUserInfoWidget::createWidget()
 {
 	userNameLabel = new QLabel(tr("游客"));
@@ -79,6 +91,7 @@ void SimplifiedUserInfoWidget::createWidget()
 	levelLabel = new QLabel(tr("Lv"));
 	levelLabel->setVisible(false);
 	levelBar = new QProgressBar();
+	levelBar->setObjectName(levelBarName);
 	levelBar->setVisible(false);
 	avatorPixmap = new QPixmap();
 }

@@ -23,7 +23,7 @@ signals:
 public slots:
 	void receiveRanklist(QVector<Player> players, QVector<Questioner> questioners, SortMethod sortMethod);
 	void receiveDetailInfo(Player player, Questioner questioner);
-
+	void paintEvent(QPaintEvent *event);
 private slots:
 	void on_searchPlayerButton_clicked();
 	void on_searchQuestionerButton_clicked();

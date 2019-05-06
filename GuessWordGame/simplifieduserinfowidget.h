@@ -31,6 +31,7 @@ signals:
 	void requireUserInfo();
 public slots:
 	void receiveUserInfo(Player player, Questioner questioner);
+	void paintEvent(QPaintEvent *event);
 private slots:
 	void showLoginOrRegisterWindow();
 	void showDetailedInfo();

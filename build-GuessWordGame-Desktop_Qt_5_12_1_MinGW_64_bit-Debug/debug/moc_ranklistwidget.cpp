@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_RanklistWidget_t {
-    QByteArrayData data[24];
-    char stringdata0[349];
+    QByteArrayData data[27];
+    char stringdata0[379];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -49,13 +49,16 @@ QT_MOC_LITERAL(13, 168, 6), // "Player"
 QT_MOC_LITERAL(14, 175, 6), // "player"
 QT_MOC_LITERAL(15, 182, 10), // "Questioner"
 QT_MOC_LITERAL(16, 193, 10), // "questioner"
-QT_MOC_LITERAL(17, 204, 29), // "on_searchPlayerButton_clicked"
-QT_MOC_LITERAL(18, 234, 33), // "on_searchQuestionerButton_cli..."
-QT_MOC_LITERAL(19, 268, 32), // "on_tableWidgetItem_doubleClicked"
-QT_MOC_LITERAL(20, 301, 17), // "QTableWidgetItem*"
-QT_MOC_LITERAL(21, 319, 4), // "item"
-QT_MOC_LITERAL(22, 324, 17), // "on_header_clicked"
-QT_MOC_LITERAL(23, 342, 6) // "column"
+QT_MOC_LITERAL(17, 204, 10), // "paintEvent"
+QT_MOC_LITERAL(18, 215, 12), // "QPaintEvent*"
+QT_MOC_LITERAL(19, 228, 5), // "event"
+QT_MOC_LITERAL(20, 234, 29), // "on_searchPlayerButton_clicked"
+QT_MOC_LITERAL(21, 264, 33), // "on_searchQuestionerButton_cli..."
+QT_MOC_LITERAL(22, 298, 32), // "on_tableWidgetItem_doubleClicked"
+QT_MOC_LITERAL(23, 331, 17), // "QTableWidgetItem*"
+QT_MOC_LITERAL(24, 349, 4), // "item"
+QT_MOC_LITERAL(25, 354, 17), // "on_header_clicked"
+QT_MOC_LITERAL(26, 372, 6) // "column"
 
     },
     "RanklistWidget\0requestRanklist\0\0"
@@ -63,8 +66,8 @@ QT_MOC_LITERAL(23, 342, 6) // "column"
     "index\0receiveRanklist\0QVector<Player>\0"
     "players\0QVector<Questioner>\0questioners\0"
     "receiveDetailInfo\0Player\0player\0"
-    "Questioner\0questioner\0"
-    "on_searchPlayerButton_clicked\0"
+    "Questioner\0questioner\0paintEvent\0"
+    "QPaintEvent*\0event\0on_searchPlayerButton_clicked\0"
     "on_searchQuestionerButton_clicked\0"
     "on_tableWidgetItem_doubleClicked\0"
     "QTableWidgetItem*\0item\0on_header_clicked\0"
@@ -78,7 +81,7 @@ static const uint qt_meta_data_RanklistWidget[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       8,   14, // methods
+       9,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -86,16 +89,17 @@ static const uint qt_meta_data_RanklistWidget[] = {
        2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   54,    2, 0x06 /* Public */,
-       5,    2,   57,    2, 0x06 /* Public */,
+       1,    1,   59,    2, 0x06 /* Public */,
+       5,    2,   62,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       7,    3,   62,    2, 0x0a /* Public */,
-      12,    2,   69,    2, 0x0a /* Public */,
-      17,    0,   74,    2, 0x08 /* Private */,
-      18,    0,   75,    2, 0x08 /* Private */,
-      19,    1,   76,    2, 0x08 /* Private */,
-      22,    1,   79,    2, 0x08 /* Private */,
+       7,    3,   67,    2, 0x0a /* Public */,
+      12,    2,   74,    2, 0x0a /* Public */,
+      17,    1,   79,    2, 0x0a /* Public */,
+      20,    0,   82,    2, 0x08 /* Private */,
+      21,    0,   83,    2, 0x08 /* Private */,
+      22,    1,   84,    2, 0x08 /* Private */,
+      25,    1,   87,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -104,10 +108,11 @@ static const uint qt_meta_data_RanklistWidget[] = {
  // slots: parameters
     QMetaType::Void, 0x80000000 | 8, 0x80000000 | 10, 0x80000000 | 3,    9,   11,    4,
     QMetaType::Void, 0x80000000 | 13, 0x80000000 | 15,   14,   16,
+    QMetaType::Void, 0x80000000 | 18,   19,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 20,   21,
-    QMetaType::Void, QMetaType::Int,   23,
+    QMetaType::Void, 0x80000000 | 23,   24,
+    QMetaType::Void, QMetaType::Int,   26,
 
        0        // eod
 };
@@ -122,10 +127,11 @@ void RanklistWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         case 1: _t->requestDetailInfo((*reinterpret_cast< SortMethod(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 2: _t->receiveRanklist((*reinterpret_cast< QVector<Player>(*)>(_a[1])),(*reinterpret_cast< QVector<Questioner>(*)>(_a[2])),(*reinterpret_cast< SortMethod(*)>(_a[3]))); break;
         case 3: _t->receiveDetailInfo((*reinterpret_cast< Player(*)>(_a[1])),(*reinterpret_cast< Questioner(*)>(_a[2]))); break;
-        case 4: _t->on_searchPlayerButton_clicked(); break;
-        case 5: _t->on_searchQuestionerButton_clicked(); break;
-        case 6: _t->on_tableWidgetItem_doubleClicked((*reinterpret_cast< QTableWidgetItem*(*)>(_a[1]))); break;
-        case 7: _t->on_header_clicked((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 4: _t->paintEvent((*reinterpret_cast< QPaintEvent*(*)>(_a[1]))); break;
+        case 5: _t->on_searchPlayerButton_clicked(); break;
+        case 6: _t->on_searchQuestionerButton_clicked(); break;
+        case 7: _t->on_tableWidgetItem_doubleClicked((*reinterpret_cast< QTableWidgetItem*(*)>(_a[1]))); break;
+        case 8: _t->on_header_clicked((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -176,13 +182,13 @@ int RanklistWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 8)
+        if (_id < 9)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 8;
+        _id -= 9;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 8)
+        if (_id < 9)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 8;
+        _id -= 9;
     }
     return _id;
 }

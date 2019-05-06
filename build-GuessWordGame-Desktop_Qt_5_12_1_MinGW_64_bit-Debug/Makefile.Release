@@ -176,7 +176,9 @@ release/qrc_img.cpp: ../GuessWordGame/img.qrc \
 		D:/Qt/Qt5.12.1/5.12.1/mingw73_64/bin/rcc.exe \
 		../GuessWordGame/img/5701.png \
 		../GuessWordGame/img/20130707105529296.jpg \
-		../GuessWordGame/qss/style.qss
+		../GuessWordGame/qss/style2.qss \
+		../GuessWordGame/qss/style.qss \
+		../GuessWordGame/qss/mystyle.qss
 	D:\Qt\Qt5.12.1\5.12.1\mingw73_64\bin\rcc.exe -name img ..\GuessWordGame\img.qrc -o release\qrc_img.cpp
 
 compiler_moc_predefs_make_all: release/moc_predefs.h

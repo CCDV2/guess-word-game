@@ -23,6 +23,7 @@ signals:
 public slots:
 	void receiveAddedWords(int count, int expGained);
 	void receiveQuestionerName(QString _questionerName);
+	void paintEvent(QPaintEvent *event);
 private:	
 	void createWidget();
 	void createLayout();

@@ -33,6 +33,7 @@ public slots:
 	void receiveWord(QString); // the word from line edit
 	void receiveWordList(QVector<Word> _words);
 	void receiveShowEndGameDialog();
+	void paintEvent(QPaintEvent *event);
 signals:
 	// to datbase
 	void requestWordList(GameLevel level);

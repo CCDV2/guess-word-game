@@ -1,4 +1,7 @@
 #include "gamemodeselectwidget.h"
+#include<QStyleOption>
+#include<QPainter>
+
 
 GameModeSelectWidget::GameModeSelectWidget(QWidget *parent):
 	QWidget(parent)
@@ -6,6 +9,15 @@ GameModeSelectWidget::GameModeSelectWidget(QWidget *parent):
 	createWidget();
 	createLayout();
 	createConnection();
+}
+
+void GameModeSelectWidget::paintEvent(QPaintEvent *event)
+{
+	Q_UNUSED(event);
+	QStyleOption styleOpt;
+	styleOpt.init(this);
+	QPainter painter(this);
+	style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
 }
 
 void GameModeSelectWidget::on_easyButton_clicked()

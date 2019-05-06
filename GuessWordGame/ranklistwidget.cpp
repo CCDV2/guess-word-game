@@ -1,6 +1,8 @@
 #include "ranklistwidget.h"
 #include<QHeaderView>
 #include<QAbstractItemView>
+#include<QStyleOption>
+#include<QPainter>
 
 RanklistWidget::RanklistWidget(DatabaseServer &_DBserver, QWidget *parent):
 	QWidget(parent), DBserver(_DBserver)
@@ -78,6 +80,15 @@ void RanklistWidget::receiveDetailInfo(Player player, Questioner questioner)
 {
 	DetailedUserInfoDialog *detailDialog = new DetailedUserInfoDialog(player, questioner, this);
 	detailDialog->exec();
+}
+
+void RanklistWidget::paintEvent(QPaintEvent *event)
+{
+	Q_UNUSED(event);
+	QStyleOption styleOpt;
+	styleOpt.init(this);
+	QPainter painter(this);
+	style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
 }
 
 void RanklistWidget::on_searchPlayerButton_clicked()

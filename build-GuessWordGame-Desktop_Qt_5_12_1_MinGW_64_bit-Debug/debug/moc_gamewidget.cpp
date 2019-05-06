@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_GameWidget_t {
-    QByteArrayData data[20];
-    char stringdata0[245];
+    QByteArrayData data[23];
+    char stringdata0[275];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -49,9 +49,12 @@ QT_MOC_LITERAL(13, 144, 15), // "receiveWordList"
 QT_MOC_LITERAL(14, 160, 13), // "QVector<Word>"
 QT_MOC_LITERAL(15, 174, 6), // "_words"
 QT_MOC_LITERAL(16, 181, 24), // "receiveShowEndGameDialog"
-QT_MOC_LITERAL(17, 206, 15), // "updateCountDown"
-QT_MOC_LITERAL(18, 222, 8), // "nextWord"
-QT_MOC_LITERAL(19, 231, 13) // "isLastCorrect"
+QT_MOC_LITERAL(17, 206, 10), // "paintEvent"
+QT_MOC_LITERAL(18, 217, 12), // "QPaintEvent*"
+QT_MOC_LITERAL(19, 230, 5), // "event"
+QT_MOC_LITERAL(20, 236, 15), // "updateCountDown"
+QT_MOC_LITERAL(21, 252, 8), // "nextWord"
+QT_MOC_LITERAL(22, 261, 13) // "isLastCorrect"
 
     },
     "GameWidget\0requestWordList\0\0GameLevel\0"
@@ -59,7 +62,8 @@ QT_MOC_LITERAL(19, 231, 13) // "isLastCorrect"
     "updateUserExp\0playerName\0expGained\0"
     "problemNum\0toMainWindow\0receiveWord\0"
     "receiveWordList\0QVector<Word>\0_words\0"
-    "receiveShowEndGameDialog\0updateCountDown\0"
+    "receiveShowEndGameDialog\0paintEvent\0"
+    "QPaintEvent*\0event\0updateCountDown\0"
     "nextWord\0isLastCorrect"
 };
 #undef QT_MOC_LITERAL
@@ -70,7 +74,7 @@ static const uint qt_meta_data_GameWidget[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       9,   14, // methods
+      10,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -78,17 +82,18 @@ static const uint qt_meta_data_GameWidget[] = {
        4,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   59,    2, 0x06 /* Public */,
-       5,    1,   62,    2, 0x06 /* Public */,
-       7,    3,   65,    2, 0x06 /* Public */,
-      11,    0,   72,    2, 0x06 /* Public */,
+       1,    1,   64,    2, 0x06 /* Public */,
+       5,    1,   67,    2, 0x06 /* Public */,
+       7,    3,   70,    2, 0x06 /* Public */,
+      11,    0,   77,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      12,    1,   73,    2, 0x0a /* Public */,
-      13,    1,   76,    2, 0x0a /* Public */,
-      16,    0,   79,    2, 0x0a /* Public */,
-      17,    0,   80,    2, 0x08 /* Private */,
-      18,    1,   81,    2, 0x08 /* Private */,
+      12,    1,   78,    2, 0x0a /* Public */,
+      13,    1,   81,    2, 0x0a /* Public */,
+      16,    0,   84,    2, 0x0a /* Public */,
+      17,    1,   85,    2, 0x0a /* Public */,
+      20,    0,   88,    2, 0x08 /* Private */,
+      21,    1,   89,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -100,8 +105,9 @@ static const uint qt_meta_data_GameWidget[] = {
     QMetaType::Void, QMetaType::QString,    2,
     QMetaType::Void, 0x80000000 | 14,   15,
     QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 18,   19,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Bool,   19,
+    QMetaType::Void, QMetaType::Bool,   22,
 
        0        // eod
 };
@@ -119,8 +125,9 @@ void GameWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 4: _t->receiveWord((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 5: _t->receiveWordList((*reinterpret_cast< QVector<Word>(*)>(_a[1]))); break;
         case 6: _t->receiveShowEndGameDialog(); break;
-        case 7: _t->updateCountDown(); break;
-        case 8: _t->nextWord((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 7: _t->paintEvent((*reinterpret_cast< QPaintEvent*(*)>(_a[1]))); break;
+        case 8: _t->updateCountDown(); break;
+        case 9: _t->nextWord((*reinterpret_cast< bool(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -185,13 +192,13 @@ int GameWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 9)
+        if (_id < 10)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 9;
+        _id -= 10;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 9)
+        if (_id < 10)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 9;
+        _id -= 10;
     }
     return _id;
 }

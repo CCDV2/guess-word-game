@@ -6,5 +6,6 @@
     <qresource prefix="/qss">
         <file>qss/style.qss</file>
         <file>qss/style2.qss</file>
+        <file>qss/mystyle.qss</file>
     </qresource>
 </RCC>

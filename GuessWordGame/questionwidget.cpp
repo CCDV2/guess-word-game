@@ -5,6 +5,8 @@
 #include<QMessageBox>
 #include<QFileDialog>
 #include<QThread>
+#include<QStyleOption>
+#include<QPainter>
 
 QuestionWidget::QuestionWidget(DatabaseServer &_DBserver, QWidget *parent):
 	QWidget(parent), DBserver(_DBserver)
@@ -23,6 +25,15 @@ void QuestionWidget::receiveAddedWords(int count, int expGained)
 void QuestionWidget::receiveQuestionerName(QString _questionerName)
 {
 	questionerName = _questionerName;
+}
+
+void QuestionWidget::paintEvent(QPaintEvent *event)
+{
+	Q_UNUSED(event);
+	QStyleOption styleOpt;
+	styleOpt.init(this);
+	QPainter painter(this);
+	style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
 }
 
 void QuestionWidget::createWidget()

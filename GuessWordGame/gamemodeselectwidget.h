@@ -15,6 +15,9 @@ public:
 	explicit GameModeSelectWidget(QWidget *parent = nullptr);
 signals:
 	void sendGameMode(GameLevel level);
+public slots:
+	void paintEvent(QPaintEvent *event);
+
 private slots:
 	void on_easyButton_clicked();
 	void on_normalButton_clicked();

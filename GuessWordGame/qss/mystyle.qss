@@ -1,0 +1,113 @@
+/* 草utf-8!! */
+*{
+	/* background-color: rgb(150, 195, 236); */
+	font-family: Consolas, "幼圆", "黑体";
+	font-size: 30px;
+	color: black;
+}
+
+QMainWindow {
+	background-color: rgb(150, 195, 236);
+}
+
+QDialog {
+	background-color: rgb(150, 195, 236);
+}
+
+QPushButton{
+	background: rgb(51, 133, 255);
+
+	color: white;
+	border-style: outset;
+	border-width: 1px;
+	border-radius: 5px;
+	border-color: white;
+	padding: 10px;
+}
+
+QPushButton::hover{
+	background: rgb(49, 126, 243);
+	border-color: white;
+}
+
+QPushButton::pressed{
+	background: rgb(48, 117, 220);
+	border-color: white;
+	border-style: inset;
+}
+
+QTabWidget::pane { /* The tab widget frame */
+	border: 5px solid;
+	border-top-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+									stop: 0 rgb(227, 179, 72),
+									stop: 1 rgb(150, 195, 236));
+	border-left-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+									  stop: 0 rgb(227, 179, 72),
+									  stop: 1 rgb(150, 195, 236));
+	border-right-color: qlineargradient(x1: 1, y1: 0, x2: 0, y2: 0,
+									stop: 0 rgb(227, 179, 72),
+									stop: 1 rgb(150, 195, 236));
+	border-bottom-color: qlineargradient(x1: 0, y1: 1, x2: 0, y2: 0,
+									  stop: 0 rgb(227, 179, 72),
+									  stop: 1 rgb(150, 195, 236));
+}
+
+/* Style the tab using the tab sub-control. Note that
+  it reads QTabBar _not_ QTabWidget */
+QTabBar::tab {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+								stop: 0 rgb(247, 199, 92),
+								stop: 1 rgb(227, 179, 72));
+	border: 2px solid #C4C4C3;
+	border-bottom-color: #C2C7CB; /* same as the pane color */
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	min-width: 8ex;
+	padding: 2px;
+	color: white;
+}
+
+QTabBar::tab::hover {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+								stop: 0 rgb(237, 189, 82),
+								stop: 1 rgb(217, 169, 62));
+}
+QTabBar::tab::pressed {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+								stop: 0 rgb(227, 179, 72),
+								stop: 1 rgb(207, 159, 52));
+}
+
+QProgressBar#levelBar {
+	 background-color: white;
+	 border: 2px solid grey;
+	 border-radius: 5px;
+	 text-align: center;
+ }
+
+ QProgressBar#levelBar::chunk {
+	 background-color: rgb(227, 179, 72);
+	 width: 20px;
+ }
+
+QLineEdit {
+	border: 2px solid gray;
+	border-radius: 10px;
+	padding: 0 8px;
+	background: white;
+	selection-background-color: darkgray;
+}
+
+QHeaderView::section {
+	background-color: rgb(81, 164, 245);
+	color: white;
+}
+
+QTableWidget {
+	background-color: white;
+}
+
+QWidget#ModuleWidget {
+	background: rgb(140, 185, 229);
+	border: 2px outset gray;
+}

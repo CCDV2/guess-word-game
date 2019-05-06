@@ -3,6 +3,8 @@
 #include<QThread>
 #include<QMessageBox>
 #include<iostream>
+#include<QStyleOption>
+#include<QPainter>
 using std::max;
 
 
@@ -116,6 +118,15 @@ void GameWidget::receiveWordList(QVector<Word> words)
 void GameWidget::receiveShowEndGameDialog()
 {
 
+}
+
+void GameWidget::paintEvent(QPaintEvent *event)
+{
+	Q_UNUSED(event);
+	QStyleOption styleOpt;
+	styleOpt.init(this);
+	QPainter painter(this);
+	style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
 }
 
 void GameWidget::createWidget()

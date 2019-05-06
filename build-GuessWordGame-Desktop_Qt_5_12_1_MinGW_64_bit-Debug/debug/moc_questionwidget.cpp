@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_QuestionWidget_t {
-    QByteArrayData data[12];
-    char stringdata0[166];
+    QByteArrayData data[15];
+    char stringdata0[196];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -43,14 +43,18 @@ QT_MOC_LITERAL(7, 94, 17), // "receiveAddedWords"
 QT_MOC_LITERAL(8, 112, 5), // "count"
 QT_MOC_LITERAL(9, 118, 9), // "expGained"
 QT_MOC_LITERAL(10, 128, 21), // "receiveQuestionerName"
-QT_MOC_LITERAL(11, 150, 15) // "_questionerName"
+QT_MOC_LITERAL(11, 150, 15), // "_questionerName"
+QT_MOC_LITERAL(12, 166, 10), // "paintEvent"
+QT_MOC_LITERAL(13, 177, 12), // "QPaintEvent*"
+QT_MOC_LITERAL(14, 190, 5) // "event"
 
     },
     "QuestionWidget\0sendQuestionWordList\0"
     "\0QVector<Word>\0words\0questionerName\0"
     "requireQuestionerName\0receiveAddedWords\0"
     "count\0expGained\0receiveQuestionerName\0"
-    "_questionerName"
+    "_questionerName\0paintEvent\0QPaintEvent*\0"
+    "event"
 };
 #undef QT_MOC_LITERAL
 
@@ -60,7 +64,7 @@ static const uint qt_meta_data_QuestionWidget[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   14, // methods
+       5,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -68,12 +72,13 @@ static const uint qt_meta_data_QuestionWidget[] = {
        2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    2,   34,    2, 0x06 /* Public */,
-       6,    0,   39,    2, 0x06 /* Public */,
+       1,    2,   39,    2, 0x06 /* Public */,
+       6,    0,   44,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       7,    2,   40,    2, 0x0a /* Public */,
-      10,    1,   45,    2, 0x0a /* Public */,
+       7,    2,   45,    2, 0x0a /* Public */,
+      10,    1,   50,    2, 0x0a /* Public */,
+      12,    1,   53,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3, QMetaType::QString,    4,    5,
@@ -82,6 +87,7 @@ static const uint qt_meta_data_QuestionWidget[] = {
  // slots: parameters
     QMetaType::Void, QMetaType::Int, QMetaType::Int,    8,    9,
     QMetaType::Void, QMetaType::QString,   11,
+    QMetaType::Void, 0x80000000 | 13,   14,
 
        0        // eod
 };
@@ -96,6 +102,7 @@ void QuestionWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         case 1: _t->requireQuestionerName(); break;
         case 2: _t->receiveAddedWords((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 3: _t->receiveQuestionerName((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 4: _t->paintEvent((*reinterpret_cast< QPaintEvent*(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -146,13 +153,13 @@ int QuestionWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 5)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 5;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 4)
+        if (_id < 5)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 4;
+        _id -= 5;
     }
     return _id;
 }

@@ -10,12 +10,9 @@ MainWindow::MainWindow(QWidget *parent)
 	createWidget();
 	createLayout();
 	createConnection();
-//	QFile styleSheet(":/qss/qss/style.qss");
-//	if (!styleSheet.open(QIODevice::ReadOnly))
-//	{
-//		qDebug("Can't open the style sheet file.");
-//	}
-//	setStyleSheet(styleSheet.readAll());
+
+
+
 	player = nullptr;
 	questioner = nullptr;
 }
@@ -109,6 +106,7 @@ void MainWindow::createWidget()
 //	loginWindow = new LoginDialog();
 //	registerWindow = new RegisterDialog();
 	simplifiedUserInfoWidget = new SimplifiedUserInfoWidget(DBServer);
+	simplifiedUserInfoWidget->setObjectName(moduleWidgetName);
 	logoLabel = new QLabel(tr("LOGO"));
 	QImage logoImg;
 	logoImg.load(":/png/img/20130707105529296.jpg");
@@ -124,21 +122,25 @@ void MainWindow::createWidget()
 
 //	game mode select widget
 	gameModeSelectWidget = new GameModeSelectWidget();
+	gameModeSelectWidget->setObjectName(moduleWidgetName);
 	backButton[0] = new QPushButton(tr("返回"));
 	widget[1] = new QWidget();
 
 //	game widget
 	gameWidget = new GameWidget(DBServer);
+	gameWidget->setObjectName(moduleWidgetName);
 	backButton[1] = new QPushButton(tr("返回"));
 	widget[2] = new QWidget();
 
 //	question widget
 	questionWidget = new QuestionWidget(DBServer);
+	questionWidget->setObjectName(moduleWidgetName);
 	backButton[2] = new QPushButton(tr("返回"));
 	widget[3] = new QWidget();
 
 //	ranklist widget
 	ranklistWidget = new RanklistWidget(DBServer);
+	ranklistWidget->setObjectName(moduleWidgetName);
 	backButton[3] = new QPushButton(tr("返回"));
 	widget[4] = new QWidget();
 
@@ -169,11 +171,11 @@ void MainWindow::createLayout()
 	widgetLayout[0]->addLayout(buttonLayout, 1);
 
 //	game select widget
-	widgetLayout[1]->addWidget(gameModeSelectWidget, 1, Qt::AlignCenter);
+	widgetLayout[1]->addWidget(gameModeSelectWidget, 0, Qt::AlignCenter);
 	widgetLayout[1]->addWidget(backButton[0], 0, Qt::AlignBottom | Qt::AlignRight);
 
 //	game widget
-	widgetLayout[2]->addWidget(gameWidget);
+	widgetLayout[2]->addWidget(gameWidget, 1);
 	widgetLayout[2]->addWidget(backButton[1], 0, Qt::AlignBottom | Qt::AlignRight);
 
 //	question widget
