@@ -13,25 +13,33 @@
 class EndGameDialog: public QDialog
 {
 public:
-	explicit EndGameDialog(GameCache &_gameCache, QWidget *parent = nullptr);
+	explicit EndGameDialog(EndGamePacket _packet, QWidget *parent = nullptr);
 private:
 	void createWidget();
 	void createLayout();
-	void mouseReleaseEvent(QMouseEvent *event);
 
-	GameCache &gameCache;
+	void toNextWidget();
+
+	void mouseReleaseEvent(QMouseEvent *event);
+	void keyPressEvent(QKeyEvent *event);
+
+	EndGamePacket packet;
 	QLabel *headLabel;
 	// first page
 	QWidget *numWidget;
 	QLabel *numLabel, *correctLabel, *wrongLabel;
+	QLabel *enemyCorrectNumLabel;
 	QLabel *pressContinueLabel;
 	// second page
+	QWidget *timeWidget;
+	QLabel *timeLabel, *spendTimeLabel;
+	QLabel *enemySpendTimeLabel;
+	// third page
 	QWidget *expWidget;
 	QLabel *validNumLabel, *scaleNumLabel, *levelLabel, *remainTimeLabel, *expGainedLabel;
 
-
 	QStackedWidget *stackWidget;
-	QGridLayout *numLayout, *expLayout;
+	QGridLayout *numLayout, *timeLayout, *expLayout;
 	QVBoxLayout *mainLayout;
 
 	int state;

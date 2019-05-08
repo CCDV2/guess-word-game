@@ -30,15 +30,17 @@ void GameWidget::startGame(Player _player, GameLevel level)
 
 void GameWidget::endGame()
 {	
-	double difficultyScale = DIFFICULTY_SCALE_TABLE[gameCache.getLevel()];
-	double expGained = 50 * (max(gameCache.getCorrectNum() - gameCache.getWrongNum(), 0))
-			* difficultyScale;
-	gameCache.setExpGained(static_cast<int>(expGained));
-	emit updateUserExp(player.getUserName(), gameCache.getExpGained(), gameCache.getCorrectNum());
-	// TODO
-	EndGameDialog *endGameDialog = new EndGameDialog(gameCache, this);
-	endGameDialog->exec();
-	emit toMainWindow();
+	EndGamePacket packet = gameCache.toEndGamePacket(player.getUserName());
+	emit sendEndGamePacket(packet);
+//	double difficultyScale = DIFFICULTY_SCALE_TABLE[gameCache.getLevel()];
+//	double expGained = 50 * (max(gameCache.getCorrectNum() - gameCache.getWrongNum(), 0))
+//			* difficultyScale;
+//	gameCache.setExpGained(static_cast<int>(expGained));
+//	emit updateUserExp(player.getUserName(), gameCache.getExpGained(), gameCache.getCorrectNum());
+//	// TODO
+//	EndGameDialog *endGameDialog = new EndGameDialog(gameCache, this);
+//	endGameDialog->exec();
+//	emit toMainWindow();
 }
 
 void GameWidget::showWordLineEdit()
@@ -99,6 +101,7 @@ void GameWidget::nextWord(bool isLastCorrect)
 
 void GameWidget::receiveWord(QString word)
 {
+	gameCache.endCountTime();
 	if(word == gameCache.getCurrentWord())
 	{
 		emit wordCorrectChecked(true);
@@ -115,9 +118,11 @@ void GameWidget::receiveWordList(QVector<Word> words)
 	nextWord(true);
 }
 
-void GameWidget::receiveShowEndGameDialog()
+void GameWidget::receiveShowEndGameDialog(EndGamePacket packet)
 {
-
+	EndGameDialog *endGameDialog = new EndGameDialog(packet, this);
+	endGameDialog->exec();
+	emit toMainWindow();
 }
 
 void GameWidget::paintEvent(QPaintEvent *event)
@@ -161,7 +166,8 @@ void GameWidget::createConnection()
 	connect(this, &GameWidget::requestWordList, &DBserver, &DatabaseServer::receiveWordListRequest);
 	connect(&DBserver, &DatabaseServer::sendWordList, this, &GameWidget::receiveWordList);
 	connect(this, &GameWidget::wordCorrectChecked, this, &GameWidget::nextWord);
-	connect(this, &GameWidget::updateUserExp, &DBserver, &DatabaseServer::receiveUpdatedExp);
+	connect(this, &GameWidget::sendEndGamePacket, &DBserver, &DatabaseServer::receiveEndGamePacket);
+	connect(&DBserver, &DatabaseServer::sendShowEndGameDialog, this, &GameWidget::receiveShowEndGameDialog);
 }
 
 void GameWidget::startCountDown()
@@ -169,6 +175,7 @@ void GameWidget::startCountDown()
 	countDownBar->setMaximum(gameCache.getTimeLength());
 	countDownTimer.setSingleShot(false);
 	countDownTimer.start(TIME_INTERVAL);
+	gameCache.startCountTime();
 }
 
 

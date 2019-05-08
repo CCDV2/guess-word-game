@@ -5,6 +5,7 @@
 #include"word.h"
 #include<QString>
 #include"datastructure.h"
+#include<QTime>
 
 class GameCache
 {
@@ -31,7 +32,13 @@ public:
 	int getExpGained() const;
 	void setExpGained(int value);
 
+	void startCountTime();
+	void pauseCountTime();
+	void resumeCountTime();
+	void endCountTime();
+	int getTotalTime();
 
+	EndGamePacket toEndGamePacket(QString player);
 private:
 	int timeLength;
 
@@ -42,6 +49,8 @@ private:
 	int expGained;
 	bool ready;
 	GameLevel level;
+	QTime typingTimer;
+	int totalTypingTime;
 };
 
 #endif // GAMECACHE_H

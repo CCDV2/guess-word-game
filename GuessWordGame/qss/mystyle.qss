@@ -1,7 +1,7 @@
 /* 草utf-8!! */
 *{
 	/* background-color: rgb(150, 195, 236); */
-	font-family: Consolas, "幼圆", "黑体";
+	font-family: "幼圆", Consolas, "黑体";
 	font-size: 30px;
 	color: black;
 }
@@ -11,6 +11,7 @@ QMainWindow {
 }
 
 QDialog {
+	border-color: rgb(227, 179, 72);
 	background-color: rgb(150, 195, 236);
 }
 

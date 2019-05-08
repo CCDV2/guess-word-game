@@ -1,15 +1,17 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2019-02-28T19:23:34
+# Project created by QtCreator 2019-05-07T22:13:15
 #
 #-------------------------------------------------
 
-QT       += core gui sql network
+QT       += core gui network sql
+
+
 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = GuessWordGame
+TARGET = TcpServer
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -27,54 +29,23 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp \
+        tcpserver.cpp \
+    tcpclientsocket.cpp \
+    server.cpp \
     databaseserver.cpp \
-    logindialog.cpp \
-    gamewidget.cpp \
-    registerdialog.cpp \
-    simplifieduserinfowidget.cpp \
-    loginorregisterdialog.cpp \
-    detaileduserinfodialog.cpp \
-    ranklistwidget.cpp \
-    word.cpp \
-    questionwidget.cpp \
-    gamemodeselectwidget.cpp \
-    endgamedialog.cpp \
-    gamecache.cpp \
-    friendwidget.cpp \
-    tcpclient.cpp \
-    user.cpp
+    user.cpp \
+    word.cpp
 
 HEADERS += \
-        mainwindow.h \
+        tcpserver.h \
+    tcpclientsocket.h \
+    server.h \
     datastructure.h \
     databaseserver.h \
-    logindialog.h \
-    gamewidget.h \
-    registerdialog.h \
-    simplifieduserinfowidget.h \
-    loginorregisterdialog.h \
-    detaileduserinfodialog.h \
-    ranklistwidget.h \
-    word.h \
-    questionwidget.h \
-    gamemodeselectwidget.h \
-    endgamedialog.h \
-    gamecache.h \
-    friendwidget.h \
-    tcpclient.h \
-    user.h
+    user.h \
+    word.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-RESOURCES += \
-    img.qrc
-	/qss/mystyle.qss
-
-DISTFILES +=
-
-
-

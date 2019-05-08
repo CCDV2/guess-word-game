@@ -7,6 +7,8 @@ MainWindow::MainWindow(QWidget *parent)
 	setWindowTitle(tr("猜单词游戏"));
 	setWindowState(Qt::WindowMaximized);
 
+	tcpClient = new TcpClient(this);
+	DBServer = new DatabaseServer(*tcpClient);
 	createWidget();
 	createLayout();
 	createConnection();
@@ -105,7 +107,7 @@ void MainWindow::createWidget()
 	setCentralWidget(mainWidget);
 //	loginWindow = new LoginDialog();
 //	registerWindow = new RegisterDialog();
-	simplifiedUserInfoWidget = new SimplifiedUserInfoWidget(DBServer);
+	simplifiedUserInfoWidget = new SimplifiedUserInfoWidget(*DBServer);
 	simplifiedUserInfoWidget->setObjectName(moduleWidgetName);
 	logoLabel = new QLabel(tr("LOGO"));
 	QImage logoImg;
@@ -127,19 +129,19 @@ void MainWindow::createWidget()
 	widget[1] = new QWidget();
 
 //	game widget
-	gameWidget = new GameWidget(DBServer);
+	gameWidget = new GameWidget(*DBServer);
 	gameWidget->setObjectName(moduleWidgetName);
 	backButton[1] = new QPushButton(tr("返回"));
 	widget[2] = new QWidget();
 
 //	question widget
-	questionWidget = new QuestionWidget(DBServer);
+	questionWidget = new QuestionWidget(*DBServer);
 	questionWidget->setObjectName(moduleWidgetName);
 	backButton[2] = new QPushButton(tr("返回"));
 	widget[3] = new QWidget();
 
 //	ranklist widget
-	ranklistWidget = new RanklistWidget(DBServer);
+	ranklistWidget = new RanklistWidget(*DBServer);
 	ranklistWidget->setObjectName(moduleWidgetName);
 	backButton[3] = new QPushButton(tr("返回"));
 	widget[4] = new QWidget();
@@ -148,6 +150,9 @@ void MainWindow::createWidget()
 	{
 		stackWidget->addWidget(widget[i]);
 	}
+
+//	friend widget
+	friendWidget = new FriendWidget(this);
 }
 
 void MainWindow::createLayout()
@@ -186,7 +191,7 @@ void MainWindow::createLayout()
 	widgetLayout[4]->addWidget(ranklistWidget);
 	widgetLayout[4]->addWidget(backButton[3], 0, Qt::AlignBottom | Qt::AlignRight);
 
-
+	mainLayout->addWidget(friendWidget);
 	mainLayout->addWidget(stackWidget, 5);
 	mainWidget->setLayout(mainLayout);
 }
@@ -194,7 +199,7 @@ void MainWindow::createLayout()
 void MainWindow::createConnection()
 {
 	// use in login
-	connect(&DBServer, &DatabaseServer::sendUserInfo, this, &MainWindow::receiveUserInfo);
+	connect(DBServer, &DatabaseServer::sendUserInfo, this, &MainWindow::receiveUserInfo);
 	connect(simplifiedUserInfoWidget, &SimplifiedUserInfoWidget::requireUserInfo,
 			this, &MainWindow::receiveRequireForUserInfo);
 

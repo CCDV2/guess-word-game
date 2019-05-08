@@ -78,7 +78,7 @@ void RanklistWidget::receiveRanklist(QVector<Player> players, QVector<Questioner
 
 void RanklistWidget::receiveDetailInfo(Player player, Questioner questioner)
 {
-	DetailedUserInfoDialog *detailDialog = new DetailedUserInfoDialog(player, questioner, this);
+	DetailedUserInfoDialog *detailDialog = new DetailedUserInfoDialog(player, questioner, ADDING_FRIEND);
 	detailDialog->exec();
 }
 

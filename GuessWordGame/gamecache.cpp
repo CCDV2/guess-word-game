@@ -57,6 +57,7 @@ void GameCache::reset(GameLevel _level)
 	timeLength = 0;
 	ready = false;
 	level = _level;
+	totalTypingTime = 0;
 }
 
 bool GameCache::isReady()
@@ -92,4 +93,24 @@ int GameCache::getExpGained() const
 void GameCache::setExpGained(int value)
 {
 	expGained = value;
+}
+
+void GameCache::startCountTime()
+{
+	typingTimer.start();
+}
+
+void GameCache::endCountTime()
+{
+	totalTypingTime += typingTimer.elapsed();
+}
+
+int GameCache::getTotalTime()
+{
+	return totalTypingTime;
+}
+
+EndGamePacket GameCache::toEndGamePacket(QString player)
+{
+	return EndGamePacket(player, level, correctNum, wrongNum, totalTypingTime);
 }

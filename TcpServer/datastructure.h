@@ -1,6 +1,7 @@
 #ifndef DATASTRUCTURE_H
 #define DATASTRUCTURE_H
 
+
 #include<QString>
 #include<QStringList>
 #include<QObject>
@@ -140,8 +141,6 @@ enum ConnectFunction
 	ADDWORD_FUNCTION
 };
 
-#define USE_NETWORK
-
 enum GameStatus
 {
 	GAME_SINGLE,
@@ -186,5 +185,6 @@ struct EndGamePacket
 	GameStatus isWin;
 	int expGained;
 };
+
 
 #endif // DATASTRUCTURE_H

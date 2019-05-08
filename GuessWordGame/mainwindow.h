@@ -16,6 +16,8 @@
 #include"ranklistwidget.h"
 #include"questionwidget.h"
 #include"gamemodeselectwidget.h"
+#include"friendwidget.h"
+#include"tcpclient.h"
 
 class MainWindow : public QMainWindow
 {
@@ -57,6 +59,7 @@ private:
 	QuestionWidget *questionWidget;
 	RanklistWidget *ranklistWidget;
 	QStackedWidget *stackWidget;
+	FriendWidget *friendWidget;
 
 	// welcome gameselect game question display
 	QWidget *widget[5];
@@ -67,7 +70,8 @@ private:
 
 	Player *player;
 	Questioner *questioner;
-	DatabaseServer DBServer;
+	DatabaseServer *DBServer;
+	TcpClient *tcpClient;
 };
 
 #endif // MAINWINDOW_H

@@ -3,7 +3,8 @@
 using std::max;
 
 #ifndef USE_NETWORK
-DatabaseServer::DatabaseServer()
+DatabaseServer::DatabaseServer(Server &_server, QObject *parent):
+	QObject(parent), server(_server)
 #else
 DatabaseServer::DatabaseServer(TcpClient &_tcpClient):
 	tcpClient(_tcpClient)
@@ -38,8 +39,6 @@ DatabaseServer::DatabaseServer(TcpClient &_tcpClient):
 	else
 		qDebug() << "create wordlist table failed";
 	initDataBase();
-#else
-	connect(&tcpClient, &TcpClient::messageQueueReady, this, &DatabaseServer::handleMessages);
 #endif
 }
 
@@ -60,7 +59,84 @@ LoginState DatabaseServer::checkLoginState(const LoginPackage &loginPackage)
 	}
 }
 
-void DatabaseServer::receiveLoginPackage(LoginPackage loginPackage)
+void DatabaseServer::sendLoginState(LoginState state, qintptr socketDescriptor)
+{
+	server.sendMessageToClient(socketDescriptor, QString::number(LOGIN_FUNCTION) + ',' + QString::number(state));
+}
+
+void DatabaseServer::sendRegisterState(RegisterState state, qintptr socketDescriptor)
+{
+	server.sendMessageToClient(socketDescriptor, QString::number(REGISTER_FUNCTION) + ',' + QString::number(state));
+}
+
+void DatabaseServer::sendUserInfo(Player player, Questioner questioner, qintptr socketDescriptor)
+{
+	server.sendMessageToClient(socketDescriptor,
+							   QString::number(USERINFO_FUNCTION) +
+							   ',' + player.toString() +
+							   ',' + questioner.toString());
+}
+
+void DatabaseServer::sendRanklist(QVector<Player> players, QVector<Questioner> questioners, SortMethod sortMethod, qintptr socketDescriptor)
+{
+	server.sendMessageToClient(socketDescriptor,
+							   QString::number(RANKLIST_FUNCTION) + ',' +
+							   Player::specialPlayer(sortMethod) + ',' +
+							   Questioner::specialQuestioner(sortMethod)
+							   );
+	for(int i = 0; i < players.size(); ++i)
+	{
+		server.sendMessageToClient(socketDescriptor,
+								   QString::number(RANKLIST_FUNCTION) + ',' +
+								   players[i].toString() + ',' +
+								   questioners[i].toString());
+	}
+	server.sendMessageToClient(socketDescriptor,
+							   QString::number(RANKLIST_FUNCTION) + ',' +
+							   Player::specialPlayer(sortMethod, false) + ',' +
+							   Questioner::specialQuestioner(sortMethod, false));
+}
+
+void DatabaseServer::sendDetailInfo(Player player, Questioner questioner, qintptr socketDescriptor)
+{
+	server.sendMessageToClient(socketDescriptor,
+							   QString::number(DETAILINFO_FUNCTION) + ',' +
+							   player.toString() + ',' +
+							   questioner.toString());
+}
+
+void DatabaseServer::sendWordList(QVector<Word> words, qintptr socketDescriptor)
+{
+	server.sendMessageToClient(socketDescriptor,
+							   QString::number(WORDLIST_FUNCTION) + ',' +
+							   Word::specialWord());
+	for(auto word : words)
+	{
+		server.sendMessageToClient(socketDescriptor,
+								   QString::number(WORDLIST_FUNCTION) + ',' +
+								   word.toString());
+	}
+	server.sendMessageToClient(socketDescriptor,
+							   QString::number(WORDLIST_FUNCTION) + ',' +
+							   Word::specialWord(false));
+}
+
+void DatabaseServer::sendEndGamePacket(EndGamePacket packet, qintptr socketDescriptor)
+{
+	server.sendMessageToClient(socketDescriptor,
+							   QString::number(UPDATE_EXP_FUNCTION) + ',' +
+							   packet.toString());
+}
+
+void DatabaseServer::sendAddedWords(int count, int expGained, qintptr socketDescriptor)
+{
+	server.sendMessageToClient(socketDescriptor,
+							   QString::number(ADDWORD_FUNCTION) + ',' +
+							   QString::number(count) + ',' +
+							   QString::number(expGained));
+}
+
+void DatabaseServer::receiveLoginPackage(LoginPackage loginPackage, qintptr socketDescriptor)
 {
 #ifdef USE_NETWORK
 	tcpClient.sendDataToServer(QString::number(LOGIN_FUNCTION) + ',' + loginPackage.toString());
@@ -76,16 +152,17 @@ void DatabaseServer::receiveLoginPackage(LoginPackage loginPackage)
 			QString pwdInDB = query.value(1).toString();
 			if(pwdInDB == password)
 			{
-				emit sendLoginState(LOGIN_SUCCESS);
-				emit sendUserInfo(Player(userName, query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
-								  Questioner(userName, query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+				sendLoginState(LOGIN_SUCCESS, socketDescriptor);
+				sendUserInfo(Player(userName, query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+							  Questioner(userName, query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()),
+							 socketDescriptor);
 			}
 			else
-				emit sendLoginState(WRONG_PASSWORD);
+				sendLoginState(WRONG_PASSWORD, socketDescriptor);
 		}
 		else
 		{
-			emit sendLoginState(UNFOUND_USERNAME);
+			sendLoginState(UNFOUND_USERNAME, socketDescriptor);
 		}
 	}
 	else
@@ -95,7 +172,7 @@ void DatabaseServer::receiveLoginPackage(LoginPackage loginPackage)
 #endif
 }
 
-void DatabaseServer::receiveRegisterPackage(RegisterPackage registerPackage)
+void DatabaseServer::receiveRegisterPackage(RegisterPackage registerPackage, qintptr socketDescriptor)
 {
 #ifdef USE_NETWORK
 	tcpClient.sendDataToServer(QString::number(REGISTER_FUNCTION) + ',' + registerPackage.toString());
@@ -106,7 +183,7 @@ void DatabaseServer::receiveRegisterPackage(RegisterPackage registerPackage)
 	{
 		if(query.next())
 		{
-			emit sendRegisterState(USER_EXISTED);
+			sendRegisterState(USER_EXISTED, socketDescriptor);
 		}
 		else
 		{
@@ -121,8 +198,8 @@ void DatabaseServer::receiveRegisterPackage(RegisterPackage registerPackage)
 			query.bindValue(7, 0);
 			if(query.exec())
 			{
-				emit sendRegisterState(REGISTER_SUCCESS);
-				emit sendUserInfo(Player(userName, 1, 0, 0), Questioner(userName, 1, 0, 0));
+				sendRegisterState(REGISTER_SUCCESS, socketDescriptor);
+				sendUserInfo(Player(userName, 1, 0, 0), Questioner(userName, 1, 0, 0), socketDescriptor);
 			}
 			else
 				qDebug() << query.lastError() << "query for register package failed";
@@ -135,7 +212,7 @@ void DatabaseServer::receiveRegisterPackage(RegisterPackage registerPackage)
 #endif
 }
 
-void DatabaseServer::receiveRanklistRequest(SortMethod sortMethod)
+void DatabaseServer::receiveRanklistRequest(SortMethod sortMethod, qintptr socketDescriptor)
 {
 #ifdef USE_NETWORK
 	tcpClient.sendDataToServer(QString::number(RANKLIST_FUNCTION) + ',' + QString::number(sortMethod));
@@ -149,7 +226,7 @@ void DatabaseServer::receiveRanklistRequest(SortMethod sortMethod)
 	// initial state, should not be received
 	case NULL_SORT:
 		qDebug() << "error receiving NULL_SORT";
-		return;
+		break;
 	// player part
 	case PLAYER_LEVEL_DESC:
 		method = tr("playerlevel desc, playerexp desc");
@@ -196,22 +273,22 @@ void DatabaseServer::receiveRanklistRequest(SortMethod sortMethod)
 			players.push_back(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()));
 			questioners.push_back(Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
 		}
-		emit sendRanklist(players, questioners, sortMethod);
+		sendRanklist(players, questioners, sortMethod, socketDescriptor);
 	}
 	else
 		qDebug() << query.lastError() << "query for player ranklist failed: " << method;
+
 #endif
 }
 
-void DatabaseServer::receiveDetailInfoRequest(SortMethod sortMethod, int index)
+void DatabaseServer::receiveDetailInfoRequest(SortMethod sortMethod, int index, qintptr socketDescriptor)
 {
 #ifdef USE_NETWORK
 	tcpClient.sendDataToServer(tr("%1,%2,%3").arg(DETAILINFO_FUNCTION).arg(sortMethod).arg(index));
-
 #else
 	QString base = tr("select * from user order by ");
 	QString method;
-	QString limit = tr("limit %1, 1").arg(index);
+	QString limit = tr(" limit %1, 1").arg(index);
 	switch(sortMethod)
 	{
 	// initial state, should not be received
@@ -261,8 +338,9 @@ void DatabaseServer::receiveDetailInfoRequest(SortMethod sortMethod, int index)
 	{
 		if(query.next())
 		{
-			emit sendDetailInfo(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
-							  Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+			sendDetailInfo(Player(query.value(0).toString(), query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+						   Questioner(query.value(0).toString(), query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()),
+						   socketDescriptor);
 		}
 		else
 			qDebug() << query.lastError() << "no detail user info... error";
@@ -272,7 +350,7 @@ void DatabaseServer::receiveDetailInfoRequest(SortMethod sortMethod, int index)
 #endif
 }
 
-void DatabaseServer::receiveWordListRequest(GameLevel level)
+void DatabaseServer::receiveWordListRequest(GameLevel level, qintptr socketDescriptor)
 {
 #ifdef USE_NETWORK
 	tcpClient.sendDataToServer(tr("%1,%2").arg(WORDLIST_FUNCTION).arg(level));
@@ -301,84 +379,92 @@ void DatabaseServer::receiveWordListRequest(GameLevel level)
 			words.push_back(Word(query.value(0).toString(), query.value(1).toInt()));
 		}
 		qDebug() << "Receive " << words.size() << "words";
-		emit sendWordList(words);
+		sendWordList(words, socketDescriptor);
 	}
 	else
 		qDebug() << query.lastError() << "get wordlist failed";
 #endif
 }
 
-void DatabaseServer::receiveEndGamePacket(EndGamePacket packet)
+void DatabaseServer::receiveEndGamePacket(EndGamePacket packet, qintptr socketDescriptor)
 {
 #ifdef USE_NETWORK
 	tcpClient.sendDataToServer(QString::number(UPDATE_EXP_FUNCTION) + ',' + packet.toString());
 #else
-	double difficultyScale = DIFFICULTY_SCALE_TABLE[packet.level];
-	int expGained = static_cast<int>(50 * (max(packet.correctNum - packet.wrongNum, 0))
-									 * difficultyScale);
-	if(query.exec(tr("select playerlevel, playerexp, playernum from user where username='%1'").arg(packet.playerName)))
+	if(packet.isWin == GAME_SINGLE)
 	{
-		if(query.next())
+		double difficultyScale = DIFFICULTY_SCALE_TABLE[packet.level];
+		int expGained = static_cast<int>(50 * (max(packet.correctNum - packet.wrongNum, 0))
+										 * difficultyScale);
+		if(query.exec(tr("select playerlevel, playerexp, playernum from user where username='%1'").arg(packet.playerName)))
 		{
-			// calculating update
-			qDebug() << "update " << packet.playerName;
-			int preLevel = query.value(0).toInt();
-			int preExp = query.value(1).toInt();
-			int preNum = query.value(2).toInt();
-			qDebug() << "preLevel: " << preLevel << " preExp: " << preExp << " preNum: " << preNum;
-			int curExp = preExp + expGained;
-			int curNum = preNum + packet.correctNum;
-			int curLevel = preLevel;
-			bool isLvup;
-			// it's an assignment !!
-			while((isLvup = isLevelup(preLevel, curExp)))
+			if(query.next())
 			{
-				++curLevel;
-			}
-			qDebug() << "curExp: " << curExp << " curNum: " << curNum << " curLevel: " << curLevel;
-
-			// update database
-			if(query.exec(tr("update user set playerlevel=%1, playerexp=%2, playernum=%3 where username='%4'")
-					   .arg(curLevel).arg(curExp).arg(curNum).arg(packet.playerName)))
-			{
-				qDebug() << "updatelevel success";
-
-				// after update the database, send it to the mainwindow
-				if(query.exec(tr("select * from user where username='%1'").arg(packet.playerName)))
+				// calculating update
+				qDebug() << "update " << packet.playerName;
+				int preLevel = query.value(0).toInt();
+				int preExp = query.value(1).toInt();
+				int preNum = query.value(2).toInt();
+				qDebug() << "preLevel: " << preLevel << " preExp: " << preExp << " preNum: " << preNum;
+				int curExp = preExp + expGained;
+				int curNum = preNum + packet.correctNum;
+				int curLevel = preLevel;
+				bool isLvup;
+				// it's an assignment !!
+				while((isLvup = isLevelup(preLevel, curExp)))
 				{
-					if(query.next())
+					++curLevel;
+				}
+				qDebug() << "curExp: " << curExp << " curNum: " << curNum << " curLevel: " << curLevel;
+
+				// update database
+				if(query.exec(tr("update user set playerlevel=%1, playerexp=%2, playernum=%3 where username='%4'")
+						   .arg(curLevel).arg(curExp).arg(curNum).arg(packet.playerName)))
+				{
+					qDebug() << "updatelevel success";
+
+					// after update the database, send it to the mainwindow
+					if(query.exec(tr("select * from user where username='%1'").arg(packet.playerName)))
 					{
-						emit sendUserInfo(Player(packet.playerName, query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
-										  Questioner(packet.playerName, query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+						if(query.next())
+						{
+							packet.expGained = expGained;
+
+							sendEndGamePacket(packet, socketDescriptor);
+							sendUserInfo(Player(packet.playerName, query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+										 Questioner(packet.playerName, query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()),
+										 socketDescriptor);
+						}
+						else
+							qDebug() << "unfound username in update exp";
 					}
 					else
-						qDebug() << "unfound username in update exp";
+						qDebug() << query.lastError() << "query for login package failed";
 				}
 				else
-					qDebug() << query.lastError() << "query for login package failed";
+					qDebug() << query.lastError() << "update userlevel failed";
 			}
 			else
-				qDebug() << query.lastError() << "update userlevel failed";
+				qDebug() << "update username not found error";
 		}
 		else
-			qDebug() << "update username not found error";
+			qDebug() << query.lastError() << "update exp failed";
 	}
-	else
-		qDebug() << query.lastError() << "update exp failed";
+
 #endif
 }
 
 
 
-void DatabaseServer::receiveQuestionWordList(QVector<Word> words, QString questioner)
+void DatabaseServer::receiveQuestionWordList(QVector<Word> words, QString questioner, qintptr socketDescriptor)
 {
 #ifdef USE_NETWORK
-	tcpClient.sendDataToServer(QString::number(ADDWORD_FUNCTION) + ',' + Word::specialWord() + ',' + questioner);
+	tcpClient.sendDataToServer(QString::number(ADDWORD_FUNCTION) + ",__start," + questioner);
 	for(auto word : words)
 	{
-		tcpClient.sendDataToServer(QString::number(ADDWORD_FUNCTION) + ',' + word.toString() + ',' + questioner);
+		tcpClient.sendDataToServer(QString::number(ADDWORD_FUNCTION) + ',' + word.getWord() + ',' + questioner);
 	}
-	tcpClient.sendDataToServer(QString::number(ADDWORD_FUNCTION) + ',' + Word::specialWord(false) + ',' + questioner);
+	tcpClient.sendDataToServer(QString::number(ADDWORD_FUNCTION) + ",__end," + questioner);
 #else
 	int cnt = 0;
 	double expGained = 0.0;
@@ -439,8 +525,9 @@ void DatabaseServer::receiveQuestionWordList(QVector<Word> words, QString questi
 				{
 					if(query.next())
 					{
-						emit sendUserInfo(Player(questioner, query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
-										  Questioner(questioner, query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
+						sendUserInfo(Player(questioner, query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+									 Questioner(questioner, query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()),
+									 socketDescriptor);
 					}
 					else
 						qDebug() << "unfound username in update exp";
@@ -457,107 +544,9 @@ void DatabaseServer::receiveQuestionWordList(QVector<Word> words, QString questi
 	else
 		qDebug() << query.lastError() << "update exp failed";
 
-	emit sendAddedWords(cnt, expGained_int);
+	sendAddedWords(cnt, expGained_int, socketDescriptor);
 #endif
 }
-
-#ifdef USE_NETWORK
-void DatabaseServer::handleMessages()
-{
-	static bool busy = false;
-	if(busy) return;
-	qDebug() << "message processing";
-	busy = true;
-	while(!tcpClient.messageQueue.empty())
-	{
-		QString message = tcpClient.messageQueue.front();
-		tcpClient.messageQueue.pop_front();
-		QStringList function = message.split(',');
-		bool ok;
-		int functionCode = function[0].toInt(&ok);
-		if(!ok)
-		{
-			qDebug() << "ERROR function code" << function[0];
-			continue;
-		}
-		switch(functionCode)
-		{
-		case LOGIN_FUNCTION:
-			emit sendLoginState(static_cast<LoginState>(function[1].toInt()));
-			break;
-		case REGISTER_FUNCTION:
-			emit sendRegisterState(static_cast<RegisterState>(function[1].toInt()));
-			break;
-		case USERINFO_FUNCTION:
-			emit sendUserInfo(Player::fromString(function[1]), Questioner::fromString(function[2]));
-			break;
-		case RANKLIST_FUNCTION:
-		{
-			Player player = Player::fromString(function[1]);
-			Questioner questioner = Questioner::fromString(function[2]);
-			if(player.getUserName() == "__start")
-			{
-				ranklistCache.players.clear();
-				ranklistCache.questioners.clear();
-				if(player.getLevel() == questioner.getLevel())
-				{
-					ranklistCache.method = static_cast<SortMethod>(player.getLevel());
-				}
-			}
-			else if(player.getUserName() == "__end")
-			{
-				qDebug() << (ranklistCache.method == player.getLevel());
-				emit sendRanklist(ranklistCache.players, ranklistCache.questioners, ranklistCache.method);
-			}
-			else
-			{
-				ranklistCache.players.push_back(player);
-				ranklistCache.questioners.push_back(questioner);
-			}
-		}
-			break;
-		case DETAILINFO_FUNCTION:
-		{
-			qDebug() << "ranklist detail";
-			Player player = Player::fromString(function[1]);
-			Questioner questioner = Questioner::fromString(function[2]);
-			emit sendDetailInfo(player, questioner);
-		}
-			break;
-		case WORDLIST_FUNCTION:
-		{
-			Word word = Word::fromString(function[1]);
-			if(word.getWord() == "__start")
-			{
-				wordsCache.clear();
-			}
-			else if(word.getWord() == "__end")
-			{
-				emit sendWordList(wordsCache);
-			}
-			else
-			{
-				wordsCache.push_back(word);
-			}
-		}
-			break;
-		case UPDATE_EXP_FUNCTION:
-		{
-			EndGamePacket packet = EndGamePacket::fromString(function[1]);
-			emit sendShowEndGameDialog(packet);
-		}
-			break;
-		case ADDWORD_FUNCTION:
-			emit sendAddedWords(function[1].toInt(), function[2].toInt());
-			break;
-		default:
-			qDebug() << "ERROR unexpected functioncode " << functionCode;
-		}
-
-	}
-	busy = false;
-}
-#endif
 
 void DatabaseServer::initDataBase()
 {

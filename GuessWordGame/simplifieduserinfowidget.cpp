@@ -6,6 +6,7 @@
 SimplifiedUserInfoWidget::SimplifiedUserInfoWidget(DatabaseServer &_DBserver, QWidget *parent):
 	QWidget(parent), DBserver(_DBserver)
 {
+
 	createWidget();
 	createLayout();
 	createConnection();
@@ -59,7 +60,7 @@ void SimplifiedUserInfoWidget::showUserInfo(Player player, Questioner questioner
 
 void SimplifiedUserInfoWidget::receiveUserInfo(Player player, Questioner questioner)
 {
-	DetailedUserInfoDialog *detailedWidget = new DetailedUserInfoDialog(player, questioner, this);
+	DetailedUserInfoDialog *detailedWidget = new DetailedUserInfoDialog(player, questioner);
 	detailedWidget->exec();
 }
 

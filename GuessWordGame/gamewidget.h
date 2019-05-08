@@ -17,6 +17,8 @@
 #include"databaseserver.h"
 #include"endgamedialog.h"
 #include"gamecache.h"
+#include<QTime>
+
 
 
 class WordLineEdit;
@@ -32,11 +34,12 @@ public:
 public slots:
 	void receiveWord(QString); // the word from line edit
 	void receiveWordList(QVector<Word> _words);
-	void receiveShowEndGameDialog();
+	void receiveShowEndGameDialog(EndGamePacket packet);
 	void paintEvent(QPaintEvent *event);
 signals:
 	// to datbase
 	void requestWordList(GameLevel level);
+	void sendEndGamePacket(EndGamePacket packet);
 	// to this(self)
 	void wordCorrectChecked(bool isCorrect);
 	// to database
@@ -70,6 +73,8 @@ private:
 
 	DatabaseServer &DBserver;
 	Player player;
+
+	QTime typingTimer;
 };
 
 class WordLineEdit: public QWidget

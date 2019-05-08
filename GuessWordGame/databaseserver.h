@@ -12,12 +12,19 @@
 #include<QSqlError>
 #include<QtDebug>
 #include<QVector>
+#include"tcpclient.h"
 
 class DatabaseServer: public QObject
 {
 	Q_OBJECT
 public:
+
+#ifdef USE_NETWORK
+	DatabaseServer(TcpClient &_tcpClient);
+#else
 	DatabaseServer();
+#endif
+
 	~DatabaseServer();
 	static LoginState checkLoginState(const LoginPackage &loginPackage);
 signals:
@@ -36,6 +43,7 @@ signals:
 
 	// to gameWidget.cpp
 	void sendWordList(QVector<Word> words);
+	void sendShowEndGameDialog(EndGamePacket packet);
 
 	// to questionWidget.cpp
 	void sendAddedWords(int count, int expGained);
@@ -53,20 +61,34 @@ public slots:
 
 	// from gameWidget.cpp
 	void receiveWordListRequest(GameLevel level);
-	void receiveUpdatedExp(QString playerName, int expGained, int problemNum);
+	void receiveEndGamePacket(EndGamePacket packet);
 
 	// from questionWidget.cpp
 	void receiveQuestionWordList(QVector<Word> words, QString questioner);
+
+#ifdef USE_NETWORK
+	// from TcpClient.cpp
+	void handleMessages();
+#endif
 
 private:
 	void initDataBase();
 	static bool isLevelup(int curLevel, int &exp);
 
 
-
 	QSqlDatabase db;
 	QSqlQuery query;
+#ifdef USE_NETWORK
+	TcpClient &tcpClient;
+	struct
+	{
+		QVector<Player> players;
+		QVector<Questioner> questioners;
+		SortMethod method;
+	} ranklistCache;
+	QVector<Word> wordsCache;
 
+#endif
 };
 
 #endif // DATABASESERVER_H
