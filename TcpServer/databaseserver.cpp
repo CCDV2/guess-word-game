@@ -188,6 +188,12 @@ void DatabaseServer::receiveLoginPackage(LoginPackage loginPackage, qintptr sock
 
 
 	const QString &userName = loginPackage.userName;
+	if(server.getOnlineSocket(userName) != 0)
+	{
+		sendLoginState(LOGIN_ALREADY, socketDescriptor);
+		return;
+	}
+
 	const QString &password = loginPackage.passWord;
 	if(query.exec(tr("select * from user where username='%1'").arg(userName)))
 	{

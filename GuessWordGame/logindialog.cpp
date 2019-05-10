@@ -28,6 +28,10 @@ void LoginDialog::receiveLoginState(LoginState state)
 		QMessageBox::warning(this, tr("未找到用户"), tr("该用户未被注册"));
 		userNameLineEdit->setFocus();
 		break;
+	case LOGIN_ALREADY:
+		QMessageBox::warning(this, tr("用户已登录"), tr("该用户已登录"));
+		userNameLineEdit->setFocus();
+		break;
 	}
 }
 
