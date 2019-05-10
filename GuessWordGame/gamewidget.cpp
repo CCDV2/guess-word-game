@@ -11,25 +11,34 @@ using std::max;
 GameWidget::GameWidget(DatabaseServer &_DBserver, QWidget *parent):
 	QWidget(parent), DBserver(_DBserver)
 {
-	QPalette palette = QPalette(this->palette());
-	palette.setColor(QPalette::Background, Qt::yellow);
-	setAutoFillBackground(true);
-	setPalette(palette);
+//	QPalette palette = QPalette(this->palette());
+//	palette.setColor(QPalette::Background, Qt::yellow);
+//	setAutoFillBackground(true);
+//	setPalette(palette);
 
 	createWidget();
 	createLayout();
 	createConnection();
 }
 
-void GameWidget::startGame(Player _player, GameLevel level)
+void GameWidget::startGame(Player _player, GameLevel level, GameStatus status, bool needSignal)
 {
+	showCountDownBar();
+	wordLabel->setText(tr("正在等待服务器连接"));
+	levelLabel->setText(tr("Level 0"));
 	player = _player;
-	gameCache.reset(level);
-	emit requestWordList(level);
+	gameCache.reset(level, status);
+	if(needSignal)
+	{
+		emit requestWordList(level, status);
+	}
 }
 
 void GameWidget::endGame()
 {	
+	showCountDownBar();
+	wordLabel->setText(tr("正在等待服务器连接"));
+	levelLabel->setText(tr("Level 0"));
 	EndGamePacket packet = gameCache.toEndGamePacket(player.getUserName());
 	emit sendEndGamePacket(packet);
 //	double difficultyScale = DIFFICULTY_SCALE_TABLE[gameCache.getLevel()];
@@ -136,7 +145,7 @@ void GameWidget::paintEvent(QPaintEvent *event)
 
 void GameWidget::createWidget()
 {
-	wordLabel = new QLabel(tr("abandon"));
+	wordLabel = new QLabel(tr("正在等待服务器连接"));
 	levelLabel = new QLabel(tr("Level 0"));
 	countDownBar = new QProgressBar();
 	wordLineEdit = new WordLineEdit();

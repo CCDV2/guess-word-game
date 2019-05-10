@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include <QApplication>
 
+#include<QSplashScreen>
+#include<QMessageBox>
+#include"tcpclient.h"
+
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
@@ -12,11 +16,19 @@ int main(int argc, char *argv[])
 	}
 	QString qss = QLatin1String(file.readAll());
 	a.setStyleSheet(qss);
-	qDebug() << a.styleSheet();
 	file.close();
+
+
+	QPixmap pixmap(":/png/img/20130707105529296.jpg");
+	QSplashScreen splash(pixmap);
+	splash.show();
+	a.processEvents();
+	splash.showMessage(QObject::tr("正在初始化.."));
+	a.processEvents();
 
 	MainWindow w;
 	w.show();
+	splash.finish(&w);
 
 	return a.exec();
 }

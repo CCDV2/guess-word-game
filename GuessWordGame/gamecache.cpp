@@ -48,7 +48,7 @@ bool GameCache::decreaseTimeLength(int dec)
 	else return true;
 }
 
-void GameCache::reset(GameLevel _level)
+void GameCache::reset(GameLevel _level, GameStatus _status)
 {
 	wordi = -1;
 	correctNum = -1;
@@ -58,6 +58,7 @@ void GameCache::reset(GameLevel _level)
 	ready = false;
 	level = _level;
 	totalTypingTime = 0;
+	status = _status;
 }
 
 bool GameCache::isReady()
@@ -112,5 +113,5 @@ int GameCache::getTotalTime()
 
 EndGamePacket GameCache::toEndGamePacket(QString player)
 {
-	return EndGamePacket(player, level, correctNum, wrongNum, totalTypingTime);
+	return EndGamePacket(player, level, correctNum, wrongNum, totalTypingTime, 0, 0, status, 0);
 }

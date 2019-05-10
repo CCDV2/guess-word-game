@@ -1,5 +1,7 @@
 #include "databaseserver.h"
 #include<QTime>
+#include<QThread>
+#include<QApplication>
 using std::max;
 
 #ifndef USE_NETWORK
@@ -272,11 +274,12 @@ void DatabaseServer::receiveDetailInfoRequest(SortMethod sortMethod, int index)
 #endif
 }
 
-void DatabaseServer::receiveWordListRequest(GameLevel level)
+void DatabaseServer::receiveWordListRequest(GameLevel level, GameStatus status)
 {
 #ifdef USE_NETWORK
-	tcpClient.sendDataToServer(tr("%1,%2").arg(WORDLIST_FUNCTION).arg(level));
+	tcpClient.sendDataToServer(tr("%1,%2,%3").arg(WORDLIST_FUNCTION).arg(level).arg(status));
 #else
+	assert(status == GAME_SINGLE);
 	QVector<Word> words;
 	QString levelRange;
 	switch(level)
@@ -373,10 +376,25 @@ void DatabaseServer::receiveEndGamePacket(EndGamePacket packet)
 void DatabaseServer::receiveQuestionWordList(QVector<Word> words, QString questioner)
 {
 #ifdef USE_NETWORK
+	int count = 0;
 	tcpClient.sendDataToServer(QString::number(ADDWORD_FUNCTION) + ',' + Word::specialWord() + ',' + questioner);
 	for(auto word : words)
 	{
 		tcpClient.sendDataToServer(QString::number(ADDWORD_FUNCTION) + ',' + word.toString() + ',' + questioner);
+		++count;
+
+		if(count >= 1000)
+		{
+			tcpClient.sendDataToServer(QString::number(ADDWORD_FUNCTION) + ',' + "__wait.0" + ',' + questioner);
+			QTime t;
+			t.start();
+			while(t.elapsed() < 2000)
+			{
+				QThread::msleep(10);
+				QApplication::processEvents();
+			}
+			count = 0;
+		}
 	}
 	tcpClient.sendDataToServer(QString::number(ADDWORD_FUNCTION) + ',' + Word::specialWord(false) + ',' + questioner);
 #else
@@ -550,12 +568,69 @@ void DatabaseServer::handleMessages()
 		case ADDWORD_FUNCTION:
 			emit sendAddedWords(function[1].toInt(), function[2].toInt());
 			break;
+		case ONLINE_USERS_FUNCTION:
+		{
+			QVector<QString> onlineUser = function[1].split('.').toVector();
+			emit sendOnlineUsers(onlineUser);
+		}
+			break;
+		case ONLINE_USER_DETAIL_FUNCTION:
+		{
+			Player player = Player::fromString(function[1]);
+			Questioner questioner = Questioner::fromString(function[2]);
+			emit sendOnlineUserDetail(player, questioner);
+		}
+			break;
+		case REQUEST_BATTLE_FUNCTION:
+		{
+			BattlePacket packet = BattlePacket::fromString(function[1]);
+			emit sendBattleRequest(packet);
+		}
+			break;
+		case RESPOND_BATTLE_FUNCTION:
+		{
+			BattlePacket packet = BattlePacket::fromString(function[1]);
+			emit sendBattleRespond(packet);
+		}
+			break;
+		case WAIT_FUNCTION:
+			emit sendWaitSignal();
+			break;
+		case GAME_CANCEL_FUNCTION:
+			emit sendEnemyGameCancel();
+			break;
 		default:
 			qDebug() << "ERROR unexpected functioncode " << functionCode;
 		}
 
 	}
 	busy = false;
+}
+
+void DatabaseServer::receiveOnlineUserRequest()
+{
+	tcpClient.sendDataToServer(QString::number(ONLINE_USERS_FUNCTION));
+}
+
+void DatabaseServer::receiveOnlineUserDetailInfoRequest(QString user)
+{
+	tcpClient.sendDataToServer(QString::number(ONLINE_USER_DETAIL_FUNCTION) + ',' + user);
+}
+
+void DatabaseServer::receiveBattleRequest(BattlePacket packet)
+{
+	tcpClient.sendDataToServer(QString::number(REQUEST_BATTLE_FUNCTION) + ',' + packet.toString());
+}
+
+void DatabaseServer::receiveBattelRespond(BattlePacket packet)
+{
+	tcpClient.sendDataToServer(QString::number(RESPOND_BATTLE_FUNCTION) + ',' +
+							   packet.toString());
+}
+
+void DatabaseServer::receiveGameCancel()
+{
+	tcpClient.sendDataToServer(QString::number(GAME_CANCEL_FUNCTION));
 }
 #endif
 

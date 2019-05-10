@@ -16,8 +16,11 @@
 #include"ranklistwidget.h"
 #include"questionwidget.h"
 #include"gamemodeselectwidget.h"
-#include"friendwidget.h"
+#include"onlineuserwidget.h"
 #include"tcpclient.h"
+#include<QToolBox>
+#include<QMessageBox>
+
 
 class MainWindow : public QMainWindow
 {
@@ -29,6 +32,11 @@ public:
 signals:
 	void sendUserInfo(Player player, Questioner questioner);
 	void sendQuestionerName(QString _questionerName);
+
+	void sendBattleRespond(BattlePacket packet);
+
+	void sendGameCancel();
+
 public slots:
 	void receiveUserInfo(Player _player, Questioner _questioner);
 	// to detial user info
@@ -36,12 +44,22 @@ public slots:
 	// to questioner
 	void receiveRequireForQuestionerName();
 
+	void receiveBattleRequest(BattlePacket packet);
+	void receiveBattleRespond(BattlePacket packet);
+	void receiveEnmeyGameCancel();
+
 private slots:
 	void on_startGameButton_clicked();
 	void on_startQuestionButton_clicked();
 	void on_startRanklistButton_clicked();
 	void backToWelcomeWidget();
-	void receiveGameMode(GameLevel level);
+	void receiveGameMode(GameLevel level, GameStatus status, bool needSignal);
+	void showEvent(QShowEvent *event);
+	void closeEvent(QCloseEvent *event);
+	void networkFailed();
+	void receiveWaitSignal();
+	void on_gameBackButton_clicked();
+	void battleBoxClosed(int result);
 private:
 	void createWidget();
 	void createLayout();
@@ -49,7 +67,7 @@ private:
 
 	QWidget *mainWidget;
 	QHBoxLayout *mainLayout;
-	QVBoxLayout *buttonLayout;
+	QVBoxLayout *buttonLayout, *loginOnlineLayout;
 //	LoginDialog *loginWindow;
 //	RegisterDialog *registerWindow;
 	GameWidget *gameWidget;
@@ -59,7 +77,7 @@ private:
 	QuestionWidget *questionWidget;
 	RanklistWidget *ranklistWidget;
 	QStackedWidget *stackWidget;
-	FriendWidget *friendWidget;
+	OnlineUserWidget *onlineUserWidget;
 
 	// welcome gameselect game question display
 	QWidget *widget[5];
@@ -72,6 +90,10 @@ private:
 	Questioner *questioner;
 	DatabaseServer *DBServer;
 	TcpClient *tcpClient;
+
+	QTimer netWorkTimer;
+	QMessageBox waitBox, battleBox;
+	BattlePacket respondPacket;
 };
 
 #endif // MAINWINDOW_H

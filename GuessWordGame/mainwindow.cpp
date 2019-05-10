@@ -1,6 +1,11 @@
 #include "mainwindow.h"
 #include<QMessageBox>
 
+#if defined(Q_OS_WIN)
+#include<windows.h>
+#endif
+
+
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 {
@@ -8,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
 	setWindowState(Qt::WindowMaximized);
 
 	tcpClient = new TcpClient(this);
+
+
 	DBServer = new DatabaseServer(*tcpClient);
 	createWidget();
 	createLayout();
@@ -17,12 +24,19 @@ MainWindow::MainWindow(QWidget *parent)
 
 	player = nullptr;
 	questioner = nullptr;
+#if defined(Q_OS_WIN)
+	Sleep(4000);
+#endif
 }
 
 MainWindow::~MainWindow()
 {
-	delete player;
-	delete questioner;
+	if(player)
+		delete player;
+	if(questioner)
+		delete questioner;
+	if(DBServer)
+		delete DBServer;
 }
 
 void MainWindow::receiveUserInfo(Player _player, Questioner _questioner)
@@ -32,6 +46,8 @@ void MainWindow::receiveUserInfo(Player _player, Questioner _questioner)
 	player = new Player(_player);
 	questioner = new Questioner(_questioner);
 	simplifiedUserInfoWidget->showUserInfo(*player, *questioner);
+	ranklistWidget->setUserName(player->getUserName());
+	onlineUserWidget->setIsLogin(true);
 }
 
 void MainWindow::receiveRequireForUserInfo()
@@ -50,6 +66,59 @@ void MainWindow::receiveRequireForQuestionerName()
 	{
 		emit sendQuestionerName(questioner->getUserName());
 	}
+}
+
+void MainWindow::receiveBattleRequest(BattlePacket packet)
+{
+	respondPacket = packet;
+	QString level = tr("难度：");
+	switch(packet.level)
+	{
+	case EASY:
+		level += tr("EASY");
+		break;
+	case NORMAL:
+		level += tr("NORMAL");
+		break;
+	case HARD:
+		level += tr("HARD");
+		break;
+	case EXPERT:
+		level += tr("EXPERT");
+		break;
+	}
+
+	battleBox.setText(packet.enemy +
+				tr("向你发来了对战请求，是否接受？\n") +
+				level + ' ' +
+				tr("单词数量：%1").arg(packet.wordNum));
+	battleBox.show();
+
+}
+
+void MainWindow::receiveBattleRespond(BattlePacket packet)
+{
+	switch(packet.respond)
+	{
+	case BATTLE_REJECT:
+		QMessageBox::information(this, tr("对战请求"), packet.enemy + tr("拒绝了你的对战请求"), QMessageBox::Ok);
+		backToWelcomeWidget();
+		break;
+	case BATTLE_OFFLINE:
+		QMessageBox::information(this, tr("对战请求"), packet.enemy + tr("似乎并不在线。。"), QMessageBox::Ok);
+		backToWelcomeWidget();
+		break;
+	default:
+		qDebug() << "battle respond can't be here";
+	}
+
+}
+
+void MainWindow::receiveEnmeyGameCancel()
+{
+	battleBox.close();
+	QMessageBox::information(this, tr("对战请求"), tr("对方取消了对战请求"));
+	backToWelcomeWidget();
 }
 
 void MainWindow::on_startGameButton_clicked()
@@ -93,11 +162,69 @@ void MainWindow::backToWelcomeWidget()
 	stackWidget->setCurrentWidget(widget[0]);
 }
 
-void MainWindow::receiveGameMode(GameLevel level)
+void MainWindow::receiveGameMode(GameLevel level, GameStatus status, bool needSignal)
 {
 	stackWidget->setCurrentWidget(widget[2]);
-	gameWidget->startGame(*player, level);
+	gameWidget->startGame(*player, level, status, needSignal);
 }
+
+void MainWindow::showEvent(QShowEvent *event)
+{
+	Q_UNUSED(event);
+	if(!tcpClient->isConnected())
+	{
+		QTimer::singleShot(500, this, &MainWindow::networkFailed);
+	}
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+	Q_UNUSED(event);
+#ifdef USE_NETWORK
+	disconnect(tcpClient, &TcpClient::serverDisconnected, this, &MainWindow::networkFailed);
+#endif
+}
+
+void MainWindow::networkFailed()
+{
+	QMessageBox::critical(this, tr("网络断开"), tr("网络连接失败"));
+	close();
+}
+
+void MainWindow::receiveWaitSignal()
+{
+	waitBox.show();
+}
+
+void MainWindow::on_gameBackButton_clicked()
+{
+	emit sendGameCancel();
+}
+
+void MainWindow::battleBoxClosed(int _result)
+{
+	switch(_result)
+	{
+	case QMessageBox::Yes:
+		respondPacket.isRequest = false;
+		respondPacket.respond = BATTLE_ACCEPT;
+		emit sendBattleRespond(respondPacket);
+		receiveGameMode(respondPacket.level, GAME_DUO, false);
+		break;
+	case QMessageBox::No:
+	case 0:
+		respondPacket.isRequest = false;
+		respondPacket.respond = BATTLE_REJECT;
+		emit sendBattleRespond(respondPacket);
+		break;
+	default:
+		qDebug() << "the result is " << _result;
+		break;
+	}
+}
+
+
+
 
 
 
@@ -152,13 +279,25 @@ void MainWindow::createWidget()
 	}
 
 //	friend widget
-	friendWidget = new FriendWidget(this);
+	onlineUserWidget = new OnlineUserWidget(*DBServer, this);
+
+	waitBox.setWindowTitle(tr("服务器忙"));
+	waitBox.setText(tr("服务器繁忙中，请稍等"));
+	waitBox.setStandardButtons(QMessageBox::Ok);
+	waitBox.setModal(false);
+
+	battleBox.setWindowTitle(tr("对战请求"));
+	battleBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	battleBox.setModal(false);
 }
 
 void MainWindow::createLayout()
 {
 	mainLayout = new QHBoxLayout(mainWidget);
-	mainLayout->addWidget(simplifiedUserInfoWidget, 1, Qt::AlignTop);
+	loginOnlineLayout = new QVBoxLayout();
+	loginOnlineLayout->addWidget(simplifiedUserInfoWidget, 1);
+	loginOnlineLayout->addWidget(onlineUserWidget, 4);
+	mainLayout->addLayout(loginOnlineLayout, 1);
 //	mainLayout->addWidget(loginWindow, 0, 0);
 //	mainLayout->addWidget(registerWindow, 1, 0);
 
@@ -191,13 +330,13 @@ void MainWindow::createLayout()
 	widgetLayout[4]->addWidget(ranklistWidget);
 	widgetLayout[4]->addWidget(backButton[3], 0, Qt::AlignBottom | Qt::AlignRight);
 
-	mainLayout->addWidget(friendWidget);
 	mainLayout->addWidget(stackWidget, 5);
 	mainWidget->setLayout(mainLayout);
 }
 
 void MainWindow::createConnection()
 {
+
 	// use in login
 	connect(DBServer, &DatabaseServer::sendUserInfo, this, &MainWindow::receiveUserInfo);
 	connect(simplifiedUserInfoWidget, &SimplifiedUserInfoWidget::requireUserInfo,
@@ -221,4 +360,22 @@ void MainWindow::createConnection()
 	{
 		connect(backButton[i], &QPushButton::clicked, this, &MainWindow::backToWelcomeWidget);
 	}
+#ifdef USE_NETWORK
+	connect(DBServer, &DatabaseServer::sendBattleRequest, this, &MainWindow::receiveBattleRequest);
+	connect(DBServer, &DatabaseServer::sendBattleRespond, this, &MainWindow::receiveBattleRespond);
+	connect(this, &MainWindow::sendBattleRespond, DBServer, &DatabaseServer::receiveBattelRespond);
+
+	connect(onlineUserWidget, &OnlineUserWidget::sendGameMode, this, &MainWindow::receiveGameMode);
+	connect(ranklistWidget, &RanklistWidget::sendGameMode, this, &MainWindow::receiveGameMode);
+
+	connect(tcpClient, &TcpClient::serverDisconnected, this, &MainWindow::networkFailed);
+	connect(DBServer, &DatabaseServer::sendWaitSignal, this, &MainWindow::receiveWaitSignal);
+
+	connect(backButton[1], &QPushButton::clicked, this, &MainWindow::on_gameBackButton_clicked);
+	connect(this, &MainWindow::sendGameCancel, DBServer, &DatabaseServer::receiveGameCancel);
+	connect(DBServer, &DatabaseServer::sendEnemyGameCancel, this, &MainWindow::receiveEnmeyGameCancel);
+	connect(&battleBox, &QMessageBox::finished, this, &MainWindow::battleBoxClosed);
+#endif
+
+
 }

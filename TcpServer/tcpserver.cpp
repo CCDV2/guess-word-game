@@ -1,11 +1,14 @@
 #include "tcpserver.h"
 #include<QTime>
 #include<QStringList>
+#include<algorithm>
+using std::random_shuffle;
 
 TcpServer::TcpServer(QWidget *parent, Qt::WindowFlags f)
 	: QDialog(parent)
 {
 	Q_UNUSED(f)
+
 
 	port = 8010;
 	setWindowState(Qt::WindowMaximized);
@@ -16,7 +19,6 @@ TcpServer::TcpServer(QWidget *parent, Qt::WindowFlags f)
 
 TcpServer::~TcpServer()
 {
-
 }
 
 void TcpServer::sendMessage(qintptr socketDescriptor, QString message)
@@ -31,13 +33,15 @@ void TcpServer::slotCreateServer()
 	server = new Server(*contentListWidget, this, port);
 	DBServer = new DatabaseServer(*server, this);
 	connect(server, &Server::sendUpdateServer, this, &TcpServer::receiveUpdateServer);
+	connect(DBServer, &DatabaseServer::sendStartMatch, this, &TcpServer::startMatch);
+
 	createButton->setEnabled(false);
 
 }
 
 void TcpServer::receiveUpdateServer(QString message, int length, qintptr socketDescriptor)
 {
-	contentListWidget->addItem(Server::getCurrentTimeStamp() + ' ' + QString::number(socketDescriptor) + ": " + message.left(length));
+	writeLog(Server::getCurrentTimeStamp() + ' ' + QString::number(socketDescriptor) + ": " + message.left(length));
 	QStringList messages = message.left(length).split('\n');
 	for(auto toHandleMessage : messages)
 	{
@@ -45,6 +49,21 @@ void TcpServer::receiveUpdateServer(QString message, int length, qintptr socketD
 		messageQueue.push_back({toHandleMessage, socketDescriptor});
 	}
 	handleMessage();
+}
+
+
+void TcpServer::receiveDeleteRequest(MatchModule *module)
+{
+	writeLog(server->getCurrentTimeStamp() + " host: game end between " + module->getTwoPlayerName(" and "));
+	for(int i = 0; i < matches.size(); ++i)
+	{
+		if(matches[i] == module)
+		{
+			matches[i]->deleteLater();
+			matches.removeAt(i);
+			return;
+		}
+	}
 }
 
 void TcpServer::handleMessage()
@@ -61,7 +80,7 @@ void TcpServer::handleMessage()
 		int functionCode = function[0].toInt(&ok);
 		if(!ok)
 		{
-			contentListWidget->addItem(Server::getCurrentTimeStamp() + ' ' + "host: ERROR converting function code. Origin string is " + function[0]);
+			writeLog(Server::getCurrentTimeStamp() + ' ' + "host: ERROR converting function code. Origin string is " + function[0]);
 			continue;
 		}
 		switch(functionCode)
@@ -81,12 +100,30 @@ void TcpServer::handleMessage()
 			DBServer->receiveDetailInfoRequest(static_cast<SortMethod>(function[1].toInt()), function[2].toInt(), socketDescriptor);
 			break;
 		case WORDLIST_FUNCTION:
-			DBServer->receiveWordListRequest(static_cast<GameLevel>(function[1].toInt()), socketDescriptor);
+		{
+			GameStatus status = static_cast<GameStatus>(function[2].toInt());
+			int level = function[1].toInt();
+			if(status == GAME_SINGLE)
+			{
+				DBServer->receiveWordListRequest(static_cast<GameLevel>(level), socketDescriptor);
+			}
+			else
+			{
+				assert(status == GAME_DUO);
+				server->setUserStatus(socketDescriptor, STATUS_WAITING_MATCH);
+				waitingMatchList[level].push_back(socketDescriptor);
+				checkWaitingList();
+			}
+		}
 			break;
 		case UPDATE_EXP_FUNCTION:
 		{
 			EndGamePacket packet = EndGamePacket::fromString(function[1]);
-			DBServer->receiveEndGamePacket(packet, socketDescriptor);
+			if(!sendToMatch(packet, socketDescriptor)) // belong to DUO game
+			{
+				// this belong to single game
+				DBServer->receiveEndGamePacket(packet, socketDescriptor);
+			}
 		}
 			break;
 		case ADDWORD_FUNCTION:
@@ -103,18 +140,139 @@ void TcpServer::handleMessage()
 				qDebug() << (addWordCache.questioner == questioner);
 				DBServer->receiveQuestionWordList(addWordCache.words, addWordCache.questioner, socketDescriptor);
 			}
+			else if(word.getWord() == "__wait")
+			{
+				qDebug() << "too many words. waiting";
+			}
 			else
 			{
 				addWordCache.words.push_back(word);
 			}
 		}
 			break;
+		case ONLINE_USERS_FUNCTION:
+		{
+			DBServer->receiveOnlineUserRequest(socketDescriptor);
+		}
+			break;
+		case ONLINE_USER_DETAIL_FUNCTION:
+		{
+			DBServer->receiveOnlineUserDetailInfoRequest(function[1], socketDescriptor);
+		}
+			break;
+		case REQUEST_BATTLE_FUNCTION:
+		{
+			BattlePacket packet = BattlePacket::fromString(function[1]);
+			waitingBattlePair[socketDescriptor] = server->getOnlineSocket(packet.enemy);
+			DBServer->receiveBattleRequest(packet, socketDescriptor);
+		}
+			break;
+		case RESPOND_BATTLE_FUNCTION:
+		{
+			BattlePacket packet = BattlePacket::fromString(function[1]);
+			if(waitingBattlePair.remove(server->getOnlineSocket(packet.enemy)))
+				DBServer->receiveBattelRespond(packet, socketDescriptor);
+		}
+			break;
+		case GAME_CANCEL_FUNCTION:
+		{
+			switch(server->getUserStatus(socketDescriptor))
+			{
+			case STATUS_WAITING_MATCH:
+				if(removeFromWaitingMacthList(socketDescriptor))
+				{
+					server->setUserStatus(socketDescriptor, STATUS_FREE);
+				}
+				else
+				{
+					server->writeLog(server->getCurrentTimeStamp() +
+									 " host: ERROR cannot find queueing player " +
+									 server->getOnlineUsername(socketDescriptor));
+				}
+				break;
+			case STATUS_WAITING_BATTLE:
+				DBServer->sendEnemyGameCancel(waitingBattlePair[socketDescriptor]);
+				waitingBattlePair.remove(socketDescriptor);
+				break;
+			default:
+				break;
+			}
+		}
+			break;
 		default:
-			contentListWidget->addItem(Server::getCurrentTimeStamp() + ' ' + tr("host: unexpected function code %1").arg(functionCode));
+			writeLog(Server::getCurrentTimeStamp() + ' ' + tr("host: unexpected function code %1").arg(functionCode));
 			break;
 		}
 	}
 }
+
+void TcpServer::checkWaitingList()
+{
+	qDebug() << "waiting";
+	for(int i = 0; i < 4; ++i)
+	{
+		if(waitingMatchList[i].size() >= 2)
+		{
+			random_shuffle(waitingMatchList[i].begin(), waitingMatchList[i].end());
+			while(waitingMatchList[i].size() >= 2)
+			{
+				qintptr p1 = waitingMatchList[i].back();
+				waitingMatchList[i].pop_back();
+				qintptr p2 = waitingMatchList[i].back();
+				waitingMatchList[i].pop_back();
+				startMatch(i, p1, p2, 5);
+			}
+		}
+	}
+
+}
+
+void TcpServer::startMatch(int level, qintptr p1, qintptr p2, int wordNum)
+{
+	writeLog(server->getCurrentTimeStamp() +
+			 " host: game start between " +
+			 server->getOnlineUsername(p1) + " and "
+			 + server->getOnlineUsername(p2));
+	MatchModule *match = new MatchModule(p1, p2, static_cast<GameLevel>(level), wordNum, *DBServer, *server, this);
+	connect(match, &MatchModule::requestDelete, this, &TcpServer::receiveDeleteRequest);
+	matches.push_back(match);
+	match->startMatch();
+}
+
+void TcpServer::writeLog(QString message)
+{
+	server->writeLog(message);
+}
+
+bool TcpServer::sendToMatch(EndGamePacket packet, qintptr socketDescriptor)
+{
+	for(auto match : matches)
+	{
+		if(match->contain(socketDescriptor))
+		{
+			match->setOnePacket(packet, socketDescriptor);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool TcpServer::removeFromWaitingMacthList(qintptr socketDescriptor)
+{
+	for(int i = 0; i < 4; ++i)
+	{
+		for(int j = 0; j < waitingMatchList[i].size(); ++j)
+		{
+			if(waitingMatchList[i][j] == socketDescriptor)
+			{
+				waitingMatchList[i].removeAt(j);
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 
 void TcpServer::createWidget()
 {
@@ -139,3 +297,4 @@ void TcpServer::createConnection()
 {
 	connect(createButton, &QPushButton::clicked, this, &TcpServer::slotCreateServer);
 }
+

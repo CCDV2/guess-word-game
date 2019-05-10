@@ -37,6 +37,12 @@ QPushButton::pressed{
 	border-style: inset;
 }
 
+QPushButton::disabled{
+	background: rgb(130, 137, 151);
+	border-color: white;
+	border-style: outset;
+}
+
 QTabWidget::pane { /* The tab widget frame */
 	border: 5px solid;
 	border-top-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,

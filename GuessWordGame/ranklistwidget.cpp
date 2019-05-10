@@ -78,7 +78,16 @@ void RanklistWidget::receiveRanklist(QVector<Player> players, QVector<Questioner
 
 void RanklistWidget::receiveDetailInfo(Player player, Questioner questioner)
 {
-	DetailedUserInfoDialog *detailDialog = new DetailedUserInfoDialog(player, questioner, ADDING_FRIEND);
+	DetailedUserInfoDialog *detailDialog;
+	if(player.getUserName() == userName)
+	{
+		detailDialog = new DetailedUserInfoDialog(player, questioner, DBserver, MYSELF_OPEN);
+	}
+	else
+	{
+		detailDialog = new DetailedUserInfoDialog(player, questioner, DBserver, RANKLIST_OPEN);
+		connect(detailDialog, &DetailedUserInfoDialog::sendGameMode, this, &RanklistWidget::receiveGameMode);
+	}
 	detailDialog->exec();
 }
 
@@ -155,6 +164,11 @@ void RanklistWidget::on_header_clicked(int column)
 	emit requestRanklist(currentMethod);
 }
 
+void RanklistWidget::receiveGameMode(GameLevel level, GameStatus status, bool needSignal)
+{
+	emit sendGameMode(level, status, needSignal);
+}
+
 void RanklistWidget::createWidget()
 {
 	searchPlayerButton = new QPushButton(tr("玩家榜"));
@@ -215,5 +229,10 @@ void RanklistWidget::showTableByQuestioner(QVector<Questioner> &questioners)
 		tableWidget->setItem(cnt, 2, new QTableWidgetItem(tr("%1").arg(questioner.getQuestionNum())));
 		++cnt;
 	}
+}
+
+void RanklistWidget::setUserName(const QString &value)
+{
+	userName = value;
 }
 

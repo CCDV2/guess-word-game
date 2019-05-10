@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql network
+QT       += core gui sql network xml
 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -41,9 +41,10 @@ SOURCES += \
     gamemodeselectwidget.cpp \
     endgamedialog.cpp \
     gamecache.cpp \
-    friendwidget.cpp \
     tcpclient.cpp \
-    user.cpp
+    user.cpp \
+    onlineuserwidget.cpp \
+    battlechoosedialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -61,9 +62,10 @@ HEADERS += \
     gamemodeselectwidget.h \
     endgamedialog.h \
     gamecache.h \
-    friendwidget.h \
     tcpclient.h \
-    user.h
+    user.h \
+    onlineuserwidget.h \
+    battlechoosedialog.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

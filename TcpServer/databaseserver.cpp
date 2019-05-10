@@ -1,5 +1,7 @@
 #include "databaseserver.h"
 #include<QTime>
+#include<QThread>
+#include<QApplication>
 using std::max;
 
 #ifndef USE_NETWORK
@@ -107,6 +109,7 @@ void DatabaseServer::sendDetailInfo(Player player, Questioner questioner, qintpt
 
 void DatabaseServer::sendWordList(QVector<Word> words, qintptr socketDescriptor)
 {
+	server.setUserStatus(socketDescriptor, STATUS_PLAYING);
 	server.sendMessageToClient(socketDescriptor,
 							   QString::number(WORDLIST_FUNCTION) + ',' +
 							   Word::specialWord());
@@ -136,6 +139,47 @@ void DatabaseServer::sendAddedWords(int count, int expGained, qintptr socketDesc
 							   QString::number(expGained));
 }
 
+void DatabaseServer::sendOnlineUsers(QVector<QString> users, qintptr socketDescriptor)
+{
+	server.sendMessageToClient(socketDescriptor,
+							   QString::number(ONLINE_USERS_FUNCTION) + ',' +
+							   users.toList().join('.'));
+}
+
+void DatabaseServer::sendOnlineUserDetail(Player player, Questioner questioner, qintptr socketDescriptor)
+{
+	server.sendMessageToClient(socketDescriptor,
+							   QString::number(ONLINE_USER_DETAIL_FUNCTION) + ',' +
+							   player.toString() + ',' +
+							   questioner.toString());
+}
+
+void DatabaseServer::sendBattleRequest(BattlePacket packet, qintptr socketDescriptor)
+{
+	server.sendMessageToClient(socketDescriptor,
+							   QString::number(REQUEST_BATTLE_FUNCTION) + ',' +
+							   packet.toString());
+}
+
+void DatabaseServer::sendBattleRespond(BattlePacket packet, qintptr socketDescriptor)
+{
+	server.sendMessageToClient(socketDescriptor,
+							   QString::number(RESPOND_BATTLE_FUNCTION) + ',' +
+							   packet.toString());
+}
+
+void DatabaseServer::sendWaitingMessage(qintptr socketDescriptor)
+{
+	server.sendMessageToClient(socketDescriptor, QString::number(WAIT_FUNCTION));
+}
+
+void DatabaseServer::sendEnemyGameCancel(qintptr socketDescriptor)
+{
+	server.sendMessageToClient(socketDescriptor, QString::number(GAME_CANCEL_FUNCTION));
+}
+
+
+
 void DatabaseServer::receiveLoginPackage(LoginPackage loginPackage, qintptr socketDescriptor)
 {
 #ifdef USE_NETWORK
@@ -152,6 +196,7 @@ void DatabaseServer::receiveLoginPackage(LoginPackage loginPackage, qintptr sock
 			QString pwdInDB = query.value(1).toString();
 			if(pwdInDB == password)
 			{
+				server.addOnlineUser(socketDescriptor, userName);
 				sendLoginState(LOGIN_SUCCESS, socketDescriptor);
 				sendUserInfo(Player(userName, query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
 							  Questioner(userName, query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()),
@@ -198,6 +243,7 @@ void DatabaseServer::receiveRegisterPackage(RegisterPackage registerPackage, qin
 			query.bindValue(7, 0);
 			if(query.exec())
 			{
+				server.addOnlineUser(socketDescriptor, userName);
 				sendRegisterState(REGISTER_SUCCESS, socketDescriptor);
 				sendUserInfo(Player(userName, 1, 0, 0), Questioner(userName, 1, 0, 0), socketDescriptor);
 			}
@@ -350,7 +396,7 @@ void DatabaseServer::receiveDetailInfoRequest(SortMethod sortMethod, int index, 
 #endif
 }
 
-void DatabaseServer::receiveWordListRequest(GameLevel level, qintptr socketDescriptor)
+void DatabaseServer::receiveWordListRequest(GameLevel level, qintptr socketDescriptor, qintptr socketDescriptor2, int wordNum)
 {
 #ifdef USE_NETWORK
 	tcpClient.sendDataToServer(tr("%1,%2").arg(WORDLIST_FUNCTION).arg(level));
@@ -372,14 +418,22 @@ void DatabaseServer::receiveWordListRequest(GameLevel level, qintptr socketDescr
 		levelRange = tr("level between 8 and 10");
 		break;
 	}
-	if(query.exec(tr("select * from wordlist where %1 order by random() limit 5").arg(levelRange)))
+	if(query.exec(tr("select * from wordlist where %1 order by random() limit %2").arg(levelRange).arg(wordNum)))
 	{
 		while(query.next())
 		{
 			words.push_back(Word(query.value(0).toString(), query.value(1).toInt()));
 		}
 		qDebug() << "Receive " << words.size() << "words";
-		sendWordList(words, socketDescriptor);
+		if(socketDescriptor2 == -1)
+		{
+			sendWordList(words, socketDescriptor);
+		}
+		else
+		{
+			sendWordList(words, socketDescriptor);
+			sendWordList(words, socketDescriptor2);
+		}
 	}
 	else
 		qDebug() << query.lastError() << "get wordlist failed";
@@ -391,11 +445,18 @@ void DatabaseServer::receiveEndGamePacket(EndGamePacket packet, qintptr socketDe
 #ifdef USE_NETWORK
 	tcpClient.sendDataToServer(QString::number(UPDATE_EXP_FUNCTION) + ',' + packet.toString());
 #else
+	double difficultyScale;
+	int expGained;
 	if(packet.isWin == GAME_SINGLE)
 	{
-		double difficultyScale = DIFFICULTY_SCALE_TABLE[packet.level];
-		int expGained = static_cast<int>(50 * (max(packet.correctNum - packet.wrongNum, 0))
-										 * difficultyScale);
+		 difficultyScale = DIFFICULTY_SCALE_TABLE[packet.level];
+		 expGained = static_cast<int>(50 * (max(packet.correctNum - packet.wrongNum, 0))
+											  * difficultyScale);
+	}
+	else
+	{
+		expGained = packet.expGained;
+	}
 		if(query.exec(tr("select playerlevel, playerexp, playernum from user where username='%1'").arg(packet.playerName)))
 		{
 			if(query.next())
@@ -406,7 +467,7 @@ void DatabaseServer::receiveEndGamePacket(EndGamePacket packet, qintptr socketDe
 				int preExp = query.value(1).toInt();
 				int preNum = query.value(2).toInt();
 				qDebug() << "preLevel: " << preLevel << " preExp: " << preExp << " preNum: " << preNum;
-				int curExp = preExp + expGained;
+				int curExp = max(preExp + expGained, 0);
 				int curNum = preNum + packet.correctNum;
 				int curLevel = preLevel;
 				bool isLvup;
@@ -430,6 +491,7 @@ void DatabaseServer::receiveEndGamePacket(EndGamePacket packet, qintptr socketDe
 						{
 							packet.expGained = expGained;
 
+							server.setUserStatus(socketDescriptor, STATUS_FREE);
 							sendEndGamePacket(packet, socketDescriptor);
 							sendUserInfo(Player(packet.playerName, query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
 										 Questioner(packet.playerName, query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()),
@@ -449,7 +511,7 @@ void DatabaseServer::receiveEndGamePacket(EndGamePacket packet, qintptr socketDe
 		}
 		else
 			qDebug() << query.lastError() << "update exp failed";
-	}
+
 
 #endif
 }
@@ -468,9 +530,26 @@ void DatabaseServer::receiveQuestionWordList(QVector<Word> words, QString questi
 #else
 	int cnt = 0;
 	double expGained = 0.0;
+	int wordCount = 1;
 	// insert into wordlist
 	for(auto word: words)
 	{
+		++wordCount;
+		if(wordCount % 1000 == 0)
+		{
+			server.writeLog(server.getCurrentTimeStamp() +
+							tr(" host: busy dealing word %1/%2").arg(wordCount).arg(words.size()));
+			sendWaitingMessage(socketDescriptor);
+			QTime t;
+			t.start();
+			while(t.elapsed() < 500)
+			{
+				QThread::msleep(10);
+				QApplication::processEvents();
+			}
+		}
+
+
 		if(query.exec(tr("select * from wordlist where word='%1'").arg(word.getWord())))
 		{
 			if(!query.next())
@@ -547,6 +626,84 @@ void DatabaseServer::receiveQuestionWordList(QVector<Word> words, QString questi
 	sendAddedWords(cnt, expGained_int, socketDescriptor);
 #endif
 }
+
+void DatabaseServer::receiveOnlineUserRequest(qintptr socketDescriptor)
+{
+	 QVector<QString> user = server.excludeOneOnlineUser(socketDescriptor).toVector();
+	 sendOnlineUsers(user, socketDescriptor);
+}
+
+void DatabaseServer::receiveOnlineUserDetailInfoRequest(QString user, qintptr socketDescriptor)
+{
+	if(query.exec(tr("select * from user where username='%1'").arg(user)))
+	{
+		if(query.next())
+		{
+			sendOnlineUserDetail(Player(user, query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
+								 Questioner(user, query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()),
+								 socketDescriptor);
+		}
+		else
+			qDebug() << "online detail unfound";
+	}
+	else
+		qDebug() << query.lastError() << "online detail failed";
+}
+
+void DatabaseServer::receiveBattleRequest(BattlePacket packet, qintptr socketDescriptor)
+{
+	assert(packet.isRequest == true);
+	packet.self = server.getOnlineUsername(socketDescriptor);
+	if(server.getOnlineSocket(packet.enemy) == 0)
+	{
+		packet.respond = BATTLE_OFFLINE;
+		sendBattleRespond(packet, socketDescriptor);
+		return;
+	}
+	switch(server.getUserStatus(server.getOnlineSocket(packet.enemy)))
+	{
+	case STATUS_FREE:
+	{
+		server.setUserStatus(socketDescriptor, STATUS_WAITING_BATTLE);
+		BattlePacket enemyPacket = packet;
+		swap(enemyPacket.self, enemyPacket.enemy);
+		sendBattleRequest(enemyPacket, server.getOnlineSocket(packet.enemy));
+	}
+		break;
+	case STATUS_WAITING_BATTLE:
+	case STATUS_WAITING_MATCH:
+	case STATUS_PLAYING:
+		packet.respond = BATTLE_REJECT;
+		sendBattleRespond(packet, socketDescriptor);
+		break;
+	}
+
+}
+
+void DatabaseServer::receiveBattelRespond(BattlePacket packet, qintptr socketDescriptor)
+{
+	assert(packet.isRequest == false);
+	switch(packet.respond)
+	{
+	case BATTLE_ACCEPT:
+		emit sendStartMatch(packet.level, socketDescriptor, server.getOnlineSocket(packet.enemy), packet.wordNum);
+		break;
+	case BATTLE_REJECT:
+	{
+		server.setUserStatus(server.getOnlineSocket(packet.enemy), STATUS_FREE);
+		BattlePacket enemyPacket = packet;
+		swap(enemyPacket.self, enemyPacket.enemy);
+		sendBattleRespond(enemyPacket, server.getOnlineSocket(packet.enemy));
+	}
+		break;
+	case BATTLE_MYSELF:
+		receiveWordListRequest(EXPERT, socketDescriptor);
+		break;
+	default:
+		server.writeLog(server.getCurrentTimeStamp() + " host: ERROR unexpected battle form " + QString::number(packet.respond));
+	}
+}
+
 
 void DatabaseServer::initDataBase()
 {

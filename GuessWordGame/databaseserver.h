@@ -47,6 +47,18 @@ signals:
 
 	// to questionWidget.cpp
 	void sendAddedWords(int count, int expGained);
+#ifdef USE_NETWORK
+	// to OnlinUserWidget.cpp
+	void sendOnlineUsers(QVector<QString> users);
+	void sendOnlineUserDetail(Player player, Questioner questioner);
+
+	// to mainWindow
+	void sendBattleRequest(BattlePacket packet);
+	void sendBattleRespond(BattlePacket packet);
+	void sendWaitSignal();
+	void sendEnemyGameCancel();
+#endif
+
 
 public slots:
 	// from loginDialog.cpp
@@ -60,7 +72,7 @@ public slots:
 	void receiveDetailInfoRequest(SortMethod sortMethod, int index);
 
 	// from gameWidget.cpp
-	void receiveWordListRequest(GameLevel level);
+	void receiveWordListRequest(GameLevel level, GameStatus status);
 	void receiveEndGamePacket(EndGamePacket packet);
 
 	// from questionWidget.cpp
@@ -69,6 +81,16 @@ public slots:
 #ifdef USE_NETWORK
 	// from TcpClient.cpp
 	void handleMessages();
+
+	// from OnlineUserWidget.cpp
+	void receiveOnlineUserRequest();
+	void receiveOnlineUserDetailInfoRequest(QString user);
+
+	// from DetailedUserInfoDialog.cpp
+	void receiveBattleRequest(BattlePacket packet);
+	void receiveBattelRespond(BattlePacket packet); // from mainwindow
+
+	void receiveGameCancel();
 #endif
 
 private:

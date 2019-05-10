@@ -6,7 +6,7 @@
 #include<QLabel>
 #include<QGridLayout>
 #include"datastructure.h"
-
+#include<QCheckBox>
 
 class GameModeSelectWidget: public QWidget
 {
@@ -14,7 +14,7 @@ class GameModeSelectWidget: public QWidget
 public:
 	explicit GameModeSelectWidget(QWidget *parent = nullptr);
 signals:
-	void sendGameMode(GameLevel level);
+	void sendGameMode(GameLevel level, GameStatus status, bool needSignal);
 public slots:
 	void paintEvent(QPaintEvent *event);
 
@@ -23,16 +23,20 @@ private slots:
 	void on_normalButton_clicked();
 	void on_hardButton_clicked();
 	void on_expertButton_clicked();
+	void changeStateText();
 
 private:
 	void createWidget();
 	void createLayout();
 	void createConnection();
 
+	QCheckBox *duoCheckBox;
+	QLabel *duoSelectLabel, *duoStateLabel;
 	QPushButton *easyButton, *normalButton, *hardButton, *expertButton;
 	QLabel *modeSelectLabel;
 
 	QGridLayout *mainLayout;
+	GameStatus status;
 };
 
 #endif // GAMEMODESELECTWIDGET_H

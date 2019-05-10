@@ -8,7 +8,6 @@ QT       += core gui network sql
 
 
 
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = TcpServer
@@ -34,7 +33,8 @@ SOURCES += \
     server.cpp \
     databaseserver.cpp \
     user.cpp \
-    word.cpp
+    word.cpp \
+    matchmodule.cpp
 
 HEADERS += \
         tcpserver.h \
@@ -43,7 +43,8 @@ HEADERS += \
     datastructure.h \
     databaseserver.h \
     user.h \
-    word.h
+    word.h \
+    matchmodule.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

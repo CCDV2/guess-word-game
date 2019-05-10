@@ -60,7 +60,7 @@ void SimplifiedUserInfoWidget::showUserInfo(Player player, Questioner questioner
 
 void SimplifiedUserInfoWidget::receiveUserInfo(Player player, Questioner questioner)
 {
-	DetailedUserInfoDialog *detailedWidget = new DetailedUserInfoDialog(player, questioner);
+	DetailedUserInfoDialog *detailedWidget = new DetailedUserInfoDialog(player, questioner, DBserver);
 	detailedWidget->exec();
 }
 

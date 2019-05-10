@@ -1,14 +1,32 @@
 #include "detaileduserinfodialog.h"
 #include"datastructure.h"
+#include"battlechoosedialog.h"
 #include<QPushButton>
+#include<QMessageBox>
 
-DetailedUserInfoDialog::DetailedUserInfoDialog(Player _player, Questioner _questioner, DetailedWidgetArg _arg, QWidget *parent):
-	QDialog(parent), player(_player), questioner(_questioner), arg(_arg)
+DetailedUserInfoDialog::DetailedUserInfoDialog(Player _player, Questioner _questioner, DatabaseServer &_DBserver,DetailedWidgetArg _arg, QWidget *parent):
+	QDialog(parent), player(_player), questioner(_questioner), arg(_arg), DBServer(_DBserver)
 {
 	setWindowFlags(Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
+	setAttribute(Qt::WA_DeleteOnClose);
 	createWidget();
 	createLayout();
 	createConnection();
+}
+
+void DetailedUserInfoDialog::on_matchButton_clicked()
+{
+	BattlePacket packet = BattlePacket("__unselected", "", true, BATTLE_MYSELF, EXPERT, 5);
+	BattleChooseDialog *dialog = new BattleChooseDialog(packet);
+	dialog->exec();
+	if(packet.self == "__selected")
+	{
+		packet.self = "__unknown";
+		packet.enemy = player.getUserName();
+		emit sendBattleRequest(packet);
+		emit sendGameMode(packet.level, GAME_DUO, false);
+	}
+	close();
 }
 
 void DetailedUserInfoDialog::createWidget()
@@ -37,18 +55,11 @@ void DetailedUserInfoDialog::createWidget()
 	backButton = new QPushButton(tr("返回"));
 	switch(arg)
 	{
-	case MYSELF:
+	case MYSELF_OPEN:
 		break;
-	case FRIEND:
+	case RANKLIST_OPEN:
+	case ONLINE_OPEN:
 		matchButton = new QPushButton(tr("对战"));
-		deleteFriendButton = new QPushButton(tr("删除"));
-		break;
-	case CHECKING_FRIEND:
-		acceptFriendButton = new QPushButton(tr("接受"));
-		rejectFriendButton = new QPushButton(tr("拒绝"));
-		break;
-	case ADDING_FRIEND:
-		addFriendButton = new QPushButton(tr("添加"));
 		break;
 	}
 }
@@ -76,18 +87,11 @@ void DetailedUserInfoDialog::createLayout()
 	buttonLayout = new QHBoxLayout();
 	switch(arg)
 	{
-	case MYSELF:
+	case MYSELF_OPEN:
 		break;
-	case FRIEND:
+	case RANKLIST_OPEN:
+	case ONLINE_OPEN:
 		buttonLayout->addWidget(matchButton, 0, Qt::AlignLeft);
-		buttonLayout->addWidget(deleteFriendButton, 0, Qt::AlignCenter);
-		break;
-	case CHECKING_FRIEND:
-		buttonLayout->addWidget(acceptFriendButton, 0, Qt::AlignLeft);
-		buttonLayout->addWidget(rejectFriendButton, 0, Qt::AlignCenter);
-		break;
-	case ADDING_FRIEND:
-		buttonLayout->addWidget(addFriendButton, 0, Qt::AlignLeft);
 		break;
 	}
 	buttonLayout->addWidget(backButton, 0, Qt::AlignRight);
@@ -110,13 +114,12 @@ void DetailedUserInfoDialog::createConnection()
 	connect(backButton, &QPushButton::clicked, this, &DetailedUserInfoDialog::close);
 	switch(arg)
 	{
-	case MYSELF:
+	case MYSELF_OPEN:
 		break;
-	case FRIEND:
-		break;
-	case CHECKING_FRIEND:
-		break;
-	case ADDING_FRIEND:
+	case RANKLIST_OPEN:
+	case ONLINE_OPEN:
+		connect(matchButton, &QPushButton::clicked, this, &DetailedUserInfoDialog::on_matchButton_clicked);
+		connect(this, &DetailedUserInfoDialog::sendBattleRequest, &DBServer, &DatabaseServer::receiveBattleRequest);
 		break;
 	}
 }

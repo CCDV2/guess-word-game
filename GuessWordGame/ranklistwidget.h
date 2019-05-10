@@ -17,9 +17,12 @@ class RanklistWidget: public QWidget
 	Q_OBJECT
 public:
 	explicit RanklistWidget(DatabaseServer &_DBServer, QWidget *parent = nullptr);
+	void setUserName(const QString &value);
+
 signals:
 	void requestRanklist(SortMethod sortMethod);
 	void requestDetailInfo(SortMethod sortMethod, int index);
+	void sendGameMode(GameLevel level, GameStatus status, bool needSignal);
 public slots:
 	void receiveRanklist(QVector<Player> players, QVector<Questioner> questioners, SortMethod sortMethod);
 	void receiveDetailInfo(Player player, Questioner questioner);
@@ -29,7 +32,7 @@ private slots:
 	void on_searchQuestionerButton_clicked();
 	void on_tableWidgetItem_doubleClicked(QTableWidgetItem *item);
 	void on_header_clicked(int column);
-
+	void receiveGameMode(GameLevel level, GameStatus status, bool needSignal);
 private:
 	void createWidget();
 	void createLayout();
@@ -45,6 +48,7 @@ private:
 	SortMethod currentMethod;
 
 	DatabaseServer &DBserver;
+	QString userName;
 
 };
 

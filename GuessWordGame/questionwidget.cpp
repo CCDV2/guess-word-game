@@ -98,6 +98,7 @@ void QuestionWidget::on_importButton_clicked()
 			{
 				QString line = in.readLine();
 				auto lists = line.split(',');
+				if(lists.size() < 2) continue;
 				QString word = lists[0];
 				bool ok;
 				int level = lists[1].toInt(&ok);

@@ -117,10 +117,9 @@ const int MAX_WORD_LEVEL = 10;
 
 enum DetailedWidgetArg
 {
-	MYSELF,
-	FRIEND,
-	CHECKING_FRIEND,
-	ADDING_FRIEND,
+	MYSELF_OPEN,
+	RANKLIST_OPEN,
+	ONLINE_OPEN
 };
 
 // used for qss selection
@@ -138,12 +137,19 @@ enum ConnectFunction
 	DETAILINFO_FUNCTION,
 	WORDLIST_FUNCTION,
 	UPDATE_EXP_FUNCTION,
-	ADDWORD_FUNCTION
+	ADDWORD_FUNCTION,
+	ONLINE_USERS_FUNCTION,
+	ONLINE_USER_DETAIL_FUNCTION,
+	REQUEST_BATTLE_FUNCTION,
+	RESPOND_BATTLE_FUNCTION,
+	WAIT_FUNCTION,
+	GAME_CANCEL_FUNCTION
 };
 
 enum GameStatus
 {
 	GAME_SINGLE,
+	GAME_DUO,
 	GAME_WIN,
 	GAME_LOSE,
 	GAME_TIE,
@@ -186,5 +192,53 @@ struct EndGamePacket
 	int expGained;
 };
 
+enum BattleRespond
+{
+	BATTLE_REJECT,
+	BATTLE_ACCEPT,
+	BATTLE_MYSELF,
+	BATTLE_OFFLINE
+};
+
+struct BattlePacket
+{
+	BattlePacket(QString _self = "", QString _enemy = "", bool _isRequest = true,
+				 BattleRespond _respond = BATTLE_MYSELF, GameLevel _level = EXPERT, int _wordNum = 5):
+		self(_self), enemy(_enemy), isRequest(_isRequest), respond(_respond), level(_level), wordNum(_wordNum){}
+
+	const QString toString()
+	{
+		QString ret = QStringList({self,
+								   enemy,
+								   QString::number(isRequest),
+								   QString::number(respond),
+								   QString::number(level),
+								   QString::number(wordNum)}).join('.');
+		return ret;
+	}
+
+	static BattlePacket fromString(QString s)
+	{
+		QStringList list = s.split('.');
+		return BattlePacket(list[0], list[1], list[2].toInt(),
+				static_cast<BattleRespond>(list[3].toInt()),
+				static_cast<GameLevel>(list[4].toInt()),
+				list[5].toInt());
+	}
+
+	QString self, enemy;
+	bool isRequest;
+	BattleRespond respond;
+	GameLevel level;
+	int wordNum;
+};
+
+enum UserStatus
+{
+	STATUS_FREE,
+	STATUS_WAITING_MATCH,
+	STATUS_WAITING_BATTLE,
+	STATUS_PLAYING
+};
 
 #endif // DATASTRUCTURE_H

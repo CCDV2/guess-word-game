@@ -19,7 +19,7 @@ public:
 	void increaseCorrectNum(int inc = 1);
 	void increaseWrongNum(int inc = 1);
 	bool decreaseTimeLength(int dec = 1);
-	void reset(GameLevel _level);
+	void reset(GameLevel _level, GameStatus _status);
 	bool isReady();
 	int getTimeLength() const;
 
@@ -51,6 +51,7 @@ private:
 	GameLevel level;
 	QTime typingTimer;
 	int totalTypingTime;
+	GameStatus status;
 };
 
 #endif // GAMECACHE_H

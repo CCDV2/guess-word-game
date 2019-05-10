@@ -28,6 +28,10 @@ public:
 
 	~DatabaseServer();
 	static LoginState checkLoginState(const LoginPackage &loginPackage);
+
+signals:
+	void sendStartMatch(GameLevel level, qintptr p1, qintptr p2, int wordNum);
+
 public:
 	// to loginDialog.cpp
 	void sendLoginState(LoginState state, qintptr socketDescriptor);
@@ -50,6 +54,16 @@ public:
 	// to questionWidget.cpp
 	void sendAddedWords(int count, int expGained, qintptr socketDescriptor);
 
+	// to OnlinUserWidget.cpp
+	void sendOnlineUsers(QVector<QString> users, qintptr socketDescriptor);
+	void sendOnlineUserDetail(Player player, Questioner questioner, qintptr socketDescriptor);
+
+	void sendBattleRequest(BattlePacket packet, qintptr socketDescriptor);
+	void sendBattleRespond(BattlePacket packet, qintptr socketDescriptor);
+
+	void sendWaitingMessage(qintptr socketDescriptor);
+
+	void sendEnemyGameCancel(qintptr socketDescriptor);
 public:
 	// from loginDialog.cpp
 	void receiveLoginPackage(LoginPackage loginPackage, qintptr socketDescriptor);
@@ -62,11 +76,20 @@ public:
 	void receiveDetailInfoRequest(SortMethod sortMethod, int index, qintptr socketDescriptor);
 
 	// from gameWidget.cpp
-	void receiveWordListRequest(GameLevel level, qintptr socketDescriptor);
+	void receiveWordListRequest(GameLevel level, qintptr socketDescriptor, qintptr socketDescriptor2 = -1, int wordNum = 5);
 	void receiveEndGamePacket(EndGamePacket packet, qintptr socketDescriptor);
 
 	// from questionWidget.cpp
 	void receiveQuestionWordList(QVector<Word> words, QString questioner, qintptr socketDescriptor);
+
+	// from OnlineUserWidget.cpp
+	void receiveOnlineUserRequest(qintptr socketDescriptor);
+	void receiveOnlineUserDetailInfoRequest(QString user, qintptr socketDescriptor);
+
+
+	void receiveBattleRequest(BattlePacket packet, qintptr socketDescriptor);
+
+	void receiveBattelRespond(BattlePacket packet, qintptr socketDescriptor);
 
 private:
 	void initDataBase();

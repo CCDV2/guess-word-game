@@ -28,6 +28,9 @@ void EndGameDialog::createWidget()
 	case GAME_TIE:
 		headLabel->setText(tr("平局"));
 		break;
+	default:
+		headLabel->setText(tr("未知错误"));
+		break;
 	}
 
 	numWidget = new QWidget();
@@ -71,6 +74,9 @@ void EndGameDialog::createWidget()
 		break;
 	case GAME_TIE:
 		remainTimeLabel->setText(tr("× 1.5"));
+		break;
+	default:
+		remainTimeLabel->setText(tr("× 0"));
 		break;
 	}
 	expGainedLabel = new QLabel(tr("%1").arg(packet.expGained));

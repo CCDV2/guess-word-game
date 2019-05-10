@@ -25,3 +25,14 @@ void TcpClientSocket::slotDisconnected()
 {
 	emit socketDisconnected(static_cast<int>(this->socketDescriptor()));
 }
+
+qintptr TcpClientSocket::getPreSocketDescriptor() const
+{
+	return preSocketDescriptor;
+}
+
+void TcpClientSocket::setPreSocketDescriptor(const qintptr &value)
+{
+	preSocketDescriptor = value;
+}
+

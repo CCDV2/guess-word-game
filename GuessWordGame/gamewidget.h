@@ -29,7 +29,7 @@ class GameWidget: public QWidget
 	Q_OBJECT
 public:
 	GameWidget(DatabaseServer &_DBserver, QWidget *parent = nullptr);
-	void startGame(Player _player, GameLevel level);
+	void startGame(Player _player, GameLevel level, GameStatus status, bool needSignal = true);
 	void endGame();
 public slots:
 	void receiveWord(QString); // the word from line edit
@@ -38,7 +38,7 @@ public slots:
 	void paintEvent(QPaintEvent *event);
 signals:
 	// to datbase
-	void requestWordList(GameLevel level);
+	void requestWordList(GameLevel level, GameStatus status);
 	void sendEndGamePacket(EndGamePacket packet);
 	// to this(self)
 	void wordCorrectChecked(bool isCorrect);

@@ -9,13 +9,19 @@
 #include<QProgressBar>
 #include<QVBoxLayout>
 #include"datastructure.h"
+#include"databaseserver.h"
 
 class DetailedUserInfoDialog : public QDialog
 {
+	Q_OBJECT
 public:
-	DetailedUserInfoDialog(Player _player, Questioner _questioner, DetailedWidgetArg _arg = MYSELF, QWidget *parent = nullptr);
+	DetailedUserInfoDialog(Player _player, Questioner _questioner, DatabaseServer &_DBserver, DetailedWidgetArg _arg = MYSELF_OPEN, QWidget *parent = nullptr);
+signals:
+	void sendBattleRequest(BattlePacket packet);
+	void sendGameMode(GameLevel level, GameStatus status, bool needSignal);
+private slots:
+	void on_matchButton_clicked();
 private:
-
 	void createWidget();
 	void createLayout();
 	void createConnection();
@@ -25,14 +31,13 @@ private:
 	QGridLayout *mainLayout;
 //	QGridLayout *playerLayout, *questionerLayout;
 	QPushButton *backButton;
-	QPushButton *matchButton, *deleteFriendButton;
-	QPushButton *acceptFriendButton, *rejectFriendButton;
-	QPushButton *addFriendButton;
+	QPushButton *matchButton;
 	QHBoxLayout *buttonLayout;
 
 	Player player;
 	Questioner questioner;
 	DetailedWidgetArg arg;
+	DatabaseServer &DBServer;
 };
 
 #endif // DETAILEDUSERINFODIALOG_H
