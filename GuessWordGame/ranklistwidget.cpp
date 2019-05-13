@@ -176,6 +176,7 @@ void RanklistWidget::createWidget()
 	tableWidget = new QTableWidget();
 	tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+//	tableWidget->verticalHeader()->setStyleSheet("QHeaderView::section{background:transparent;}");
 	tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
 }
 

@@ -93,6 +93,8 @@ void BattleChooseDialog::createLayout()
 	mainLayout->addWidget(normalButton, 3, 1);
 	mainLayout->addWidget(hardButton, 4, 0);
 	mainLayout->addWidget(expertButton, 4, 1);
+	mainLayout->setColumnStretch(0, 1);
+	mainLayout->setColumnStretch(1, 1);
 }
 
 void BattleChooseDialog::createConnection()

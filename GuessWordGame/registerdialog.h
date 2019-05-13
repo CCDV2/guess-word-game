@@ -23,7 +23,7 @@ public slots:
 	void receiveRegisterState(RegisterState state);
 private slots:
 	void on_submitButton_clicked();
-
+	void resetSentStatus();
 private:
 	void createLabel();
 	void createLayout();
@@ -35,6 +35,8 @@ private:
 	QGridLayout *mainLayout;
 	QHBoxLayout *buttonLayout;
 	DatabaseServer &DBserver;
+
+	bool isRegisterSent;
 };
 
 #endif // REGISTERDIALOG_H

@@ -63,22 +63,38 @@ void GameModeSelectWidget::createWidget()
 	status = GAME_SINGLE;
 	modeSelectLabel = new QLabel(tr("请选择游戏难度"));
 	easyButton = new QPushButton(tr("EASY"));
+//	easyButton->setObjectName(levelButtonName);
 	normalButton = new QPushButton(tr("NORMAL"));
+//	normalButton->setObjectName(levelButtonName);
 	hardButton = new QPushButton(tr("HARD"));
+//	hardButton->setObjectName(levelButtonName);
 	expertButton = new QPushButton(tr("EXPERT"));
+//	expertButton->setObjectName(levelButtonName);
 }
 
 void GameModeSelectWidget::createLayout()
 {
 	mainLayout = new QGridLayout(this);
-	mainLayout->addWidget(duoSelectLabel, 0, 0, 1, 2, Qt::AlignCenter);
-	mainLayout->addWidget(duoCheckBox, 1, 0);
-	mainLayout->addWidget(duoStateLabel, 1, 1);
-	mainLayout->addWidget(modeSelectLabel, 2, 0, 1, 2, Qt::AlignCenter);
+	mainLayout->addWidget(duoSelectLabel, 0, 0, 1, 2, Qt::AlignCenter | Qt::AlignBottom);
+	mainLayout->addWidget(duoCheckBox, 1, 0, Qt::AlignRight | Qt::AlignTop);
+	mainLayout->addWidget(duoStateLabel, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+	mainLayout->addWidget(modeSelectLabel, 2, 0, 1, 2, Qt::AlignCenter | Qt::AlignBottom);
 	mainLayout->addWidget(easyButton, 3, 0);
 	mainLayout->addWidget(normalButton, 3, 1);
 	mainLayout->addWidget(hardButton, 4, 0);
 	mainLayout->addWidget(expertButton, 4, 1);
+	mainLayout->addItem(new QSpacerItem(50, 10), 5, 0, 1, 2);
+
+	mainLayout->setRowStretch(0, 3);
+	mainLayout->setRowStretch(1, 1);
+	mainLayout->setRowStretch(2, 2);
+	mainLayout->setRowStretch(3, 1);
+	mainLayout->setRowStretch(4, 1);
+	mainLayout->setRowStretch(5, 3);
+	mainLayout->setMargin(this->size().width() / 5);
+
+	mainLayout->setColumnStretch(0, 1);
+	mainLayout->setColumnStretch(1, 1);
 }
 
 void GameModeSelectWidget::createConnection()

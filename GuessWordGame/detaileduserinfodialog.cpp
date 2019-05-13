@@ -7,6 +7,7 @@
 DetailedUserInfoDialog::DetailedUserInfoDialog(Player _player, Questioner _questioner, DatabaseServer &_DBserver,DetailedWidgetArg _arg, QWidget *parent):
 	QDialog(parent), player(_player), questioner(_questioner), arg(_arg), DBServer(_DBserver)
 {
+	setWindowIcon(QIcon(":/png/img/icon.png"));
 	setWindowFlags(Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
 	setAttribute(Qt::WA_DeleteOnClose);
 	createWidget();

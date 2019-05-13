@@ -10,16 +10,19 @@ int main(int argc, char *argv[])
 	QApplication a(argc, argv);
 
 	QFile file(":/qss/qss/mystyle.qss");
-	if (!file.open(QIODevice::ReadOnly))
+	if (file.open(QIODevice::ReadOnly))
+	{
+		QString qss = QLatin1String(file.readAll());
+		a.setStyleSheet(qss);
+		file.close();
+	}
+	else
 	{
 		qDebug("Can't open the style sheet file.");
 	}
-	QString qss = QLatin1String(file.readAll());
-	a.setStyleSheet(qss);
-	file.close();
 
 
-	QPixmap pixmap(":/png/img/20130707105529296.jpg");
+	QPixmap pixmap(":/png/img/logo-nofade.png");
 	QSplashScreen splash(pixmap);
 	splash.show();
 	a.processEvents();
@@ -27,7 +30,8 @@ int main(int argc, char *argv[])
 	a.processEvents();
 
 	MainWindow w;
-	w.show();
+	w.showFullScreen();
+//	w.show();
 	splash.finish(&w);
 
 	return a.exec();

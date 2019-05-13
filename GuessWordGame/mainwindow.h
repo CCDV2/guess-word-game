@@ -56,6 +56,7 @@ private slots:
 	void receiveGameMode(GameLevel level, GameStatus status, bool needSignal);
 	void showEvent(QShowEvent *event);
 	void closeEvent(QCloseEvent *event);
+	void paintEvent(QPaintEvent *event);
 	void networkFailed();
 	void receiveWaitSignal();
 	void on_gameBackButton_clicked();
@@ -74,6 +75,7 @@ private:
 	GameModeSelectWidget *gameModeSelectWidget;
 	SimplifiedUserInfoWidget *simplifiedUserInfoWidget;
 	QPushButton *startGameButton, *startQuestionButton, *startRanklistButton;
+	QPushButton *exitButton;
 	QuestionWidget *questionWidget;
 	RanklistWidget *ranklistWidget;
 	QStackedWidget *stackWidget;

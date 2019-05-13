@@ -1,17 +1,19 @@
 #include "mainwindow.h"
 #include<QMessageBox>
+#include<QPainter>
 
 #if defined(Q_OS_WIN)
 #include<windows.h>
 #endif
 
+#define USE_LOGO
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 {
 	setWindowTitle(tr("猜单词游戏"));
 	setWindowState(Qt::WindowMaximized);
-
+	setWindowIcon(QIcon(":/png/img/icon.png"));
 	tcpClient = new TcpClient(this);
 
 
@@ -185,6 +187,15 @@ void MainWindow::closeEvent(QCloseEvent *event)
 #endif
 }
 
+void MainWindow::paintEvent(QPaintEvent *event)
+{
+	Q_UNUSED(event);
+	QStyleOption styleOpt;
+	styleOpt.init(this);
+	QPainter painter(this);
+	style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
+}
+
 void MainWindow::networkFailed()
 {
 	QMessageBox::critical(this, tr("网络断开"), tr("网络连接失败"));
@@ -200,6 +211,8 @@ void MainWindow::on_gameBackButton_clicked()
 {
 	emit sendGameCancel();
 }
+
+
 
 void MainWindow::battleBoxClosed(int _result)
 {
@@ -237,10 +250,13 @@ void MainWindow::createWidget()
 	simplifiedUserInfoWidget = new SimplifiedUserInfoWidget(*DBServer);
 	simplifiedUserInfoWidget->setObjectName(moduleWidgetName);
 	logoLabel = new QLabel(tr("LOGO"));
+#ifdef USE_LOGO
 	QImage logoImg;
-	logoImg.load(":/png/img/20130707105529296.jpg");
+	logoImg.load(":/png/img/logo-fade-50.png");
+	logoImg.scaled(logoLabel->size(), Qt::KeepAspectRatio);
 	logoLabel->setPixmap(QPixmap::fromImage(logoImg));
-
+	logoLabel->setScaledContents(true);
+#endif
 	stackWidget = new QStackedWidget();
 
 //	welcome widget
@@ -280,6 +296,7 @@ void MainWindow::createWidget()
 
 //	friend widget
 	onlineUserWidget = new OnlineUserWidget(*DBServer, this);
+	onlineUserWidget->setObjectName(moduleWidgetName);
 
 	waitBox.setWindowTitle(tr("服务器忙"));
 	waitBox.setText(tr("服务器繁忙中，请稍等"));
@@ -289,6 +306,9 @@ void MainWindow::createWidget()
 	battleBox.setWindowTitle(tr("对战请求"));
 	battleBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 	battleBox.setModal(false);
+
+//	exit button
+	exitButton = new QPushButton(tr("退出游戏"));
 }
 
 void MainWindow::createLayout()
@@ -308,14 +328,15 @@ void MainWindow::createLayout()
 
 //	welcome widget
 	buttonLayout = new QVBoxLayout();
-	buttonLayout->addWidget(startGameButton, 1, Qt::AlignCenter);
-	buttonLayout->addWidget(startQuestionButton, 1, Qt::AlignCenter);
-	buttonLayout->addWidget(startRanklistButton, 1, Qt::AlignCenter);
+	buttonLayout->addWidget(startGameButton, 3, Qt::AlignCenter);
+	buttonLayout->addWidget(startQuestionButton, 3, Qt::AlignCenter);
+	buttonLayout->addWidget(startRanklistButton, 3, Qt::AlignCenter);
+	buttonLayout->addWidget(exitButton, 1, Qt::AlignCenter);
 	widgetLayout[0]->addWidget(logoLabel, 4);
 	widgetLayout[0]->addLayout(buttonLayout, 1);
 
 //	game select widget
-	widgetLayout[1]->addWidget(gameModeSelectWidget, 0, Qt::AlignCenter);
+	widgetLayout[1]->addWidget(gameModeSelectWidget);
 	widgetLayout[1]->addWidget(backButton[0], 0, Qt::AlignBottom | Qt::AlignRight);
 
 //	game widget
@@ -360,6 +381,7 @@ void MainWindow::createConnection()
 	{
 		connect(backButton[i], &QPushButton::clicked, this, &MainWindow::backToWelcomeWidget);
 	}
+	connect(exitButton, &QPushButton::clicked, this, &MainWindow::close);
 #ifdef USE_NETWORK
 	connect(DBServer, &DatabaseServer::sendBattleRequest, this, &MainWindow::receiveBattleRequest);
 	connect(DBServer, &DatabaseServer::sendBattleRespond, this, &MainWindow::receiveBattleRespond);

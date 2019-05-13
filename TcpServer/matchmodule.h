@@ -6,8 +6,8 @@
 #include"datastructure.h"
 #include"databaseserver.h"
 
-const int SINGLE_WORD_TIME = 6000;
-const int WAIT_ANOTER_TIME = 20000;
+const int SINGLE_WORD_TIME = 8000;
+const int WAIT_ANOTER_TIME = 6000;
 
 class MatchModule: public QObject
 {

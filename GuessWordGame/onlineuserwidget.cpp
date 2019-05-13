@@ -2,6 +2,7 @@
 #include<QDebug>
 #include<QTreeWidgetItem>
 #include<QMessageBox>
+#include<QPainter>
 
 OnlineUserWidget::OnlineUserWidget(DatabaseServer &_DBserver, QWidget *parent):
 	QWidget(parent), DBserver(_DBserver)
@@ -71,6 +72,15 @@ void OnlineUserWidget::on_item_doubleclicked(QTreeWidgetItem *item, int column)
 void OnlineUserWidget::receiveGameMode(GameLevel level, GameStatus status, bool needSignal)
 {
 	emit sendGameMode(level, status, needSignal);
+}
+
+void OnlineUserWidget::paintEvent(QPaintEvent *event)
+{
+	Q_UNUSED(event);
+	QStyleOption styleOpt;
+	styleOpt.init(this);
+	QPainter painter(this);
+	style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
 }
 
 

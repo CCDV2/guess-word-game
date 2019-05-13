@@ -2,10 +2,12 @@
 #include "datastructure.h"
 #include"databaseserver.h"
 #include<QMessageBox>
+#include<QTimer>
 
 LoginDialog::LoginDialog(DatabaseServer &_DBserver, QWidget *parent) :
 	QDialog(parent), DBserver(_DBserver)
 {
+	isLoginSent = false;
 	createWidget();
 	createLayout();
 	createConnection();
@@ -78,6 +80,10 @@ void LoginDialog::createConnection()
 
 void LoginDialog::on_submitButton_clicked()
 {
+	if(isLoginSent) return;
+	isLoginSent = true;
+	QTimer::singleShot(200, this, &LoginDialog::resetSentStatus);
+
 	LoginPackage loginPackage = LoginPackage(userNameLineEdit->text(), passWordLineEdit->text());
 
 	// has empty username
@@ -103,7 +109,12 @@ void LoginDialog::on_submitButton_clicked()
 
 void LoginDialog::on_cancelButton_clicked()
 {
-//	rejected();
+	//	rejected();
+}
+
+void LoginDialog::resetSentStatus()
+{
+	isLoginSent = false;
 }
 
 LoginState LoginDialog::checkLoginState(const LoginPackage &loginPackage)

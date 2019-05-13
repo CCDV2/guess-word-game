@@ -29,6 +29,7 @@ public slots:
 private slots:
 	void on_submitButton_clicked();
 	void on_cancelButton_clicked();
+	void resetSentStatus();
 private:
 	void createWidget();
 	void createLayout();
@@ -43,6 +44,7 @@ private:
 	QHBoxLayout *buttonLayout;
 
 	DatabaseServer &DBserver;
+	bool isLoginSent;
 };
 
 #endif // LOGINWINDOW_H

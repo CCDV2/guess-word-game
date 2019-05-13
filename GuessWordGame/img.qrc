@@ -2,6 +2,13 @@
     <qresource prefix="/png">
         <file alias="Logo">img/5701.png</file>
         <file>img/20130707105529296.jpg</file>
+        <file>img/background.jpg</file>
+        <file>img/background0.png</file>
+        <file>img/background1.png</file>
+        <file>img/icon.png</file>
+        <file>img/logo-fade.png</file>
+        <file>img/logo-nofade.png</file>
+        <file>img/logo-fade-50.png</file>
     </qresource>
     <qresource prefix="/qss">
         <file>qss/style.qss</file>

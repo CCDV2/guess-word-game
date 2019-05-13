@@ -32,7 +32,8 @@ void MatchModule::setOnePacket(EndGamePacket packet, qintptr _socketDescriptor)
 	if(arrivePacketCount == 1)
 	{
 		waitForOneArrivedTimer.stop();
-		waitForAnotherArrivedTimer.start(WAIT_ANOTER_TIME);
+		waitForAnotherArrivedTimer.start(max(wordNum * WAIT_ANOTER_TIME - packet.totalTime,
+											 max(wordNum * WAIT_ANOTER_TIME / 4, 10000)));
 	}
 	else
 	{
@@ -45,7 +46,7 @@ void MatchModule::setOnePacket(EndGamePacket packet, qintptr _socketDescriptor)
 void MatchModule::startMatch()
 {
 	DBserver.receiveWordListRequest(level, socketDescriptor[0], socketDescriptor[1], wordNum);
-	waitForOneArrivedTimer.start(SINGLE_WORD_TIME * 5);
+	waitForOneArrivedTimer.start(SINGLE_WORD_TIME * wordNum);
 }
 
 void MatchModule::sendEndGamePacket(EndGamePacket packet, qintptr socketDescriptor)

@@ -1,9 +1,11 @@
 #include "registerdialog.h"
 #include<QMessageBox>
+#include<QTimer>
 
 RegisterDialog::RegisterDialog(DatabaseServer &_DBserver, QWidget *parent):
 	QDialog(parent), DBserver(_DBserver)
 {
+	isRegisterSent = false;
 	createLabel();
 	createLayout();
 	createConnection();
@@ -27,6 +29,10 @@ void RegisterDialog::receiveRegisterState(RegisterState state)
 
 void RegisterDialog::on_submitButton_clicked()
 {
+	if(isRegisterSent) return;
+	isRegisterSent = true;
+	QTimer::singleShot(200, this, &RegisterDialog::resetSentStatus);
+
 	const QString userName = userNameLineEdit->text();
 	const QString password = passwordLineEdit->text();
 	const QString recheckPassword = recheckPasswordLineEdit->text();
@@ -59,6 +65,11 @@ void RegisterDialog::on_submitButton_clicked()
 		}
 	}
 
+}
+
+void RegisterDialog::resetSentStatus()
+{
+	isRegisterSent = false;
 }
 
 void RegisterDialog::createLabel()

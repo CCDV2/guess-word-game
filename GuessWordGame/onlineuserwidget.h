@@ -27,6 +27,7 @@ private slots:
 	void on_item_doubleclicked(QTreeWidgetItem *item, int column);
 
 	void receiveGameMode(GameLevel level, GameStatus status, bool needSignal);
+	void paintEvent(QPaintEvent *event);
 private:
 	void createWidget();
 	void createLayout();

@@ -125,7 +125,7 @@ enum DetailedWidgetArg
 // used for qss selection
 const QString levelBarName = "levelBar";
 const QString moduleWidgetName = "ModuleWidget";
-
+const QString levelButtonName = "levelButton";
 
 // used for tcp connection
 enum ConnectFunction
