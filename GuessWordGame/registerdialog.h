@@ -25,6 +25,7 @@ private slots:
 	void on_submitButton_clicked();
 	void resetSentStatus();
 private:
+	bool isTextValid(RegisterPackage &package);
 	void createLabel();
 	void createLayout();
 	void createConnection();

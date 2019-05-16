@@ -33,8 +33,6 @@ public:
 	void setExpGained(int value);
 
 	void startCountTime();
-	void pauseCountTime();
-	void resumeCountTime();
 	void endCountTime();
 	int getTotalTime();
 

@@ -25,7 +25,7 @@ TcpClient::TcpClient(QObject *parent): QObject(parent)
 	connect(tcpSocket, &QTcpSocket::disconnected, this, &TcpClient::tcpDisconnected);
 	connect(tcpSocket, &QTcpSocket::readyRead, this, &TcpClient::receiveDataFromServer);
 	tcpSocket->connectToHost(*serverIP, static_cast<quint16>(port));
-	connectStatus = tcpSocket->waitForConnected();
+	connectStatus = tcpSocket->waitForConnected(2000);
 
 	writeXml();
 }

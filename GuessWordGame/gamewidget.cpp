@@ -54,10 +54,12 @@ void GameWidget::endGame()
 
 void GameWidget::showWordLineEdit()
 {
+
 	wordStackedWidget->setCurrentWidget(wordLineEdit);
 	wordLineEdit->setEnabled(true);
 //	wordLineEdit->setVisible(true);
 	wordLineEdit->setFocus();
+	gameCache.startCountTime();
 }
 
 void GameWidget::showCountDownBar()
@@ -76,6 +78,7 @@ void GameWidget::updateCountDown()
 	else
 	{
 		countDownTimer.stop();
+		countDownBar->setValue(0);
 		showWordLineEdit();
 	}
 }
@@ -184,7 +187,6 @@ void GameWidget::startCountDown()
 	countDownBar->setMaximum(gameCache.getTimeLength());
 	countDownTimer.setSingleShot(false);
 	countDownTimer.start(TIME_INTERVAL);
-	gameCache.startCountTime();
 }
 
 

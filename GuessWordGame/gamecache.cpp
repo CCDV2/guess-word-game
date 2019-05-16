@@ -99,6 +99,7 @@ void GameCache::setExpGained(int value)
 void GameCache::startCountTime()
 {
 	typingTimer.start();
+
 }
 
 void GameCache::endCountTime()

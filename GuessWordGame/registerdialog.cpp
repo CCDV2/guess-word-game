@@ -51,16 +51,20 @@ void RegisterDialog::on_submitButton_clicked()
 		QMessageBox::information(this, tr("请输入确认密码"), tr("请先输入确认密码再注册"));
 		passwordLineEdit->setFocus();
 	}
+	else if(password != recheckPassword)
+	{
+		QMessageBox::warning(this, tr("密码错误"), tr("两次密码不一致，请重新输入"));
+		passwordLineEdit->setFocus();
+	}
 	else
 	{
-		if(password != recheckPassword)
+		RegisterPackage package = LoginPackage(userName, password);
+		if(!isTextValid(package))
 		{
-			QMessageBox::warning(this, tr("密码错误"), tr("两次密码不一致，请重新输入"));
-			passwordLineEdit->setFocus();
+			QMessageBox::information(this, tr("非法字符"), tr("输入字符中仅能包含字母或数字"));
 		}
 		else
 		{
-			RegisterPackage package = LoginPackage(userName, password);
 			emit sendRegisterPackage(package);
 		}
 	}
@@ -70,6 +74,25 @@ void RegisterDialog::on_submitButton_clicked()
 void RegisterDialog::resetSentStatus()
 {
 	isRegisterSent = false;
+}
+
+bool RegisterDialog::isTextValid(RegisterPackage &package)
+{
+	for(auto c : package.userName)
+	{
+		if(!(c.isLower() || c.isUpper() || c.isDigit()))
+		{
+			return false;
+		}
+	}
+	for(auto c : package.passWord)
+	{
+		if(!(c.isLower() || c.isUpper() || c.isDigit()))
+		{
+			return false;
+		}
+	}
+	return true;
 }
 
 void RegisterDialog::createLabel()

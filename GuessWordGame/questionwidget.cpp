@@ -124,7 +124,7 @@ void QuestionWidget::on_submitButton_clicked()
 	emit requireQuestionerName();
 	while(questionerName.isEmpty())
 	{
-		QThread::sleep(100);
+		QThread::msleep(100);
 		qDebug() << "waiting";
 	}
 	for(int i = 0; i < tableWidget->rowCount(); ++i)
@@ -132,6 +132,19 @@ void QuestionWidget::on_submitButton_clicked()
 		if(tableWidget->item(i, 0) == nullptr || tableWidget->item(i, 1) == nullptr) continue;
 		QString word = tableWidget->item(i, 0)->text();
 		if(word.isEmpty()) continue;
+		bool isTextValid = true;
+		for(auto c : word)
+		{
+			if(!(c.isLower() || c.isUpper()))
+			{
+				isTextValid = false;
+				break;
+			}
+		}
+		if(!isTextValid)
+		{
+			continue;
+		}
 		bool ok;
 		int level = tableWidget->item(i, 1)->text().toInt(&ok);
 		if(!ok) continue;

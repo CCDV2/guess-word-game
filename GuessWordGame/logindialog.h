@@ -31,6 +31,7 @@ private slots:
 	void on_cancelButton_clicked();
 	void resetSentStatus();
 private:
+	bool isTextValid(LoginPackage &package);
 	void createWidget();
 	void createLayout();
 	void createConnection();

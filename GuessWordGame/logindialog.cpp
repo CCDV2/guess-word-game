@@ -92,18 +92,20 @@ void LoginDialog::on_submitButton_clicked()
 		QMessageBox::information(this, tr("请输入用户名"), tr("请先输入用户名再登录"));
 		userNameLineEdit->setFocus();
 	}
-	else
+	else if(loginPackage.passWord.isEmpty())
 	{
 		// has empty password
-		if(loginPackage.passWord.isEmpty())
-		{
-			QMessageBox::information(this, tr("请输入密码"), tr("请先输入密码再登录"));
-			passWordLineEdit->setFocus();
-		}
-		else // check valid
-		{
-			emit sendLoginPackage(loginPackage);
-		}
+		QMessageBox::information(this, tr("请输入密码"), tr("请先输入密码再登录"));
+		passWordLineEdit->setFocus();
+	}
+	else if(!isTextValid(loginPackage))
+	{
+		// check valid
+		QMessageBox::information(this, tr("非法字符"), tr("输入字符中仅能包含字母或数字"));
+	}
+	else
+	{
+		emit sendLoginPackage(loginPackage);
 	}
 }
 
@@ -115,6 +117,25 @@ void LoginDialog::on_cancelButton_clicked()
 void LoginDialog::resetSentStatus()
 {
 	isLoginSent = false;
+}
+
+bool LoginDialog::isTextValid(LoginPackage &package)
+{
+	for(auto c : package.userName)
+	{
+		if(!(c.isLower() || c.isUpper() || c.isDigit()))
+		{
+			return false;
+		}
+	}
+	for(auto c : package.passWord)
+	{
+		if(!(c.isLower() || c.isUpper() || c.isDigit()))
+		{
+			return false;
+		}
+	}
+	return true;
 }
 
 LoginState LoginDialog::checkLoginState(const LoginPackage &loginPackage)

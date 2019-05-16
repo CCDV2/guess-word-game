@@ -30,6 +30,7 @@ void TcpServer::sendMessage(qintptr socketDescriptor, QString message)
 
 void TcpServer::slotCreateServer()
 {
+	port = portLineEdit->text().toInt();
 	server = new Server(*contentListWidget, this, port);
 	DBServer = new DatabaseServer(*server, this);
 	connect(server, &Server::sendUpdateServer, this, &TcpServer::receiveUpdateServer);
@@ -68,6 +69,9 @@ void TcpServer::receiveDeleteRequest(MatchModule *module)
 
 void TcpServer::handleMessage()
 {
+	static bool isBusy = false;
+	if(isBusy) return;
+	isBusy = true;
 	while(!messageQueue.empty())
 	{
 		auto item = messageQueue.front();
@@ -204,6 +208,7 @@ void TcpServer::handleMessage()
 			break;
 		}
 	}
+	isBusy = false;
 }
 
 void TcpServer::checkWaitingList()
@@ -280,8 +285,9 @@ void TcpServer::createWidget()
 	contentListWidget = new QListWidget();
 	portLabel = new QLabel(tr("端口："));
 	portLineEdit = new QLineEdit();
+	portLineEdit->setValidator(new QIntValidator(this));
 	portLineEdit->setText(QString::number(port));
-	createButton = new QPushButton(tr("创建聊天室"));
+	createButton = new QPushButton(tr("创建服务器"));
 }
 
 void TcpServer::createLayout()

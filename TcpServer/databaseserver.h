@@ -76,7 +76,7 @@ public:
 	void receiveDetailInfoRequest(SortMethod sortMethod, int index, qintptr socketDescriptor);
 
 	// from gameWidget.cpp
-	void receiveWordListRequest(GameLevel level, qintptr socketDescriptor, qintptr socketDescriptor2 = -1, int wordNum = 5);
+	void receiveWordListRequest(GameLevel level, qintptr socketDescriptor, qintptr socketDescriptor2 = -1, int wordNum = -1);
 	void receiveEndGamePacket(EndGamePacket packet, qintptr socketDescriptor);
 
 	// from questionWidget.cpp

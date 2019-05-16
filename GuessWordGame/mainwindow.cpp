@@ -1,10 +1,11 @@
 #include "mainwindow.h"
 #include<QMessageBox>
 #include<QPainter>
+#include<QThread>
 
-#if defined(Q_OS_WIN)
-#include<windows.h>
-#endif
+//#if defined(Q_OS_WIN)
+//#include<windows.h>
+//#endif
 
 #define USE_LOGO
 
@@ -26,9 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	player = nullptr;
 	questioner = nullptr;
-#if defined(Q_OS_WIN)
-	Sleep(4000);
-#endif
+	QThread::sleep(4);
 }
 
 MainWindow::~MainWindow()

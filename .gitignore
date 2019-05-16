@@ -3,3 +3,6 @@
 /build-TcpServer-Desktop_Qt_5_12_1_MinGW_64_bit-Debug/
 /build-WordExtracter-Desktop_Qt_5_12_1_MinGW_64_bit-Debug/
 *.psd
+/build-GuessWordGame-Desktop_Qt_5_12_1_MinGW_64_bit-Release/
+/build-TcpServer-Desktop_Qt_5_12_1_MinGW_64_bit-Release/
+*.rar

@@ -424,6 +424,10 @@ void DatabaseServer::receiveWordListRequest(GameLevel level, qintptr socketDescr
 		levelRange = tr("level between 8 and 10");
 		break;
 	}
+	if(wordNum == -1)
+	{
+		wordNum = level + 2;
+	}
 	if(query.exec(tr("select * from wordlist where %1 order by random() limit %2").arg(levelRange).arg(wordNum)))
 	{
 		while(query.next())
