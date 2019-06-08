@@ -103,11 +103,12 @@ void OnlineUserWidget::createConnection()
 {
 	connect(treeWidget, &QTreeWidget::itemClicked, this, &OnlineUserWidget::on_item_clicked);
 	connect(treeWidget, &QTreeWidget::itemDoubleClicked, this, &OnlineUserWidget::on_item_doubleclicked);
-
+#ifdef USE_NETWORK
 	connect(this, &OnlineUserWidget::sendOnlineUserRequest, &DBserver, &DatabaseServer::receiveOnlineUserRequest);
 	connect(&DBserver, &DatabaseServer::sendOnlineUsers, this, &OnlineUserWidget::receiveOnlineUsers);
 	connect(this, &OnlineUserWidget::sendOnlineDetailInfoRequest, &DBserver, &DatabaseServer::receiveOnlineUserDetailInfoRequest);
 	connect(&DBserver, &DatabaseServer::sendOnlineUserDetail, this, &OnlineUserWidget::receiveOnlineDetailInfo);
+#endif
 }
 
 void OnlineUserWidget::setIsLogin(bool value)

@@ -79,6 +79,7 @@ void RanklistWidget::receiveRanklist(QVector<Player> players, QVector<Questioner
 void RanklistWidget::receiveDetailInfo(Player player, Questioner questioner)
 {
 	DetailedUserInfoDialog *detailDialog;
+#ifdef USE_NETWORK
 	if(player.getUserName() == userName)
 	{
 		detailDialog = new DetailedUserInfoDialog(player, questioner, DBserver, MYSELF_OPEN);
@@ -88,6 +89,10 @@ void RanklistWidget::receiveDetailInfo(Player player, Questioner questioner)
 		detailDialog = new DetailedUserInfoDialog(player, questioner, DBserver, RANKLIST_OPEN);
 		connect(detailDialog, &DetailedUserInfoDialog::sendGameMode, this, &RanklistWidget::receiveGameMode);
 	}
+#else
+	detailDialog = new DetailedUserInfoDialog(player, questioner, DBserver);
+#endif
+
 	detailDialog->exec();
 }
 

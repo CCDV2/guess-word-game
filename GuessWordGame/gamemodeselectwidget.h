@@ -17,7 +17,9 @@ signals:
 	void sendGameMode(GameLevel level, GameStatus status, bool needSignal);
 public slots:
 	void paintEvent(QPaintEvent *event);
-
+#ifdef VERSION1
+	void startGame();
+#endif
 private slots:
 	void on_easyButton_clicked();
 	void on_normalButton_clicked();
@@ -29,9 +31,10 @@ private:
 	void createWidget();
 	void createLayout();
 	void createConnection();
-
+#ifdef USE_NETWORK
 	QCheckBox *duoCheckBox;
 	QLabel *duoSelectLabel, *duoStateLabel;
+#endif
 	QPushButton *easyButton, *normalButton, *hardButton, *expertButton;
 	QLabel *modeSelectLabel;
 

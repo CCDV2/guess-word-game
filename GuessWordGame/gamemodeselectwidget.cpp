@@ -20,6 +20,13 @@ void GameModeSelectWidget::paintEvent(QPaintEvent *event)
 	style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
 }
 
+#ifdef VERSION1
+void GameModeSelectWidget::startGame()
+{
+	emit sendGameMode(NORMAL, GAME_SINGLE, true);
+}
+#endif
+
 void GameModeSelectWidget::on_easyButton_clicked()
 {
 	emit sendGameMode(EASY, status, true);
@@ -42,6 +49,7 @@ void GameModeSelectWidget::on_expertButton_clicked()
 
 void GameModeSelectWidget::changeStateText()
 {
+#ifdef USE_NETWORK
 	if(duoCheckBox->isChecked())
 	{
 		status = GAME_DUO;
@@ -52,14 +60,17 @@ void GameModeSelectWidget::changeStateText()
 		status = GAME_SINGLE;
 		duoStateLabel->setText(tr("双人匹配：关闭"));
 	}
+#endif
 }
 
 void GameModeSelectWidget::createWidget()
 {
+#ifdef USE_NETWORK
 	duoSelectLabel = new QLabel(tr("请选择游戏模式"));
 	duoStateLabel = new QLabel(tr("双人匹配：关闭"));
 	duoCheckBox = new QCheckBox();
 	duoCheckBox->setCheckState(Qt::Unchecked);
+#endif
 	status = GAME_SINGLE;
 	modeSelectLabel = new QLabel(tr("请选择游戏难度"));
 	easyButton = new QPushButton(tr("EASY"));
@@ -75,9 +86,11 @@ void GameModeSelectWidget::createWidget()
 void GameModeSelectWidget::createLayout()
 {
 	mainLayout = new QGridLayout(this);
+#ifdef USE_NETWORK
 	mainLayout->addWidget(duoSelectLabel, 0, 0, 1, 2, Qt::AlignCenter | Qt::AlignBottom);
 	mainLayout->addWidget(duoCheckBox, 1, 0, Qt::AlignRight | Qt::AlignTop);
 	mainLayout->addWidget(duoStateLabel, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+#endif
 	mainLayout->addWidget(modeSelectLabel, 2, 0, 1, 2, Qt::AlignCenter | Qt::AlignBottom);
 	mainLayout->addWidget(easyButton, 3, 0);
 	mainLayout->addWidget(normalButton, 3, 1);
@@ -103,6 +116,7 @@ void GameModeSelectWidget::createConnection()
 	connect(normalButton, &QPushButton::clicked, this, &GameModeSelectWidget::on_normalButton_clicked);
 	connect(hardButton, &QPushButton::clicked, this, &GameModeSelectWidget::on_hardButton_clicked);
 	connect(expertButton, &QPushButton::clicked, this, &GameModeSelectWidget::on_expertButton_clicked);
-
+#ifdef USE_NETWORK
 	connect(duoCheckBox, &QCheckBox::clicked, this, &GameModeSelectWidget::changeStateText);
+#endif
 }

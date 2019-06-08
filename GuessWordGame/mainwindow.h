@@ -79,7 +79,11 @@ private:
 	QuestionWidget *questionWidget;
 	RanklistWidget *ranklistWidget;
 	QStackedWidget *stackWidget;
+
+#ifdef USE_NETWORK
+	// network only!!
 	OnlineUserWidget *onlineUserWidget;
+#endif
 
 	// welcome gameselect game question display
 	QWidget *widget[5];
@@ -91,7 +95,9 @@ private:
 	Player *player;
 	Questioner *questioner;
 	DatabaseServer *DBServer;
+#ifdef USE_NETWORK
 	TcpClient *tcpClient;
+#endif
 
 	QTimer netWorkTimer;
 	QMessageBox waitBox, battleBox;

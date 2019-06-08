@@ -120,7 +120,9 @@ void DetailedUserInfoDialog::createConnection()
 	case RANKLIST_OPEN:
 	case ONLINE_OPEN:
 		connect(matchButton, &QPushButton::clicked, this, &DetailedUserInfoDialog::on_matchButton_clicked);
+#ifdef USE_NETWORK
 		connect(this, &DetailedUserInfoDialog::sendBattleRequest, &DBServer, &DatabaseServer::receiveBattleRequest);
+#endif
 		break;
 	}
 }

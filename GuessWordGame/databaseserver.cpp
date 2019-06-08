@@ -213,7 +213,7 @@ void DatabaseServer::receiveDetailInfoRequest(SortMethod sortMethod, int index)
 #else
 	QString base = tr("select * from user order by ");
 	QString method;
-	QString limit = tr("limit %1, 1").arg(index);
+	QString limit = tr(" limit %1, 1").arg(index);
 	switch(sortMethod)
 	{
 	// initial state, should not be received
@@ -282,6 +282,7 @@ void DatabaseServer::receiveWordListRequest(GameLevel level, GameStatus status)
 	assert(status == GAME_SINGLE);
 	QVector<Word> words;
 	QString levelRange;
+	int num = 2 + level;
 	switch(level)
 	{
 	case EASY:
@@ -297,7 +298,7 @@ void DatabaseServer::receiveWordListRequest(GameLevel level, GameStatus status)
 		levelRange = tr("level between 8 and 10");
 		break;
 	}
-	if(query.exec(tr("select * from wordlist where %1 order by random() limit 5").arg(levelRange)))
+	if(query.exec(tr("select * from wordlist where %1 order by random() limit %2").arg(levelRange).arg(num)))
 	{
 		while(query.next())
 		{
@@ -330,6 +331,9 @@ void DatabaseServer::receiveEndGamePacket(EndGamePacket packet)
 			int preNum = query.value(2).toInt();
 			qDebug() << "preLevel: " << preLevel << " preExp: " << preExp << " preNum: " << preNum;
 			int curExp = preExp + expGained;
+#ifndef VERSION1
+			packet.expGained = expGained;
+#endif
 			int curNum = preNum + packet.correctNum;
 			int curLevel = preLevel;
 			bool isLvup;
@@ -351,6 +355,7 @@ void DatabaseServer::receiveEndGamePacket(EndGamePacket packet)
 				{
 					if(query.next())
 					{
+						emit sendShowEndGameDialog(packet);
 						emit sendUserInfo(Player(packet.playerName, query.value(2).toInt(), query.value(3).toInt(), query.value(4).toInt()),
 										  Questioner(packet.playerName, query.value(5).toInt(), query.value(6).toInt(), query.value(7).toInt()));
 					}

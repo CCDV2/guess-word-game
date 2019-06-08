@@ -15,10 +15,13 @@ MainWindow::MainWindow(QWidget *parent)
 	setWindowTitle(tr("猜单词游戏"));
 	setWindowState(Qt::WindowMaximized);
 	setWindowIcon(QIcon(":/png/img/icon.png"));
+
+#ifdef USE_NETWORK
 	tcpClient = new TcpClient(this);
-
-
 	DBServer = new DatabaseServer(*tcpClient);
+#else
+	DBServer = new DatabaseServer();
+#endif
 	createWidget();
 	createLayout();
 	createConnection();
@@ -48,7 +51,9 @@ void MainWindow::receiveUserInfo(Player _player, Questioner _questioner)
 	questioner = new Questioner(_questioner);
 	simplifiedUserInfoWidget->showUserInfo(*player, *questioner);
 	ranklistWidget->setUserName(player->getUserName());
+#ifdef USE_NETWORK
 	onlineUserWidget->setIsLogin(true);
+#endif
 }
 
 void MainWindow::receiveRequireForUserInfo()
@@ -130,7 +135,12 @@ void MainWindow::on_startGameButton_clicked()
 	}
 	else
 	{
+#ifndef VERSION1
 		stackWidget->setCurrentWidget(widget[1]);
+#else
+		stackWidget->setCurrentWidget(widget[2]);
+		gameModeSelectWidget->startGame();
+#endif
 	}
 }
 
@@ -172,10 +182,12 @@ void MainWindow::receiveGameMode(GameLevel level, GameStatus status, bool needSi
 void MainWindow::showEvent(QShowEvent *event)
 {
 	Q_UNUSED(event);
+#ifdef USE_NETWORK
 	if(!tcpClient->isConnected())
 	{
 		QTimer::singleShot(500, this, &MainWindow::networkFailed);
 	}
+#endif
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -261,6 +273,9 @@ void MainWindow::createWidget()
 //	welcome widget
 	startGameButton = new QPushButton(tr("开始游戏"));
 	startQuestionButton = new QPushButton(tr("开始出题"));
+#ifdef VERSION1
+	startQuestionButton->setVisible(false);
+#endif
 	startRanklistButton = new QPushButton(tr("查看排行榜"));
 	widget[0] = new QWidget();
 
@@ -293,9 +308,11 @@ void MainWindow::createWidget()
 		stackWidget->addWidget(widget[i]);
 	}
 
+#ifdef USE_NETWORK
 //	friend widget
 	onlineUserWidget = new OnlineUserWidget(*DBServer, this);
 	onlineUserWidget->setObjectName(moduleWidgetName);
+#endif
 
 	waitBox.setWindowTitle(tr("服务器忙"));
 	waitBox.setText(tr("服务器繁忙中，请稍等"));
@@ -315,7 +332,11 @@ void MainWindow::createLayout()
 	mainLayout = new QHBoxLayout(mainWidget);
 	loginOnlineLayout = new QVBoxLayout();
 	loginOnlineLayout->addWidget(simplifiedUserInfoWidget, 1);
+#ifdef USE_NETWORK
 	loginOnlineLayout->addWidget(onlineUserWidget, 4);
+#else
+	loginOnlineLayout->addWidget(new QLabel(), 4);
+#endif
 	mainLayout->addLayout(loginOnlineLayout, 1);
 //	mainLayout->addWidget(loginWindow, 0, 0);
 //	mainLayout->addWidget(registerWindow, 1, 0);

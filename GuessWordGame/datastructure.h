@@ -146,7 +146,12 @@ enum ConnectFunction
 	GAME_CANCEL_FUNCTION
 };
 
+// version3
 #define USE_NETWORK
+#ifndef USE_NETWORK
+// version1, comment it will be version2
+// #define VERSION1
+#endif
 
 enum GameStatus
 {
